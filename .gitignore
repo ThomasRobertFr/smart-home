@@ -1,0 +1,5 @@
+/data
+/.idea
+/config-private.yml
+
+*.pyc

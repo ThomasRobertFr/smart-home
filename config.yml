@@ -1,0 +1,49 @@
+hue:
+  host: hue
+  username: secret
+
+rcp:
+  url: http://raspi:6680/mopidy/rpc
+
+google-calendar:
+  client-secret-path: data/client_secret.json
+  credentials-path: data/smart-light.json
+  events-path: data/events.pkl
+  previous-run-path: data/previous-run.pkl
+  calendar-id: secret
+  scopes: https://www.googleapis.com/auth/calendar.readonly
+  app-name: Smart Light
+
+nas:
+  gpio: 22
+  url: http://nas/web/login.asp
+
+rf:
+  gpio_tx: 17
+  gpio_rx: 27
+  commands: secret
+    # pulse, on, off, [type, additional_info...]
+    # - [0, 0, 0, put, "scenarios/arrive", "scenarios/leave"]
+    # - [0, 0, 0, put, "scenarios/wakeup", "scenarios/sleep"]
+    # - [0, 0, 0, plug, main-lamp]
+    # - [0, 0, 0, plug, bedside-lamp]
+    # - [0, 0, 0, plug, desk]
+    # - [0, 0, 0, plug, starwars-lamp]
+    # - [0, 0, 0, plug, plasma-lamp]
+    # - [0, 0, 0, plug, bathroom-heat]
+    # - [0, 0, 0, plug, bedroom-heat-1]
+    # - [0, 0, 0, plug, bedroom-heat-2]
+
+remote_pilot_wire:
+  plug_ids:
+    - bedroom-heat-1
+    - bedroom-heat-2
+
+weather:
+  key: secret
+  location: lang:FR/q/France/Paris%2005%20Pantheon
+
+location:
+  latitude: 48
+  longitude: 2
+  timezone: 1

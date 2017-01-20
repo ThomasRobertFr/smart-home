@@ -1,0 +1,487 @@
+@import url('https://fonts.googleapis.com/css?family=Comfortaa:300,400,700'); /* |Nunito:300,400,600,700 */
+
+body {
+    font-family: Comfortaa, 'Open Sans', Helvetica, sans-serif;
+}
+
+header {
+    background: url('/api/sun.svg') center center;
+    overflow: auto;
+}
+
+#header-container {
+    background-position: center center;
+    min-width: 600px;
+}
+
+#header-content {
+    width: 600px;
+    height: 175px;
+    margin: 0 auto;
+    position: relative;
+}
+
+#header-content .btn {
+    color: #000;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-color: rgba(204, 204, 204, 0.6);
+    opacity: 0.7;
+    position: absolute;
+    top: 65px;
+}
+
+#btn-wakeup { left: 122px; }
+#btn-leave { left: 185px; }
+#btn-arrive { right: 190px; }
+#btn-party { right: 132px; }
+#btn-bedtime { right: 70px; }
+#btn-sleep { right: 10px; }
+
+
+#header-info {
+    height: 45px;
+    padding-left: 15px;
+    padding-top: 5px;
+}
+
+.header-info-block {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: 12px;
+}
+
+#header-time {
+    font-size: 230%;
+    font-weight: 300;
+}
+
+#header-day {
+    position: relative;
+    width: 41px;
+}
+
+#header-weather-icon {
+    font-size: 30px;
+    margin-top: 5px;
+}
+
+#header-day .dayname {
+    transform: rotate(90deg);
+    position: absolute;
+    top: 8px;
+    left: -9px;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+    width: 25px;
+    text-align: center;
+    font-weight: bold;
+}
+
+#header-day .day {
+    position: absolute;
+    top: -3px;
+    left: 9px;
+    font-size: 28px;
+    letter-spacing: -1px;
+    font-weight: bold;
+}
+
+#header-day .month {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: lighter;
+    letter-spacing: 2.3px;
+}
+
+#header-weather-temp-1 {
+    font-size: 20px;
+}
+
+#header-weather-temp-2 {
+    font-size: 11px;
+    margin-top: -4px;
+}
+
+#header-weather-add {
+    font-size: 12px;
+}
+#header-weather-add-1 {
+    margin-top: 1px;
+    font-size: 14px;
+}
+#header-weather-add-2 .wi-wind {
+    font-size: 17px;
+    vertical-align: middle;
+    margin-left: -3px;
+}
+
+/*
+#header-weather {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+}
+#header-weather .icon, #header-weather .info {
+    float: left;
+    margin-right: 20px;
+}
+
+#header-weather .space {
+    width: 10px;
+    display: inline-block;
+}
+
+#header-weather .icon {
+    font-size: 200%;
+}
+#header-weather .info .temp {
+    font-size: 110%;
+    margin: 0;
+}
+#header-weather .info .forecast {
+    font-size: 90%;
+    margin: 0;
+}*/
+
+
+
+.block h2 {
+    font-size: 20px;
+    text-transform: uppercase;
+    text-align: center;
+    border-top: 2px solid #5e5e5e;
+    margin-top: 30px;
+}
+
+.block h2 span {
+    position: relative;
+    top: -10px;
+    background: white;
+    padding: 0 15px;
+}
+
+.block h3 {
+    font-size: 16px;
+    text-transform: uppercase;
+}
+
+
+.flt-left-block {
+    float: left;
+}
+
+
+.command-container {
+    margin: 5px 0;
+}
+
+.command-container .command-label {
+    display: inline-block;
+    width: 120px;
+    text-align: right;
+    text-transform: capitalize;
+    font-weight: bold;
+    padding-right: 8px;
+    vertical-align: middle;
+}
+
+
+
+
+#weather {
+    width: 100%;
+    overflow: auto;
+}
+
+#precipitation {
+    fill: none;
+    stroke: #1878f0;
+    stroke-width: 2;
+}
+
+#temperature {
+    fill: none;
+    stroke: #ffd220;
+    stroke-width: 2;
+}
+
+#precipitation_zero {
+    stroke: #1878f0;
+    stroke-width: 1;
+    stroke-dasharray: 1,3;
+}
+
+#temperature_txts {
+    text-anchor: middle;
+    fill: #b89300;
+    font-size: 9px;
+}
+
+#precipitation_txts {
+    text-anchor: middle;
+    fill: #0b54ad;
+    font-size: 8px;
+}
+
+#weather-time line {
+    stroke-width: 1;
+    stroke-dasharray: 1,1;
+    stroke: #eee;
+}
+
+#weather-time text {
+    text-anchor: middle;
+    font-size: 8px;
+    fill: #999;
+}
+
+
+#weather-time line.day {
+    stroke-width: 1;
+    stroke-dasharray: none;
+    stroke: #ccc;
+}
+
+#weather-time text.day {
+    text-anchor: start;
+    writing-mode: tb;
+    fill: #333;
+    font-size: 9.5px;
+}
+
+
+
+#hue_hs_container {
+    width: 250px;
+    max-width: 100%;
+    margin: 0 auto 20px;
+    position: relative;
+}
+
+#hue_hs_pos {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -7px;
+    margin-left: -3px;
+    pointer-events: none;
+}
+
+#hue_hs {
+    width: 100%;
+}
+
+
+#running-seqs .sequence span {
+    display: none;
+    color: #8c8c8c;
+    padding-left: 7px;
+}
+
+#running-seqs .sequence i {
+    cursor: pointer;
+}
+
+#running-seqs .sequence.stopping span {
+    display: inline;
+}
+
+#running-seqs .sequence.stopping i {
+    display: none;
+}
+
+
+input[type=range]:focus {
+    outline: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    cursor: pointer;
+    height: 30px;
+    border: 3px solid #f9f9f9;
+    border-radius: 40px;
+    background: #dadada;
+    box-shadow: inset 0 0 2px 1px rgba(0, 0, 0, 0.3);
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  background: transparent;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    cursor: pointer;
+    margin-top: -3px;
+    -webkit-appearance: none;
+    width: 30px;
+    height: 30px;
+    background: #F5F5F5;
+    border: 1px solid #e8e8e8;
+    border-radius: 100%;
+    box-shadow: 0 2px 4px rgba(100, 100, 100, 0.1);
+}
+
+#hue_v::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg, #b9b9b9, #f3f2f2);;
+}
+
+.toggle-container {
+    display: inline-block;
+}
+
+.toggle-container > * {
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.toggle-container .text {
+    display: inline-block;
+    color: #5e5e5e;
+    font-weight: bold;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.toggle {
+    display: inline-block;
+    position: relative;
+    width: 60px;
+    height: 30px;
+    border: 3px solid #f9f9f9;
+    border-radius: 40px;
+    background: #F56557;
+    box-shadow: inset 0 0 2px 1px rgba(0, 0, 0, 0.3);
+    transition: background .25s ease-in;
+}
+
+.toggle .btn {
+    display: block;
+    position: absolute;
+    top: -3px;
+    left: -1px;
+    width: 30px;
+    height: 30px;
+    background: #F5F5F5;
+    border: 1px solid #e8e8e8;
+    border-radius: 100%;
+    box-shadow: 0 2px 4px rgba(100, 100, 100, 0.1);
+    transition: left .25s ease-in-out;
+}
+
+.toggle.checked {
+  background: #48C893;
+}
+
+.toggle.checked .btn {
+  left: 25px;
+}
+
+.toggle3-container {
+    display: inline-block;
+}
+
+.toggle3-container > * {
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.toggle3-container .text {
+    display: inline-block;
+    color: #5e5e5e;
+    font-weight: bold;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.toggle3 {
+    display: inline-block;
+    position: relative;
+    width: 90px;
+    height: 30px;
+    border: 3px solid #f9f9f9;
+    border-radius: 40px;
+    background: #F56557;
+    box-shadow: inset 0 0 2px 1px rgba(0, 0, 0, 0.3);
+    transition: background .25s ease-in;
+    margin-top: 16px;
+}
+.toggle3-text {
+    margin-top: 16px;
+}
+
+.toggle3 .middle {
+    display: block;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    top: -20px;
+}
+
+.toggle3 .middle .circle {
+    width: 14px;
+    height: 14px;
+    margin-top: 5px;
+    margin-left: 34px;
+    border-radius: 20px;
+    background: rgba(0,0,0,0.05);
+    box-shadow: inset 0 0 2px 1px rgba(0, 0, 0, 0.15);
+}
+
+.toggle3 .left-btn, .toggle3 .center-btn, .toggle3 .right-btn {
+    position: absolute;
+    top: -3px;
+    height: 30px;
+    width: 30px;
+}
+
+.toggle3 .left-btn {
+    left: -2px;
+}
+
+.toggle3 .center-btn {
+    left: 28px;
+}
+
+.toggle3 .right-btn {
+    right: -2px;
+}
+
+.toggle3 .btn {
+    display: block;
+    position: absolute;
+    top: -3px;
+    left: -1px;
+    width: 30px;
+    height: 30px;
+    background: #F5F5F5;
+    border: 1px solid #e8e8e8;
+    border-radius: 100%;
+    box-shadow: 0 2px 4px rgba(100, 100, 100, 0.1);
+    transition: left .25s ease-in-out;
+}
+
+.toggle3.checked-mid {
+  background: #ead11a;
+}
+
+.toggle3.checked-mid .btn {
+  left: 26px;
+}
+
+.toggle3.checked-right {
+  background: #48C893;
+}
+
+.toggle3.checked-right .btn {
+  left: 55px;
+}
+
+

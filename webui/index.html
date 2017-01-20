@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Home</title>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/weather-icons.min.css">
+    <link rel="stylesheet" href="css/weather-icons-wind.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header>
+        <div id="header-container">
+            <div id="header-content">
+                <div id="header-info">
+                    <div class="header-info-block" id="header-day">
+                        <div class="dayname">???</div>
+                        <div class="day">??</div>
+                        <div class="month">????</div>
+                    </div>
+                    <div class="header-info-block" id="header-time">??:??</div>
+                    <div class="header-info-block" id="header-weather-icon">
+                        <i data-toggle="tooltip" data-placement="bottom" title="Unknown" class="wi wi-na"></i>
+                    </div>
+                    <div class="header-info-block" id="header-weather-temp">
+                        <div id="header-weather-temp-1"><span>?</span>°C</div>
+                        <div id="header-weather-temp-2">
+                            <span>?</span> &ndash; <span>?</span>°
+                        </div>
+                    </div>
+                    <div class="header-info-block" id="header-weather-add">
+                        <div id="header-weather-add-1">
+                            <i class="wi wi-raindrop"></i> <span>?</span>%
+                        </div>
+                        <div id="header-weather-add-2">
+                            <i class="wi wi-strong-wind" data-toggle="tooltip" data-placement="bottom" title="Unknown"></i> <span>?</span> km/h
+                        </div>
+                    </div>
+                </div>
+
+                <button id="btn-wakeup" class="btn btn-lg btn-default" data-uri="/api/scenarios/wakeup">
+                    <i class="fa fa-bell"></i></button>
+                <button id="btn-leave" class="btn btn-lg btn-default" data-state="out" data-uri="/api/scenarios/leave">
+                    <i class="fa fa-sign-out"></i></button>
+                <button id="btn-arrive" class="btn btn-lg btn-default" data-state="home" data-uri="/api/scenarios/arrive">
+                    <i class="fa fa-sign-in"></i></button>
+                <button id="btn-party" class="btn btn-lg btn-default" data-state="simple" data-uri="/api/scenarios/party">
+                    <i class="fa fa-users"></i></button>
+                <button id="btn-bedtime" class="btn btn-lg btn-default" data-state="simple" data-uri="/api/scenarios/bedtime">
+                    <i class="wi wi-sunset"></i></button>
+                <button id="btn-sleep" class="btn btn-lg btn-default" data-state="simple" data-uri="/api/scenarios/sleep">
+                    <i class="fa fa-bed"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container" role="main">
+        <div class="col-md-4 col-sm-6">
+            <div class="block" id="switches">
+                <h2><span>Switches</span></h2>
+                <div class="col-lg-12">
+                    <h3>Lights</h3>
+
+                    <div class="command-container" data-device="power-plug" data-id="main-lamp" data-uri="/api/devices/power-plug/main-lamp">
+                        <span class="command-label">Main</span>
+                        <div class="command toggle-container">
+                            <div class="text before">Off</div>
+                            <div class="toggle">
+                                <span class="btn"></span>
+                            </div>
+                            <div class="text after">On</div>
+                        </div>
+                    </div>
+
+                    <div class="command-container" data-device="power-plug" data-id="bedside-lamp" data-uri="/api/devices/power-plug/bedside-lamp">
+                        <span class="command-label">Bedside</span>
+                        <div class="command toggle-container">
+                            <div class="text before">Off</div>
+                            <div class="toggle">
+                                <span class="btn"></span>
+                            </div>
+                            <div class="text after">On</div>
+                        </div>
+                    </div>
+
+                    <div class="command-container" data-device="power-plug" data-id="starwars-lamp" data-uri="/api/devices/power-plug/starwars-lamp">
+                        <span class="command-label">Star Wars</span>
+                        <div class="command toggle-container">
+                            <div class="text before">Off</div>
+                            <div class="toggle">
+                                <span class="btn"></span>
+                            </div>
+                            <div class="text after">On</div>
+                        </div>
+                    </div>
+
+                    <div class="command-container" data-device="power-plug" data-id="plasma-lamp" data-uri="/api/devices/power-plug/plasma-lamp">
+                        <span class="command-label">Plasma</span>
+                        <div class="command toggle-container">
+                            <div class="text before">Off</div>
+                            <div class="toggle">
+                                <span class="btn"></span>
+                            </div>
+                            <div class="text after">On</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <h3>Devices</h3>
+
+                    <div class="command-container" data-device="nas" data-values="off,void,on" data-uri="/api/devices/nas">
+                        <span class="command-label toggle3-text">NAS</span>
+                        <div class="command toggle3-container">
+                            <div class="toggle3-text text before">Off</div>
+                            <div class="toggle3">
+                                <div class="middle disabled"><div class="text">Busy</div><div class="circle"></div></div>
+                                <span class="btn"></span>
+                                <div class="left-btn"></div>
+                                <div class="right-btn"></div>
+                            </div>
+                            <div class="toggle3-text text after">On</div>
+                        </div>
+                    </div>
+
+                    <div class="command-container" data-device="power-plug" data-id="desk" data-uri="/api/devices/power-plug/desk">
+                        <span class="command-label">Screen & BT</span>
+                        <div class="command toggle-container">
+                            <div class="text before">Off</div>
+                            <div class="toggle">
+                                <span class="btn"></span>
+                            </div>
+                            <div class="text after">On</div>
+                        </div>
+                    </div>
+
+
+                    <h3>Heating</h3>
+
+                    <div class="command-container" data-device="remote-pilot-wire" data-values="off,eco,on" data-uri="/api/devices/remote-pilot-wire">
+                        <span class="command-label toggle3-text">Bedroom</span>
+                        <div class="command toggle3-container">
+                            <div class="toggle3-text text before">Off</div>
+                            <div class="toggle3">
+                                <div class="middle"><div class="text">Eco</div><div class="circle"></div></div>
+                                <span class="btn"></span>
+                                <div class="left-btn"></div>
+                                <div class="center-btn"></div>
+                                <div class="right-btn"></div>
+                            </div>
+                            <div class="toggle3-text text after">On</div>
+                        </div>
+                    </div>
+
+                    <div class="command-container" data-device="power-plug" data-id="bathroom-heat" data-uri="/api/devices/power-plug/bathroom-heat">
+                        <span class="command-label">Bathroom</span>
+                        <div class="command toggle-container">
+                            <div class="text before">Off</div>
+                            <div class="toggle">
+                                <span class="btn"></span>
+                            </div>
+                            <div class="text after">On</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-6">
+            <div class="block" id="radio">
+                <h2><span>Radio</span></h2>
+                <p class="text-center">
+                    <span class="btn-group">
+                        <button class="btn btn-default" data-type="simple" data-uri="/api/devices/radio/play"><i class="fa fa-play"></i></button>
+                        <button class="btn btn-default" data-type="simple" data-uri="/api/devices/radio/pause"><i class="fa fa-pause"></i></button>
+                        <button class="btn btn-default" data-type="simple" data-uri="/api/devices/radio/clearQueue"><i class="fa fa-stop"></i></button>
+                        <button class="btn btn-default" data-type="simple" data-uri="/api/devices/radio/previous"><i class="fa fa-step-backward"></i></button>
+                        <button class="btn btn-default" data-type="simple" data-uri="/api/devices/radio/next"><i class="fa fa-step-forward"></i></button>
+                        <button class="btn btn-default" data-type="simple" data-uri="/api/devices/radio/queueRadio"><i class="fa fa-music"></i></button>
+                    </span>
+                </p>
+            </div>
+            <div class="block">
+                <h2><span>Hue</span></h2>
+                <div id="hue_hs_container">
+                    <div id="hue_hs_pos">+</div>
+                    <img id="hue_hs" src="images/hue.png" />
+                </div>
+                <div style="display: flex;">
+                    <div id="hue_on" class="command toggle-container" style="margin-right: 15px;">
+                        <div class="text before">Off</div>
+                        <div class="toggle">
+                            <span class="btn"></span>
+                        </div>
+                        <div class="text after">On</div>
+                    </div>
+                    <div style="flex-grow: 1;">
+                        <input id="hue_v" type="range" min="0" max="255" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <div class="block">
+                <h2><span>Weather</span></h2>
+                <div id="weather">
+                    <svg width="2400" height="130" xmlns="http://www.w3.org/2000/svg">
+                        <g id="weather-time"></g>
+                        <line id="precipitation_zero" x1="0" x2="2400" y1="120" y2="120" />
+                        <path id="precipitation" fill="none" stroke="#1878f0" stroke-width="2" d="" />
+                        <g id="precipitation_txts"></g>
+                        <path id="temperature" fill="none" stroke="#ffd220" stroke-width="2" d="" />
+                        <g id="temperature_txts"></g>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="block" id="running-seqs">
+                <h2><span>Running sequences</span></h2>
+                <p class="text-center small">No sequence running</p>
+            </div>
+
+            <!--
+            <div class="block">
+                <h2><span>Calendar</span></h2>
+            </div>
+            -->
+        </div>
+
+
+    </div>
+
+
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
