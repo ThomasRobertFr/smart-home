@@ -47,3 +47,7 @@ location:
   latitude: 48
   longitude: 2
   timezone: 1
+
+temperature:
+  gpio: 25
+  sensor: 11 # DHT11

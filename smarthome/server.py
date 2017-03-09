@@ -30,9 +30,10 @@ api.add_resource(CalendarUpdate, '/triggers/calendar/update')
 api.add_resource(CalendarTrigger, '/triggers/calendar/trigger')
 
 # sensors
-from .sensors import Sun, Weather, State, Threads
+from .sensors import Sun, Weather, State, Threads, Temperature
 api.add_resource(Sun, '/sensors/sun')
 api.add_resource(State, '/sensors/state')
+api.add_resource(Temperature, '/sensors/temperature')
 api.add_resource(Threads, '/sensors/threads', '/sensors/threads/<id>')
 api.add_resource(Weather, '/sensors/weather', '/sensors/weather/<type>')
 
