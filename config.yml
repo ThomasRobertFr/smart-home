@@ -5,14 +5,14 @@ hue:
 rcp:
   url: http://raspi:6680/mopidy/rpc
 
-google-calendar:
-  client-secret-path: data/client_secret.json
-  credentials-path: data/smart-light.json
-  events-path: data/events.pkl
-  previous-run-path: data/previous-run.pkl
-  calendar-id: secret
+google_calendar:
+  client_secret_path: data/client_secret.json
+  credentials_path: data/smart-light.json
+  events_path: data/events.pkl
+  previous_run_path: data/previous-run.pkl
+  calendar_id: secret
   scopes: https://www.googleapis.com/auth/calendar.readonly
-  app-name: Smart Light
+  app_name: Smart Light
 
 nas:
   gpio: 22

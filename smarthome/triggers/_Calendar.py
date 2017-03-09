@@ -8,7 +8,8 @@ from oauth2client import tools
 from oauth2client.file import Storage
 
 from ..scenarios import WakeUp
-from ..misc import config
+from ..misc import config as _config
+config = _config.get().google_calendar
 
 import pickle
 
@@ -19,15 +20,13 @@ import pytz
 
 class Calendar(Resource):
 
-    config = config.get()["google-calendar"]
-
     def get_credentials(self):
-        store = Storage(self.config["credentials-path"])
+        store = Storage(config.credentials_path)
         credentials = store.get()
         if not credentials or credentials.invalid:
             flow = client.flow_from_clientsecrets(
-                self.config["client-secret-path"], self.config["scopes"])
-            flow.user_agent = self.config["app-name"]
+                config.client_secret_path, config.scopes)
+            flow.user_agent = config.app_name
             flow.params['access_type'] = 'offline'
             credentials = tools.run_flow(flow, store)
         return credentials
@@ -44,18 +43,18 @@ class Calendar(Resource):
         # Load events
         now = (datetime.datetime.utcnow() - datetime.timedelta(hours=3)).isoformat() + 'Z'
         events_result = service.events().list(
-            calendarId=self.config["calendar-id"], timeMin=now, maxResults=20, singleEvents=True,
+            calendarId=config.calendar_id, timeMin=now, maxResults=20, singleEvents=True,
             orderBy='startTime').execute()
         return events_result.get('items', [])
 
     def save_events(self, events):
-        f = open(self.config["events-path"], "wb")
+        f = open(config.events_path, "wb")
         pickle.dump(events, f)
         f.close()
 
     def read_events(self):
         try:
-            f = open(self.config["events-path"], "rb")
+            f = open(config.events_path, "rb")
             events = pickle.load(f)
             f.close()
             if not (isinstance(events, list)):
@@ -66,7 +65,7 @@ class Calendar(Resource):
 
     def get_previous(self):
         try:
-            f = open(self.config["previous-run-path"], "rb")
+            f = open(config.previous_run_path, "rb")
             previous = pickle.load(f)
             f.close()
             if not (isinstance(previous, list)):
@@ -78,7 +77,7 @@ class Calendar(Resource):
     def save_previous(self, previous):
         if len(previous) > 30:
             previous = previous[-30:]
-        f = open(self.config["previous-run-path"], "wb")
+        f = open(config.previous_run_path, "wb")
         pickle.dump(previous, f)
         f.close()
 
