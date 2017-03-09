@@ -18,6 +18,7 @@ This repository contains the code for the my small and personal smart-home proje
 * Better radio widget
 * Voice recognition
 * Velib status
+* Use _Embedded Google Assistant SDK_ (yet to be released) or _Alexa Voice Service_ for voice control + feedback
 
 # Hardware
 
@@ -28,9 +29,11 @@ This repository contains the code for the my small and personal smart-home proje
     * 8 Etekcity RF-controlled power-plug adapters
     * Speakers + jack
     * NAS + wire soldered on the power-on switch
+    * USB microphone
 * **Electronics:**
     * 5V to 3.3V adapter
     * RF 433 MHz transmitter & receiver
+    * IR transmitter & receiver
     * Temperature sensor (DHT11)
     * Motion sensor (PIR)
 
@@ -53,8 +56,15 @@ python python-pip python3 python3-pip
 ## Text-to-speech
 lame alsa-mixer libttspico-utils sox
 
-# pip
+# Python packages
+
+## pip
 google-api-python-client requests pytz python-dateutil
+
+## DHT library
+git clone https://github.com/adafruit/Adafruit_Python_DHT.git
+cd Adafruit_Python_DHT
+sudo python3 setup.py install
 ```
 
 ## dnsmask setup
@@ -129,6 +139,86 @@ server {
 	}
 }
 ```
+
+## lirc
+
+`sudo apt-get install lirc`
+
+### Configuration
+
+Edit `/boot/config.txt`:
+
+```
+# [...]
+dtoverlay=lirc-rpi,gpio_in_pin=24,gpio_out_pin=23
+# [...]
+```
+
+Edit `/etc/lirc/hardware.conf`:
+
+```
+LIRCD_ARGS=""
+#START_LIRCMD=false
+#START_IREXEC=false
+LOAD_MODULES=true
+
+DRIVER="default"
+DEVICE="/dev/lirc0"
+MODULES="lirc_rpi"
+
+LIRCD_CONF=""
+LIRCMD_CONF=""
+```
+
+### Recording a remote
+
+To test the receiver:
+
+```
+sudo /etc/init.d/lirc stop
+mode2 -d /dev/lirc0
+```
+
+To record a remote: `irrecord -d /dev/lirc0 ~/lircd.conf`
+
+### Sending signals
+
+My config file `/etc/lircd/lircd.conf`:
+
+```
+begin remote
+
+  name  mistlamp
+  bits           16
+  flags SPACE_ENC|CONST_LENGTH
+  eps            30
+  aeps          100
+
+  header       8974  4509
+  one           548  1706
+  zero          548   605
+  ptrail        549
+  repeat       8980  2273
+  pre_data_bits   16
+  pre_data       0x1FE
+  gap          107495
+  toggle_bit_mask 0x0
+
+      begin codes
+          KEY_BRIGHTNESS_CYCLE     0x29D6
+          KEY_POWER                0x23DC
+          BTN_MODE                 0x6996
+          KEY_POWER2               0x01FE
+      end codes
+
+end remote
+```
+
+* Start the service :  
+  `sudo service lirc start`  
+  `sudo lircd --device /dev/lirc0`
+* Test remote commands: `irsend LIST mistlamp ""`
+* Send command: `irsend SEND_ONCE mistlamp KEY_POWER`
 
 ## Smart-home crons
 
