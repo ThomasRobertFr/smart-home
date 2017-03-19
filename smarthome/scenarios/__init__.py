@@ -4,3 +4,4 @@ from ._Sleep import Sleep
 from ._Arrive import Arrive
 from ._Bedtime import Bedtime
 from ._Party import Party
+from ._ArriveOrBedtime import ArriveOrBedtime

@@ -7,13 +7,14 @@ app = Flask(__name__)
 api = Api(app)
 
 # scenarios
-from .scenarios import WakeUp, Leave, Sleep, Arrive, Bedtime, Party
+from .scenarios import WakeUp, Leave, Sleep, Arrive, Bedtime, Party, ArriveOrBedtime
 api.add_resource(WakeUp, '/scenarios/wakeup')
 api.add_resource(Leave, '/scenarios/leave')
 api.add_resource(Sleep, '/scenarios/sleep')
 api.add_resource(Party, '/scenarios/party')
 api.add_resource(Bedtime, '/scenarios/bedtime')
 api.add_resource(Arrive, '/scenarios/arrive')
+api.add_resource(ArriveOrBedtime, '/scenarios/arrive-or-bedtime')
 
 # devices
 from .devices import HueLamp, Radio, PowerPlug, PowerPlugs, RemotePilotWire, NAS
