@@ -39,6 +39,14 @@ remote_pilot_wire:
     - bedroom-heat-1
     - bedroom-heat-2
 
+mist_lamp:
+  id: mistlamp
+  codes:
+    power: KEY_POWER
+    light: KEY_POWER2
+    brightness: KEY_BRIGHTNESS_CYCLE
+    mist: BTN_MODE
+
 weather:
   key: secret
   location: lang:FR/q/France/Paris%2005%20Pantheon

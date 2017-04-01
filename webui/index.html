@@ -61,7 +61,7 @@
     </header>
 
     <div class="container" role="main">
-        <div class="col-md-4 col-sm-6">
+        <div class="col-lg-4 col-sm-6">
             <div class="block" id="switches">
                 <h2><span>Switches</span></h2>
                 <div class="col-lg-12">
@@ -109,6 +109,25 @@
                             </div>
                             <div class="text after">On</div>
                         </div>
+                    </div>
+
+                    <div class="command-container" data-device="mist-lamp" data-uri="/api/devices/mist-lamp">
+                        <span class="command-label">Mist Lamp</span>
+                        <div class="command toggle-container">
+                            <div class="text before">Off</div>
+                            <div class="toggle">
+                                <span class="btn"></span>
+                            </div>
+                            <div class="text after">On</div>
+                        </div>
+                        <br>
+                        <span class="command-label"></span>
+                        <div class="btn-group btn-group-xs" style="margin: 5px 20px">
+                            <button type="button" class="btn btn-default" data-command="light"><i class="fa fa-lightbulb-o fa-fw"></i></button>
+                            <button type="button" class="btn btn-default" data-command="mist"><i class="fa fa-clock-o fa-fw"></i></button>
+                            <button type="button" class="btn btn-default" data-command="bri"><i class="wi wi-day-sunny wi-fw"></i></button>
+                        </div>
+
                     </div>
                 </div>
                 <div class="col-lg-12">
@@ -171,7 +190,7 @@
             </div>
         </div>
 
-        <div class="col-md-4 col-sm-6">
+        <div class="col-lg-4 col-sm-6">
             <div class="block" id="radio">
                 <h2><span>Radio</span></h2>
                 <p class="text-center">
@@ -205,7 +224,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4 col-sm-6">
+        <div class="col-lg-4 col-sm-6">
             <div class="block">
                 <h2><span>Weather</span></h2>
                 <div id="weather">

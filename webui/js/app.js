@@ -7,6 +7,7 @@ var updates = [
     [updatePowerPlugStatus, 10, 0],
     [updateRemoteWire, 11, 0],
     [updateNAS, 12, 0],
+    [updateMist, 13, 0],
     [displayHourlyWeather, 10*60, 0],
     [updateHue, 29, 0],
     [updateTime, 9, 0],
@@ -106,6 +107,15 @@ function updateNAS() {
             $("[data-device='nas'] .toggle3").removeClass("checked-mid").addClass("checked-right");
         else
             $("[data-device='nas'] .toggle3").addClass("checked-mid").removeClass("checked-right");
+    });
+}
+
+function updateMist() {
+    $.get('/api/devices/mist-lamp', function(data) {
+        if (data == true)
+            $('[data-device="mist-lamp"] .toggle').addClass("checked");
+        else
+            $('[data-device="mist-lamp"] .toggle').removeClass("checked");
     });
 }
 
@@ -275,6 +285,16 @@ $(document).ready(function() {
         runToggle3(this);
     });
 
+
+    /**
+     ************ MIST **************
+     */
+
+    $('[data-device="mist-lamp"] button[data-command]').click(function () {
+        $.ajax($(this).parents("[data-uri]").data("uri")+"/"+$(this).data("command"), {
+            'method': 'PUT'
+        });
+    });
 
     /**
      ************ HUE **************

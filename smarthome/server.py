@@ -17,10 +17,11 @@ api.add_resource(Arrive, '/scenarios/arrive')
 api.add_resource(ArriveOrBedtime, '/scenarios/arrive-or-bedtime')
 
 # devices
-from .devices import HueLamp, Radio, PowerPlug, PowerPlugs, RemotePilotWire, NAS
+from .devices import HueLamp, Radio, PowerPlug, PowerPlugs, RemotePilotWire, NAS, MistLamp
 api.add_resource(HueLamp, '/devices/hue-lamp/<id>')
 api.add_resource(Radio, '/devices/radio/<action>')
 api.add_resource(RemotePilotWire, '/devices/remote-pilot-wire', '/devices/remote-pilot-wire/<action>')
+api.add_resource(MistLamp, '/devices/mist-lamp', '/devices/mist-lamp/<command>')
 api.add_resource(PowerPlugs, '/devices/power-plugs')
 api.add_resource(PowerPlug, '/devices/power-plug/<id>', '/devices/power-plug/<id>/<status>')
 api.add_resource(NAS, '/devices/nas', '/devices/nas/<status>')
