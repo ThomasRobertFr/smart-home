@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from ..devices import PowerPlug
+from ..devices import PowerPlug, HueLamp
 from ..sensors import State
 
 
@@ -10,7 +10,14 @@ class Party(Resource):
             "default": True,
             "title": "Turn plugs on",
             "config": {
-                "plug-ids": ["main-lamp", "bedside-lamp", "plasma-lamp", "starwars-lamp", "desk"]
+                "plug-ids": ["main-lamp", "plasma-lamp", "starwars-lamp", "desk"]
+            }
+        },
+        "hue": {
+            "default": True,
+            "title": "Turn Hue on",
+            "config": {
+                "ids": [1]
             }
         }
     }
@@ -27,5 +34,7 @@ class Party(Resource):
         for plug in self.actions["plugs"]["config"]["plug-ids"]:
             PowerPlug().put(plug, "on")
 
-
+        # HUE ON
+        for id in self.actions["hue"]["config"]["ids"]:
+            HueLamp().put(id, "on")
 

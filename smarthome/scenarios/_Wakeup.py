@@ -11,8 +11,7 @@ class WakeUp(Resource, Threads.Stoppable):
             "default": True,
             "title": "Turn on lamp slowly",
             "config": {
-                "hue-id": 1,
-                "plug-id": "bedside-lamp"
+                "hue-id": 1
             },
             "options": {
                 "delay": 0,
@@ -56,13 +55,13 @@ class WakeUp(Resource, Threads.Stoppable):
 
         # Initial color
         time.sleep(self.actions["light"]["options"]["delay"])
-        HueLamp().put(
+        HueLamp().send(
             self.actions["light"]["config"]["hue-id"],
             {"on": True, "bri": 0, "xy": [0.674, 0.322], "transitiontime": 0})
 
         # Start transition
-        time.sleep(1)
-        HueLamp().put(
+        time.sleep(1.5)
+        HueLamp().send(
             self.actions["light"]["config"]["hue-id"],
             {"on": True, "bri": 254, "xy": [0.4974, 0.4152], "transitiontime": self.actions["light"]["options"]["duration"] * 10})
 

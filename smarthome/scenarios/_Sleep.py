@@ -22,8 +22,7 @@ class Sleep(Resource):
             "default": True,
             "title": "Turn bedside lamp off slowly",
             "config": {
-                "hue-id": 1,
-                "plug-id": "bedside-lamp"
+                "hue-id": 1
             },
             "options": {
                 "duration": 45
@@ -40,9 +39,8 @@ class Sleep(Resource):
         State().put("sleeping")
 
         # HUE ON
-
-        hue_already_on = PowerPlug().get(self.actions["light"]["config"]["plug-id"])["status"] == 1
-        PowerPlug().put(self.actions["light"]["config"]["plug-id"], "on")
+        #hue_already_on = PowerPlug().get(self.actions["light"]["config"]["plug-id"])["status"] == 1
+        HueLamp().put(self.actions["light"]["config"]["hue-id"], "on")
 
         # PLUGS OFF
 
@@ -61,10 +59,9 @@ class Sleep(Resource):
         print("> heating eco")
 
         # HUE FADING
-
-        if not hue_already_on:
-            time.sleep(10)
-        HueLamp().put(
+        #if not hue_already_on:
+        #    time.sleep(10)
+        HueLamp().send(
             self.actions["light"]["config"]["hue-id"],
             {"on": False, "bri": 0, "xy": [0.674, 0.322],
              "transitiontime": self.actions["light"]["options"]["duration"] * 10})

@@ -12,10 +12,16 @@ class HueLamp(Resource):
         return r.json()
         # TODO handle errors
 
-    def put(self, id, data):
+    def put(self, id, status):
+        url = "http://%s/api/%s/lights/%s/state" % (config.host, config.username, id)
+        r = requests.put(url, json={"on": (status == "on")})
+        print(r.json())
+        return r.json()
+        # TODO handle errors
+
+    def send(self, id, data):
         url = "http://%s/api/%s/lights/%s/state" % (config.host, config.username, id)
         r = requests.put(url, json=data)
         print(r.json())
         return r.json()
-        # TODO handle errors
 

@@ -22,8 +22,7 @@ class Bedtime(Resource):
             "default": True,
             "title": "Turn bedside lamp to a bedtime-friendly orange",
             "config": {
-                "hue-id": 1,
-                "plug-id": "bedside-lamp"
+                "hue-id": 1
             },
             "options": {
                 "duration": 300
@@ -40,9 +39,9 @@ class Bedtime(Resource):
         State().put("bedtime")
 
         # HUE ON
-
-        hue_already_on = PowerPlug().get(self.actions["light"]["config"]["plug-id"])["status"] == 1
-        PowerPlug().put(self.actions["light"]["config"]["plug-id"], "on")
+        HueLamp().put(self.actions["light"]["config"]["hue-id"], "on")
+        #hue_already_on = PowerPlug().get(self.actions["light"]["config"]["plug-id"])["status"] == 1
+        #PowerPlug().put(self.actions["light"]["config"]["plug-id"], "on")
 
         # PLUGS OFF
 
@@ -56,9 +55,7 @@ class Bedtime(Resource):
         print("> heating eco")
 
         # HUE TO ORANGE
-        if not hue_already_on:
-            time.sleep(10)
-        HueLamp().put(
+        HueLamp().send(
             self.actions["light"]["config"]["hue-id"],
             {"on": True, "bri": 150, "xy": [0.5239,0.4136], "transitiontime": self.actions["light"]["options"]["duration"] * 10})
         print("> hue set for orange")

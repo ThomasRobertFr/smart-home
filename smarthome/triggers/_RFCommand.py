@@ -19,6 +19,8 @@ while True:
         if rfdevice.rx_proto != 1:
             continue
 
+        print("DEBUG" + str(rfdevice.rx_pulselength) + " " +str(rfdevice.rx_code))
+
         # search for the right command
         status = -1
         for i, command in enumerate(config.commands):
@@ -32,6 +34,8 @@ while True:
 
         # command found, try to do something
         if status != -1:
+            print("Received %s %d" % (command, status))
+
             # avoid multiple calls
             if last_command_id == i*2+status and datetime.now() - last_command_time < timedelta(seconds=5):
                 continue
@@ -39,11 +43,14 @@ while True:
             last_command_time = datetime.now()
 
             # do something
-            print("%s st=%d, code=%d, pulse=%d" % (command, status, rfdevice.rx_code, rfdevice.rx_pulselength   ))
+            #print("%s st=%d, code=%d, pulse=%d" % (command, status, rfdevice.rx_code, rfdevice.rx_pulselength))
             if command[3] == "plug":
                 requests.put("http://raspi/api/devices/power-plug/%s/%s" % (command[4], "on" if status == 1 else "off"))
             if command[3] == "put":
-                requests.put("http://raspi/api/%s" % (command[4] if status == 1 else command[5]))
+                url = command[4] if status == 1 else command[5]
+                if "scenarios" in url:
+                    time.sleep(1.5)
+                requests.put("http://raspi/api/%s" % url)
 
     time.sleep(0.01)
 
