@@ -7,11 +7,13 @@ var updates = [
     [updatePowerPlugStatus, 10, 0],
     [updateRemoteWire, 11, 0],
     [updateNAS, 12, 0],
+    [updateCrespinStatus, 35, 0],
     [updateMist, 13, 0],
     [displayHourlyWeather, 10*60, 0],
     [updateHue, 29, 0],
     [updateTime, 9, 0],
-    [updateRunningSequences, 13, 0]
+    [updateRunningSequences, 13, 0],
+    [updateScoll, 5*60, 0]
 ];
 
 function intervals() {
@@ -22,6 +24,15 @@ function intervals() {
             el[0]();
         }
     }
+}
+
+function updateScoll() {
+    var h = new Date().getHours();
+    var m = new Date().getMinutes();
+
+    var timeFloat = Math.max(0, h + m / 60 - 3.5) * 600;
+
+    $("header").scrollLeft(timeFloat);
 }
 
 function updateTime() {
@@ -121,10 +132,11 @@ function updateMist() {
 
 function updateHue() {
     $.get('/hue/lights/1', function (data) {
+        var el = $("[data-device='hue-lamp'][data-id='1']").find(".toggle");
         if (data.state.on)
-            $("#hue_on .toggle").addClass("checked");
+            el.addClass("checked");
         else
-            $("#hue_on .toggle").removeClass("checked");
+            el.removeClass("checked");
 
         $("#hue_v").val(data.state.bri);
         var rho = data.state.sat / 255.;
@@ -133,6 +145,15 @@ function updateHue() {
         var x = rho * Math.sin(phi);
         $("#hue_hs_pos").css("left", ((x + 1)*50)+"%");
         $("#hue_hs_pos").css("top", ((y + 1)*50)+"%");
+    });
+}
+
+function updateCrespinStatus() {
+    $.get('/api/devices/crespin', function(data) {
+        if (data == "on")
+            $('[data-device="crespin"] .toggle').addClass("checked");
+        else
+            $('[data-device="crespin"] .toggle').removeClass("checked");
     });
 }
 
@@ -162,6 +183,28 @@ function updateRunningSequences() {
 }
 
 function displayHourlyWeather() {
+    var icons = {
+        "clear": "f00d", // "wi-day-sunny",
+        "cloudy": "f041", // "wi-cloud",
+        "flurries": "f01b", //"wi-snow",
+        "fog": "f014", // "wi-fog",
+        "hazy": "f0b6", // "wi-day-haze",
+        "sleet": "f0b5", //"wi-sleet",
+        "rain": "f019", //"wi-rain",
+        "snow": "f076", //"wi-snowflake-cold",
+        "sunny": "f00d", // "wi-day-sunny",
+        "tstorms":"f01e", // "wi-thunderstorm",
+        "chanceflurries": "f01b", //"wi-snow",
+        "chancerain": "f01a", // "wi-showers",
+        "chancesleet": "f0b5", //"wi-sleet",
+        "chancesnow": "f01b", //"wi-snow",
+        "chancetstorms": "f01d", //"wi-storm-showers",
+        "partlysunny": "f00c", // "wi-day-sunny-overcast",
+        "partlycloudy": "f002", //"wi-day-cloudy",
+        "mostlycloudy": "f002", //"wi-day-cloudy",
+        "mostlysunny": "f00c", // "wi-day-sunny-overcast"
+    };
+
     $.get("/api/sensors/weather/hourly", function (data) {
         $("#header-weather-temp-1 span").html(data.hourly_forecast[0].temp.metric);
 
@@ -171,36 +214,42 @@ function displayHourlyWeather() {
             if (t > tMax) tMax = t;
             if (t < tMin) tMin = t;
         }
-        tMax += 2; tMin--;
+        //tMax += 2; tMin--;
         if (tMax - tMin < 8) {
             var tmp = tMax + (8 - tMax + tMin) / 2;
             tMin = tMin - (8 - tMax + tMin) / 2;
             tMax = tmp;
         }
 
-        var xScale = 15;
-        var yScale = 130 / (tMax - tMin);
+        var dx = 15;
+        var dy = 83 / (tMax - tMin);
 
-        function getY (t) { return (tMax - t) * yScale; }
+        function getTemp(i) { return data.hourly_forecast[i].temp.metric; }
+        function getYTemp(i) { return (tMax - data.hourly_forecast[i].temp.metric) * dy + 38; }
+        function getRain(i) { return data.hourly_forecast[i].pop; }
+        function getYRain(i) { return 120 - data.hourly_forecast[i].pop; }
 
-        var dTemp = "M 0 "+getY(data.hourly_forecast[0].temp.metric);
+        var dTemp = "M 0 "+getYTemp(0);
         var dRain = "M 0 "+(120 - data.hourly_forecast[i].pop);
         var tempTxts = "", rainTxts = "", time = "";
-        for (i = 1; i < data.hourly_forecast.length; i++) {
-            dTemp += " C " + ((i-0.5)*xScale) + " " + getY(data.hourly_forecast[i-1].temp.metric) +
-                     ", "  + ((i-0.5)*xScale) + " " + getY(data.hourly_forecast[i].temp.metric) +
-                     ", "  + (i*xScale) + " "+getY(data.hourly_forecast[i].temp.metric);
-            dRain += " C " + ((i-0.5)*xScale) + " " + (120 - data.hourly_forecast[i-1].pop) +
-                     ", "  + ((i-0.5)*xScale) + " " + (120 - data.hourly_forecast[i].pop) +
-                     ", "  + (i*xScale) + " "+ (120 - data.hourly_forecast[i].pop);
-            tempTxts += '<text x="'+(i*xScale)+'" y="'+(getY(data.hourly_forecast[i].temp.metric)-3)+'">'+data.hourly_forecast[i].temp.metric+'</text>';
+        for (i = 1; i < data.hourly_forecast.length - 1; i++) {
+
+            dTemp += " S " + ((i-0.3333)*dx) + " " + (getYTemp(i) - (getYTemp(i+1) - getYTemp(i-1)) / 6) +
+                     ", "  + (i*dx) + " "+getYTemp(i);
+
+            dRain += " S " + ((i-0.3333)*dx) + " " + (getYRain(i) - (getYRain(i+1) - getYRain(i-1)) / 6) +
+                     ", "  + (i*dx) + " "+ getYRain(i);
+
+            tempTxts += '<text x="'+(i*dx)+'" y="'+(getYTemp(i)-3)+'">'+getTemp(i)+'</text>';
             if (data.hourly_forecast[i].pop > 10)
-                rainTxts += '<text x="'+(i*xScale)+'" y="'+(120 - 3 - data.hourly_forecast[i].pop)+'">'+data.hourly_forecast[i].pop+'</text>';
+                rainTxts += '<text x="'+(i*dx)+'" y="'+(120 - 3 - data.hourly_forecast[i].pop)+'">'+data.hourly_forecast[i].pop+'</text>';
             if (data.hourly_forecast[i].FCTTIME.hour == 0)
-                time += '<line class="day" x1="'+(i*xScale)+'" x2="'+(i*xScale)+'" y1="130" y2="0"/><text class="day" x="'+(i*xScale)+'" y="2">'+
+                time += '<line class="day" x1="'+(i*dx)+'" x2="'+(i*dx)+'" y1="130" y2="0"/><text class="day" x="'+(i*dx)+'" y="2">'+
                     data.hourly_forecast[i].FCTTIME.weekday_name+' '+data.hourly_forecast[i].FCTTIME.mday+' '+data.hourly_forecast[i].FCTTIME.month_name_abbrev+'</text>';
             else
-                time += '<line x1="'+(i*xScale)+'" x2="'+(i*xScale)+'" y1="130" y2="0"/><text x="'+(i*xScale)+'" y="8">'+data.hourly_forecast[i].FCTTIME.hour+'h</text>';
+                time += '<line x1="'+(i*dx)+'" x2="'+(i*dx)+'" y1="130" y2="0"/>' +
+                        '<text x="'+(i*dx)+'" y="8">'+data.hourly_forecast[i].FCTTIME.hour+'h</text>' +
+                            '<text class="weather weather-'+data.hourly_forecast[i].icon+'" x="'+(i*dx)+'" y="23">&#x'+icons[data.hourly_forecast[i].icon]+'</text>';
 
         }
 
@@ -349,10 +398,130 @@ $(document).ready(function() {
 
 
     /**
+     ************ CRESPIN **************
+     */
+    $('#crespin [data-command="run"], #crespin [data-command="pause"], #crespin [data-command="totarget"]').click(function() {
+        $.post($('#crespin').data('uri'), {data: $(this).data("command")});
+        $('#crespin [data-command="run"], #crespin [data-command="pause"], #crespin [data-command="totarget"]').removeClass("active");
+        $(this).addClass("active");
+    });
+
+    $('#crespin [data-command="data"]').click(function() {
+        $.post($('#crespin').data('uri'), {data: $(this).data("command")}, function (data) {
+            $('#crespin [data-command="run"], #crespin [data-command="pause"], #crespin [data-command="totarget"]').removeClass("active");
+
+            data = data.split("\n");
+
+            $('#crespin [data-command="'+data[0]+'"]').addClass("active");
+            $('#crespin [data-action="speed-val"]').val(data[1]);
+
+            for (var i = 2; i < data.length; i++) {
+                var vals = data[i].split(",");
+                $('#crespin [data-motid='+(i-2)+'] .pos').html(vals[0]);
+                $('#crespin [data-motid='+(i-2)+'] .target').html(vals[1]);
+            }
+        });
+    });
+
+    function setdata() {
+        // full data update (pos & targets) if in position mode
+        if ($('#crespin [data-action="position"]').hasClass("active")) {
+            var data = "setdata ";
+            var n = $('#crespin [data-motid]').length;
+            for (var i = 0; i < n; i++) {
+                data += $('#crespin [data-motid='+i+'] .pos').html()+" ";
+                data += $('#crespin [data-motid='+i+'] .target').html()+" ";
+            }
+            $.post($('#crespin').data('uri'), {data: data});
+        }
+        // only target if in normal move mode
+        else {
+            var data = "settargets ";
+            var n = $('#crespin [data-motid]').length;
+            for (var i = 0; i < n; i++) {
+                data += $('#crespin [data-motid='+i+'] .target').html()+" ";
+            }
+            $.post($('#crespin').data('uri'), {data: data});
+        }
+    }
+    $('#crespin [data-command="setdata"]').click(function() { setdata(); });
+
+    $('#crespin [data-action="up"], #crespin [data-action="down"]').click(function() {
+        var els, delta;
+        if ($('#crespin [data-action="target"]').hasClass("active")) {
+            els = $('#crespin-motors td.active .target');
+            delta = -parseInt($('#crespin [data-action="delta-val"]').val()); // up by default
+        }
+        else {
+            els = $('#crespin-motors td.active .pos');
+            delta = parseInt($('#crespin [data-action="delta-val"]').val());
+        }
+        if ($(this).data("action") == "down")
+            delta *= -1;
+
+        els.each(function (i, e) {
+            $(e).html(parseInt($(e).html()) + delta);
+        });
+
+        if ($('#crespin [data-action="instant"]').hasClass("active") && !$('#crespin [data-action="instant"]').hasClass("disabled")) {
+            setdata();
+        }
+    });
+
+    $('#crespin [data-action="setpos"], #crespin [data-action="settarget"]').click(function() {
+        var field = $(this).data("action") == "setpos" ? "pos" : "target";
+        var els = $('#crespin-motors td.active .'+field);
+        var val = parseInt($(this).parent().parent().find("input").val());
+        els.each(function (i, e) { $(e).html(val); });
+
+        if ($('#crespin [data-action="instant"]').hasClass("active") && !$('#crespin [data-action="instant"]').hasClass("disabled")) {
+            setdata();
+        }
+    });
+
+    $('#crespin [data-action="setspeed"]').click(function() {
+        var val = parseInt($(this).parent().parent().find("input").val());
+        $.post($('#crespin').data('uri'), {data: "setspeed "+val});
+    });
+
+    $('#crespin [data-action="target"], #crespin [data-action="position"]').click(function() {
+        $('#crespin [data-action="target"], #crespin [data-action="position"]').removeClass("active");
+        $(this).addClass("active");
+        if ($(this).data("action") == "position")
+            $('#crespin [data-action="instant"]').addClass("disabled");
+        else
+            $('#crespin [data-action="instant"]').removeClass("disabled");
+    });
+
+    $('#crespin [data-action="multiselect"], #crespin [data-action="instant"]').click(function() {
+        $(this).toggleClass("active");
+    });
+
+    $('#crespin [data-action="selectall"]').click(function() {
+        if ($('#crespin-motors td.active').length > 0)
+            $('#crespin-motors td').removeClass('active');
+        else
+            $('#crespin-motors td').addClass('active');
+    });
+
+    $('#crespin-motors td').click(function() {
+        if ($('#crespin [data-action="multiselect"]').hasClass("active")) {
+            $(this).toggleClass("active");
+        }
+        else {
+            var activeBefore = $(this).hasClass("active");
+            $('#crespin-motors td').removeClass("active");
+            if (!activeBefore)
+                $(this).addClass("active");
+        }
+    });
+
+
+    /**
      ************ INTERVALS **************
      */
 
     setInterval(intervals, 1000);
 
-    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip({container: 'body'});
 });

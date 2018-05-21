@@ -1,0 +1,7 @@
+{
+  "short_name": "Home",
+  "name": "Home",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "portrait"
+}

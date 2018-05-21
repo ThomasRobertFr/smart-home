@@ -7,6 +7,8 @@
 
     <title>Home</title>
 
+    <link rel="manifest" href="manifest.json">
+
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/weather-icons.min.css">
@@ -15,34 +17,35 @@
 </head>
 <body>
 
+    <div id="header-info">
+        <div class="header-info-block" id="header-day">
+            <div class="dayname">???</div>
+            <div class="day">??</div>
+            <div class="month">????</div>
+        </div>
+        <div class="header-info-block" id="header-time">??:??</div>
+        <div class="header-info-block" id="header-weather-icon">
+            <i data-toggle="tooltip" data-placement="bottom" title="Unknown" class="wi wi-na"></i>
+        </div>
+        <div class="header-info-block" id="header-weather-temp">
+            <div id="header-weather-temp-1"><span>?</span>°C</div>
+            <div id="header-weather-temp-2">
+                <span>?</span> &ndash; <span>?</span>°
+            </div>
+        </div>
+        <div class="header-info-block" id="header-weather-add">
+            <div id="header-weather-add-1">
+                <i class="wi wi-raindrop"></i> <span>?</span>%
+            </div>
+            <div id="header-weather-add-2">
+                <i class="wi wi-strong-wind" data-toggle="tooltip" data-placement="bottom" title="Unknown"></i> <span>?</span> km/h
+            </div>
+        </div>
+    </div>
+
     <header>
         <div id="header-container">
             <div id="header-content">
-                <div id="header-info">
-                    <div class="header-info-block" id="header-day">
-                        <div class="dayname">???</div>
-                        <div class="day">??</div>
-                        <div class="month">????</div>
-                    </div>
-                    <div class="header-info-block" id="header-time">??:??</div>
-                    <div class="header-info-block" id="header-weather-icon">
-                        <i data-toggle="tooltip" data-placement="bottom" title="Unknown" class="wi wi-na"></i>
-                    </div>
-                    <div class="header-info-block" id="header-weather-temp">
-                        <div id="header-weather-temp-1"><span>?</span>°C</div>
-                        <div id="header-weather-temp-2">
-                            <span>?</span> &ndash; <span>?</span>°
-                        </div>
-                    </div>
-                    <div class="header-info-block" id="header-weather-add">
-                        <div id="header-weather-add-1">
-                            <i class="wi wi-raindrop"></i> <span>?</span>%
-                        </div>
-                        <div id="header-weather-add-2">
-                            <i class="wi wi-strong-wind" data-toggle="tooltip" data-placement="bottom" title="Unknown"></i> <span>?</span> km/h
-                        </div>
-                    </div>
-                </div>
 
                 <button id="btn-wakeup" class="btn btn-lg btn-default" data-uri="/api/scenarios/wakeup">
                     <i class="fa fa-bell"></i></button>
@@ -78,7 +81,7 @@
                         </div>
                     </div>
 
-                    <div class="command-container" data-device="power-plug" data-id="bedside-lamp" data-uri="/api/devices/power-plug/bedside-lamp">
+                    <div class="command-container" data-device="hue-lamp" data-id="1" data-uri="/api/devices/hue-lamp/1">
                         <span class="command-label">Bedside</span>
                         <div class="command toggle-container">
                             <div class="text before">Off</div>
@@ -158,6 +161,17 @@
                         </div>
                     </div>
 
+                    <div class="command-container" data-device="crespin" data-uri="/api/devices/crespin">
+                        <span class="command-label">Crespin</span>
+                        <div class="command toggle-container">
+                            <div class="text before">Off</div>
+                            <div class="toggle">
+                                <span class="btn"></span>
+                            </div>
+                            <div class="text after">On</div>
+                        </div>
+                    </div>
+
 
                     <h3>Heating</h3>
 
@@ -210,18 +224,7 @@
                     <div id="hue_hs_pos">+</div>
                     <img id="hue_hs" src="images/hue.png" />
                 </div>
-                <div style="display: flex;">
-                    <div id="hue_on" class="command toggle-container" style="margin-right: 15px;">
-                        <div class="text before">Off</div>
-                        <div class="toggle">
-                            <span class="btn"></span>
-                        </div>
-                        <div class="text after">On</div>
-                    </div>
-                    <div style="flex-grow: 1;">
-                        <input id="hue_v" type="range" min="0" max="255" />
-                    </div>
-                </div>
+                <input id="hue_v" type="range" min="0" max="255" />
             </div>
         </div>
         <div class="col-lg-4 col-sm-6">
@@ -242,6 +245,97 @@
             <div class="block" id="running-seqs">
                 <h2><span>Running sequences</span></h2>
                 <p class="text-center small">No sequence running</p>
+            </div>
+
+            <div class="block" id="crespin" data-uri="/api/devices/crespin">
+                <h2><span>Crespin Mobile</span></h2>
+                <p class="text-center">
+                    <span class="btn-group">
+                        <button class="btn btn-default" data-command="run"><i class="fa fa-play"></i></button>
+                        <button class="btn btn-default" data-command="pause"><i class="fa fa-pause"></i></button>
+                        <button class="btn btn-default" data-command="totarget"><i class="fa fa-sort"></i></button>
+                    </span>
+                    <span class="btn-group">
+                        <button class="btn btn-default" data-command="data"><i class="fa fa-cloud-download"></i></button>
+                        <button class="btn btn-default" data-command="setdata"><i class="fa fa-cloud-upload"></i></button>
+                    </span>
+                </p>
+                <p class="text-center">
+                    <span class="btn-group">
+                        <input type="text" class="btn btn-default" data-action="delta-val" value="10" size="2">
+                        <button class="btn btn-info" data-action="up"><i class="fa fa-arrow-up"></i></button>
+                        <button class="btn btn-info" data-action="down"><i class="fa fa-arrow-down"></i></button>
+                    </span>
+                    <span class="btn-group">
+                        <button class="btn btn-default active" data-action="target" data-toggle="tooltip" title="Move (target)"><i class="fa fa-arrows-v"></i></button>
+                        <button class="btn btn-default" data-action="position" data-toggle="tooltip" title="Calibrate (position)"><i class="fa fa-cog"></i></button>
+                    </span>
+                    <span class="btn-group">
+                        <button class="btn btn-default" data-action="selectall" data-toggle="tooltip" title="Select all"><i class="fa fa-check-square-o"></i></button>
+                        <button class="btn btn-default active" data-action="multiselect" data-toggle="tooltip" title="Multiple select"><i class="fa fa-plus-square-o"></i></button>
+                        <button class="btn btn-default" data-action="instant" data-toggle="tooltip" title="Instant update"><i class="fa fa-exchange"></i></button>
+                    </span>
+                </p>
+                <table id="crespin-vals">
+                    <tr>
+                        <td>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-addon">P</span>
+                                <input type="text" class="form-control" data-action="position-val">
+                                <span class="input-group-btn">
+                                   <button class="btn btn-primary" type="button" data-action="setpos"><i class="fa fa-pencil"></i></button>
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-addon" style="color: #ccc">T</span>
+                                <input type="text" class="form-control" data-action="target-val">
+                                <span class="input-group-btn">
+                                   <button class="btn btn-primary" type="button" data-action="settarget"><i class="fa fa-pencil"></i></button>
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-addon" style="color: #ccc">S</span>
+                                <input type="text" class="form-control" data-action="speed-val">
+                                <span class="input-group-btn">
+                                   <button class="btn btn-primary" type="button" data-action="setspeed"><i class="fa fa-check"></i></button>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <table id="crespin-motors">
+                    <tr class="row-1">
+                        <td data-motid="21"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="19"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="17"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="15"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="13"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="11"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="9"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="7"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="5"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="3"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="1"><span class="pos">?</span><br><span class="target">?</span></td>
+                    </tr>
+                    <tr class="row-2">
+                        <td data-motid="20"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="18"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="16"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="14"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="12"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="10"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="8"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="6"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="4"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="2"><span class="pos">?</span><br><span class="target">?</span></td>
+                        <td data-motid="0"><span class="pos">?</span><br><span class="target">?</span></td>
+                    </tr>
+                </table>
             </div>
 
             <!--

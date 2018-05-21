@@ -40,8 +40,12 @@ header {
 
 #header-info {
     height: 45px;
+    margin: 0 auto -45px;
     padding-left: 15px;
     padding-top: 5px;
+    position: relative;
+    z-index: 100;
+    max-width: 600px;
 }
 
 .header-info-block {
@@ -240,6 +244,25 @@ header {
     fill: #999;
 }
 
+#weather-time text.weather {
+    font-family: weathericons;
+    fill: #666;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+#weather-time text.weather-mostlysunny, #weather-time text.weather-partlysunny, #weather-time text.weather-clear, #weather-time text.weather-sunny
+    { fill: #f5c400; }
+#weather-time text.weather-partlycloudy
+    { fill: #d8cda3; }
+#weather-time text.weather-mostlycloudy, #weather-time text.weather-cloudy, #weather-time text.weather-fog, #weather-time text.weather-hazy
+    { fill: #9aa2a7; }
+#weather-time text.weather-chancerain, #weather-time text.weather-rain
+    { fill: #5d90c3; }
+#weather-time text.weather-chancesnow, #weather-time text.weather-chancesleet, #weather-time text.weather-flurries, #weather-time text.weather-snow, #weather-time text.weather-sleet, #weather-time text.weather-chanceflurries
+    { fill: #e4e3e3; text-shadow: 0px 0px 1.5px #444 }
+#weather-time text.weather-chancetstorms, #weather-time text.weather-tstorms
+    { fill: #38638e; }
 
 #weather-time line.day {
     stroke-width: 1;
@@ -484,4 +507,79 @@ input[type=range]::-webkit-slider-thumb {
   left: 55px;
 }
 
+.btn:focus,.btn:active:focus,.btn.active:focus,
+.btn.focus,.btn:active.focus,.btn.active.focus {
+    outline: none;
+}
 
+#crespin input.btn {
+    cursor: text;
+}
+
+#crespin-vals {
+    margin-bottom: 10px;
+}
+
+#crespin-vals td:not(:last-child) {
+    padding-right: 5px;
+}
+
+#crespin-vals .input-group-sm>.form-control, #crespin-vals .input-group-sm>.input-group-addon, #crespin-vals .input-group-sm>.input-group-btn>.btn {
+    padding: 5px 7px;
+}
+
+#crespin-motors {
+    width: 100%;
+    max-width: 390px;
+    border-collapse: separate;
+}
+
+#crespin-motors td {
+    text-align: center;
+    color: #333;
+    background: #fff;
+    line-height: 10px;
+    padding: 6px 0;
+    cursor: pointer;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    width: 9%;
+}
+
+#crespin-motors td.active {
+    color: #333;
+    background-color: #e6e6e6;
+    border-color: #adadad;
+    box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+}
+
+#crespin-motors td .target {
+    color: #AAA;
+}
+
+#crespin-motors tr:last-child td {
+    border-bottom: 1px solid #ccc;
+}
+#crespin-motors tr td:last-child {
+    border-right: 1px solid #ccc;
+}
+
+#crespin-motors tr:first-child td {
+    margin-bottom: -1px;
+}
+#crespin-motors tr:first-child td:first-child {
+    border-top-left-radius: 4px;
+}
+#crespin-motors tr:first-child td:last-child {
+    border-top-right-radius: 4px;
+}
+#crespin-motors tr:last-child td:first-child {
+    border-bottom-left-radius: 4px;
+}
+#crespin-motors tr:last-child td:last-child {
+    border-bottom-right-radius: 4px;
+}
+
+#crespin-motors .pos, #crespin-motors .target {
+    font-size: 9px;
+}

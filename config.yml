@@ -54,7 +54,7 @@ weather:
 location:
   latitude: 48
   longitude: 2
-  timezone: 1
+  timezone: 2
 
 temperature:
   gpio: 25
