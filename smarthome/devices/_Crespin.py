@@ -34,7 +34,7 @@ class Crespin(Resource):
         elif status == "off" and self.get() != "off":
             self._set_status("off")
             self.send("shutdown")
-            time.sleep(3)
+            time.sleep(10)
             PowerPlug().put("crespin-mobile", "off")
 
     def post(self):

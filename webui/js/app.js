@@ -1,9 +1,14 @@
 'use strict';
 
+const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const dayNamesShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const monthNamesShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 // updates to perform [fct, interval (s), lastUpdateField]
 var updates = [
     [setWeather, 10*60, 0],
-    [updateBackground, 60, 0],
+    //[updateBackground, 60, 0],
     [updatePowerPlugStatus, 10, 0],
     [updateRemoteWire, 11, 0],
     [updateNAS, 12, 0],
@@ -15,6 +20,12 @@ var updates = [
     [updateRunningSequences, 13, 0],
     [updateScoll, 5*60, 0]
 ];
+
+function vibrate() {
+    if ("vibrate" in navigator) {
+        navigator.vibrate(150);
+    }
+}
 
 function intervals() {
     for (var i in updates) {
@@ -43,10 +54,11 @@ function updateTime() {
 
 function setWeather() {
     $.get("/api/sensors/weather", function(data) {
-        data = data.forecast.simpleforecast.forecastday["0"];
-        $("#header-weather-temp-2 span:last").html(data.high.celsius);
-        $("#header-weather-temp-2 span:first").html(data.low.celsius);
-        $("#header-weather-add-1 span").html(data.pop);
+        console.log(data);
+        data = data.daily.data[0];
+        $("#header-weather-temp-2 span:last").html(Math.round(data.temperatureHigh));
+        $("#header-weather-temp-2 span:first").html(Math.round(data.temperatureLow));
+        $("#header-weather-add-1 span").html(Math.round(data.precipProbability*100));
         var icons = {
             "clear": "wi-day-sunny",
             "cloudy": "wi-cloud",
@@ -69,16 +81,17 @@ function setWeather() {
             "mostlysunny": "wi-day-sunny-overcast"
         };
         $("#header-weather-icon i").attr("class", "").addClass("wi").addClass(icons[data.icon] || "wi-na");
-        $("#header-weather-icon i").attr("title", data.conditions).tooltip('fixTitle');
+        $("#header-weather-icon i").attr("title", data.summary).tooltip('fixTitle');
 
-        $("#header-weather-add-2 span").html(data.maxwind.kph);
-        $("#header-weather-add-2 i").attr("class", "").addClass("wi").addClass("wi-wind")
-            .addClass("wi-from-"+data.maxwind.dir.toLowerCase());
-        $("#header-weather-add-2 i").attr("title", data.maxwind.dir).tooltip('fixTitle');
+        $("#header-weather-add-2 span").html(data.windGust);
+        //$("#header-weather-add-2 i").attr("class", "").addClass("wi").addClass("wi-wind")
+        //    .addClass("wi-from-"+data.maxwind.dir.toLowerCase()); // TODO from windBearing (degrees from north, clockwise)
+        //$("#header-weather-add-2 i").attr("title", data.maxwind.dir).tooltip('fixTitle');
 
-        $("#header-day .dayname").html(data.date.weekday.substring(0,3));
-        $("#header-day .day").html(data.date.day < 10 ? "0"+data.date.day : data.date.day);
-        $("#header-day .month").html(data.date.monthname.substring(0,4));
+        var d = new Date();
+        $("#header-day .dayname").html(dayNamesShort[d.getDay()]);
+        $("#header-day .day").html(d.getDate() < 10 ? "0"+d.getDate() : d.getDate());
+        $("#header-day .month").html(monthNamesShort[d.getMonth()]);
 
     });
 }
@@ -185,6 +198,8 @@ function updateRunningSequences() {
 function displayHourlyWeather() {
     var icons = {
         "clear": "f00d", // "wi-day-sunny",
+        "clear-day": "f00d", // "wi-day-sunny",
+        "clear-night": "f02e", // "wi-night-clear"
         "cloudy": "f041", // "wi-cloud",
         "flurries": "f01b", //"wi-snow",
         "fog": "f014", // "wi-fog",
@@ -192,6 +207,7 @@ function displayHourlyWeather() {
         "sleet": "f0b5", //"wi-sleet",
         "rain": "f019", //"wi-rain",
         "snow": "f076", //"wi-snowflake-cold",
+        "wind": "f085", // wi-day-windy
         "sunny": "f00d", // "wi-day-sunny",
         "tstorms":"f01e", // "wi-thunderstorm",
         "chanceflurries": "f01b", //"wi-snow",
@@ -200,17 +216,21 @@ function displayHourlyWeather() {
         "chancesnow": "f01b", //"wi-snow",
         "chancetstorms": "f01d", //"wi-storm-showers",
         "partlysunny": "f00c", // "wi-day-sunny-overcast",
+        "partly-cloudy-day": "f002", //"wi-day-cloudy",
+        "partly-cloudy-night": "f031", //"wi-night-cloudy",
         "partlycloudy": "f002", //"wi-day-cloudy",
         "mostlycloudy": "f002", //"wi-day-cloudy",
-        "mostlysunny": "f00c", // "wi-day-sunny-overcast"
+        "mostlysunny": "f00c" // "wi-day-sunny-overcast"
     };
 
     $.get("/api/sensors/weather/hourly", function (data) {
-        $("#header-weather-temp-1 span").html(data.hourly_forecast[0].temp.metric);
+        $("#header-weather-temp-1 span").html(Math.round(data.currently.temperature));
+
+        data = data.hourly.data
 
         var i, tMin = 50, tMax = -50;
-        for (i in data.hourly_forecast) {
-            var t = parseInt(data.hourly_forecast[i].temp.metric);
+        for (i in data) {
+            var t = Math.round(data[i].temperature);
             if (t > tMax) tMax = t;
             if (t < tMin) tMin = t;
         }
@@ -224,15 +244,16 @@ function displayHourlyWeather() {
         var dx = 15;
         var dy = 83 / (tMax - tMin);
 
-        function getTemp(i) { return data.hourly_forecast[i].temp.metric; }
-        function getYTemp(i) { return (tMax - data.hourly_forecast[i].temp.metric) * dy + 38; }
-        function getRain(i) { return data.hourly_forecast[i].pop; }
-        function getYRain(i) { return 120 - data.hourly_forecast[i].pop; }
+        function getTemp(i) { return Math.round(data[i].temperature); }
+        function getYTemp(i) { return (tMax - Math.round(data[i].temperature)) * dy + 38; }
+        function getRain(i) { return Math.round(data[i].precipProbability * 100); }
+        function getYRain(i) { return 120 - Math.round(data[i].precipProbability * 100); }
 
         var dTemp = "M 0 "+getYTemp(0);
-        var dRain = "M 0 "+(120 - data.hourly_forecast[i].pop);
+        var dRain = "M 0 "+getYRain(0);
         var tempTxts = "", rainTxts = "", time = "";
-        for (i = 1; i < data.hourly_forecast.length - 1; i++) {
+        for (i = 1; i < data.length - 1; i++) {
+            var dateI = (new Date(data[i].time*1000));
 
             dTemp += " S " + ((i-0.3333)*dx) + " " + (getYTemp(i) - (getYTemp(i+1) - getYTemp(i-1)) / 6) +
                      ", "  + (i*dx) + " "+getYTemp(i);
@@ -241,15 +262,15 @@ function displayHourlyWeather() {
                      ", "  + (i*dx) + " "+ getYRain(i);
 
             tempTxts += '<text x="'+(i*dx)+'" y="'+(getYTemp(i)-3)+'">'+getTemp(i)+'</text>';
-            if (data.hourly_forecast[i].pop > 10)
-                rainTxts += '<text x="'+(i*dx)+'" y="'+(120 - 3 - data.hourly_forecast[i].pop)+'">'+data.hourly_forecast[i].pop+'</text>';
-            if (data.hourly_forecast[i].FCTTIME.hour == 0)
+            if (getRain(i) > 10)
+                rainTxts += '<text x="'+(i*dx)+'" y="'+(120 - 3 - getRain(i))+'">'+getRain(i)+'</text>';
+            if (dateI.getHours() == 0)
                 time += '<line class="day" x1="'+(i*dx)+'" x2="'+(i*dx)+'" y1="130" y2="0"/><text class="day" x="'+(i*dx)+'" y="2">'+
-                    data.hourly_forecast[i].FCTTIME.weekday_name+' '+data.hourly_forecast[i].FCTTIME.mday+' '+data.hourly_forecast[i].FCTTIME.month_name_abbrev+'</text>';
+                    dayNames[dateI.getDay()]+' '+dateI.getDate()+' '+monthNames[dateI.getMonth()]+'</text>';
             else
                 time += '<line x1="'+(i*dx)+'" x2="'+(i*dx)+'" y1="130" y2="0"/>' +
-                        '<text x="'+(i*dx)+'" y="8">'+data.hourly_forecast[i].FCTTIME.hour+'h</text>' +
-                            '<text class="weather weather-'+data.hourly_forecast[i].icon+'" x="'+(i*dx)+'" y="23">&#x'+icons[data.hourly_forecast[i].icon]+'</text>';
+                        '<text x="'+(i*dx)+'" y="8">'+dateI.getHours()+'h</text>' +
+                            '<text class="weather weather-'+data[i].icon+'" x="'+(i*dx)+'" y="23">&#x'+icons[data[i].icon]+'</text>';
 
         }
 
@@ -290,6 +311,7 @@ $(document).ready(function() {
 
     // SCENARIOS
     $('#header-content button[data-uri]').click(function () {
+        vibrate();
         $.ajax($(this).attr('data-uri'), {
             'method': 'PUT'
         });
@@ -297,6 +319,7 @@ $(document).ready(function() {
 
     // RADIO
     $('#radio button[data-uri]').click(function () {
+        vibrate();
         $.ajax($(this).attr('data-uri'), {
             'method': 'PUT'
         });
@@ -306,30 +329,30 @@ $(document).ready(function() {
      ************ SWITCH TOGGLES **************
      */
 
-    $('#switches .toggle').click(function () {
+    $('#switches .toggle').click(function () { vibrate();
         $(this).toggleClass("checked");
         runToggle(this);
     });
 
-    $('#switches .toggle-container .before').click(function () {
+    $('#switches .toggle-container .before').click(function () { vibrate();
         $(this).parent().find('.toggle').removeClass("checked");
         runToggle(this);
     });
 
-    $('#switches .toggle-container .after').click(function () {
+    $('#switches .toggle-container .after').click(function () { vibrate();
         $(this).parent().find('.toggle').addClass("checked");
         runToggle(this);
     });
 
-    $('#switches .toggle3 .left-btn, #switches .toggle3-container .before').click(function () {
+    $('#switches .toggle3 .left-btn, #switches .toggle3-container .before').click(function () { vibrate();
         $(this).parents(".command-container").find('.toggle3').removeClass("checked-mid").removeClass("checked-right");
         runToggle3(this);
     });
-    $('#switches .toggle3 .center-btn, #switches .toggle3 .middle:not(.disabled)').click(function () {
+    $('#switches .toggle3 .center-btn, #switches .toggle3 .middle:not(.disabled)').click(function () { vibrate();
         $(this).parents(".command-container").find('.toggle3').addClass("checked-mid").removeClass("checked-right");
         runToggle3(this);
     });
-    $('#switches .toggle3 .right-btn, #switches .toggle3-container .after').click(function () {
+    $('#switches .toggle3 .right-btn, #switches .toggle3-container .after').click(function () { vibrate();
         $(this).parents(".command-container").find('.toggle3').removeClass("checked-mid").addClass("checked-right");
         runToggle3(this);
     });
@@ -339,7 +362,7 @@ $(document).ready(function() {
      ************ MIST **************
      */
 
-    $('[data-device="mist-lamp"] button[data-command]').click(function () {
+    $('[data-device="mist-lamp"] button[data-command]').click(function () { vibrate();
         $.ajax($(this).parents("[data-uri]").data("uri")+"/"+$(this).data("command"), {
             'method': 'PUT'
         });
@@ -381,17 +404,17 @@ $(document).ready(function() {
 	    });
     }
 
-    $('#hue_on .toggle').click(function () {
+    $('#hue_on .toggle').click(function () { vibrate();
         $(this).toggleClass("checked");
         hueToggle();
     });
 
-    $('#hue_on .before').click(function () {
+    $('#hue_on .before').click(function () { vibrate();
         $(this).parent().find('.toggle').removeClass("checked");
         hueToggle();
     });
 
-    $('#hue_on .after').click(function () {
+    $('#hue_on .after').click(function () { vibrate();
         $(this).parent().find('.toggle').addClass("checked");
         hueToggle();
     });

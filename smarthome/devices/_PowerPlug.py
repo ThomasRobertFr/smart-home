@@ -32,9 +32,12 @@ class PowerPlug(Resource):
         if id not in PowerPlug.plugs:
             abort(404, message="Plug {} does not exist.".format(id))
 
-    def get(self, id):
-        PowerPlug.exists(id)
-        return PowerPlug.plugs[id]
+    def get(self, id, status=None):
+        if status == None:
+            PowerPlug.exists(id)
+            return PowerPlug.plugs[id]
+        else:
+            return self.put(id, status)
 
     def put(self, id, status):
         PowerPlug.exists(id)

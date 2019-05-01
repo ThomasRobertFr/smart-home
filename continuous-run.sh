@@ -17,3 +17,12 @@ if [ "${RESULT:-null}" = null ]; then
 else
 	echo "Running RF"
 fi
+
+RESULT=`ps -x | grep "google-home.google-hom[e]"`
+
+if [ "${RESULT:-null}" = null ]; then
+        echo "Launch Google Home"
+	/home/pi/ghomeenv/bin/python -m google-home.google-home >> /tmp/google-home.log 2>&1 &
+else
+	echo "Running Google Home"
+fi

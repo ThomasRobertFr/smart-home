@@ -10,7 +10,7 @@ class Arrive(Resource):
             "default": True,
             "title": "Turn plugs on",
             "config": {
-                "plug-ids": ["main-lamp", "plasma-lamp", "desk"]
+                "plug-ids": ["main-lamp", "plasma-lamp", "desk", "phone-charger"]
             }
         },
         "heating": {

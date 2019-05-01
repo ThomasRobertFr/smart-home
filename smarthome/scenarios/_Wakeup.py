@@ -22,10 +22,11 @@ class WakeUp(Resource, Threads.Stoppable):
             "default": True,
             "title": "Turn on radio slowly",
             "options": {
-                "delay": 600,
+                "delay": 0,
                 "duration": 300,
-                "minVolume": 1,
-                "maxVolume": 20,
+                "minVolume": 10,
+                "maxVolume": 30,
+                #"radio": "gmusic:playlist:865ff4b3-2d34-41da-859b-a084bedb4911"
                 "radio": "gmusic:radio:7b807d80-5a6a-36d1-9017-9b6ac79371d3"
             }
         },
@@ -37,7 +38,7 @@ class WakeUp(Resource, Threads.Stoppable):
             },
             "options": {
                 "delay": 300,
-                "duration": 900
+                "duration": 4000
             }
         }
     }
@@ -65,6 +66,9 @@ class WakeUp(Resource, Threads.Stoppable):
             self.actions["light"]["config"]["hue-id"],
             {"on": True, "bri": 254, "xy": [0.4974, 0.4152], "transitiontime": self.actions["light"]["options"]["duration"] * 10})
 
+        PowerPlug().put(self.actions["heating"]["config"]["plug-id"], "on")
+	
+
         # RADIO
 
         time.sleep(self.actions["radio"]["options"]["delay"])
@@ -79,7 +83,7 @@ class WakeUp(Resource, Threads.Stoppable):
         # Start
         time.sleep(self.actions["heating"]["options"]["delay"])
         if self.should_stop(): return
-        PowerPlug().put(self.actions["heating"]["config"]["plug-id"], "on")
+        # PowerPlug().put(self.actions["heating"]["config"]["plug-id"], "on")
 
         # Stop
         time.sleep(self.actions["heating"]["options"]["duration"])

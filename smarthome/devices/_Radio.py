@@ -1,6 +1,7 @@
 from flask_restful import Resource
 import requests
 import time
+import random
 from flask import request
 from ..misc import config as _config
 config = _config.get().rcp
@@ -26,6 +27,7 @@ class Radio(Resource):
     def queue_radio(self, radio_uri):
         r = self.make_request("core.library.browse", {"uri": radio_uri}, "get tracks from %s" % radio_uri)
         tracks = list(map(lambda x: x['uri'], r.json()['result']))
+        random.shuffle(tracks)
         self.make_request("core.tracklist.add", {"uris": tracks}, debug_title="queue tracks")
         self.make_request("core.playback.play", debug_title="play")
 
@@ -59,7 +61,7 @@ class Radio(Resource):
         if action == "clearQueue":
             self.clear_queue()
         if action == "queueRadio":
-            radio = data.get("radio", "gmusic:radio:7b807d80-5a6a-36d1-9017-9b6ac79371d3")
+            radio = data.get("radio", "gmusic:playlist:865ff4b3-2d34-41da-859b-a084bedb4911")
             self.queue_radio(radio)
 
         if action == "play":

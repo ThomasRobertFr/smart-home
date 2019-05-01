@@ -4,21 +4,29 @@ body {
     font-family: Comfortaa, 'Open Sans', Helvetica, sans-serif;
 }
 
+/*
+header { background: url('/api/sun.svg') center center; overflow: auto; }
+#header-container { background-position: center center; min-width: 600px; height: 175px; }
+#header-content { max-width: 600px; height: 175px; margin: 0 auto; position: relative; } header-info { height: 45px; margin: 0 auto -45px; padding-left: 15px; padding-top: 5px; position: relative; z-index: 100; max-width: 600px; } btn-wakeup { left: 122px; }
+#btn-leave { left: 185px; }
+#btn-arrive { right: 190px; }
+#btn-party { right: 132px; }
+#btn-bedtime { right: 70px; }
+#btn-sleep { right: 10px; }
+#header-content .btn { position: absolute; top: 65px; }
+*/
+
 header {
     background: url('/api/sun.svg') center center;
     overflow: auto;
-}
-
-#header-container {
-    background-position: center center;
-    min-width: 600px;
+    height: 175px;
 }
 
 #header-content {
-    width: 600px;
-    height: 175px;
-    margin: 0 auto;
-    position: relative;
+    height: 45px;
+    margin: 20px auto 0;
+    text-align: center;
+    max-width: 600px;
 }
 
 #header-content .btn {
@@ -26,25 +34,13 @@ header {
     background-color: rgba(255, 255, 255, 0.8);
     border-color: rgba(204, 204, 204, 0.6);
     opacity: 0.7;
-    position: absolute;
-    top: 65px;
 }
-
-#btn-wakeup { left: 122px; }
-#btn-leave { left: 185px; }
-#btn-arrive { right: 190px; }
-#btn-party { right: 132px; }
-#btn-bedtime { right: 70px; }
-#btn-sleep { right: 10px; }
-
 
 #header-info {
     height: 45px;
-    margin: 0 auto -45px;
+    margin: 0 auto;
     padding-left: 15px;
     padding-top: 5px;
-    position: relative;
-    z-index: 100;
     max-width: 600px;
 }
 
@@ -251,9 +247,9 @@ header {
     font-size: 10px;
 }
 
-#weather-time text.weather-mostlysunny, #weather-time text.weather-partlysunny, #weather-time text.weather-clear, #weather-time text.weather-sunny
+#weather-time text.weather-mostlysunny, #weather-time text.weather-partlysunny, #weather-time text.weather-clear, #weather-time text.weather-sunny, #weather-time text.weather-clear-day, #weather-time text.weather-clear-night
     { fill: #f5c400; }
-#weather-time text.weather-partlycloudy
+#weather-time text.weather-partlycloudy, #weather-time text.weather-partly-cloudy-day, #weather-time text.weather-partly-cloudy-night
     { fill: #d8cda3; }
 #weather-time text.weather-mostlycloudy, #weather-time text.weather-cloudy, #weather-time text.weather-fog, #weather-time text.weather-hazy
     { fill: #9aa2a7; }

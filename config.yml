@@ -14,6 +14,13 @@ google_calendar:
   scopes: https://www.googleapis.com/auth/calendar.readonly
   app_name: Smart Light
 
+google_home:
+  project_id: secret
+  device_model_id: secret
+  credentials: data/google_home_credentials.json
+  device_config: data/google_home_device_config.json
+
+
 nas:
   gpio: 22
   url: http://nas/web/login.asp

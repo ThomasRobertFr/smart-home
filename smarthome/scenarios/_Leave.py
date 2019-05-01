@@ -10,7 +10,7 @@ class Leave(Resource):
             "default": True,
             "title": "Turn plugs off",
             "config": {
-                "plug-ids": ["main-lamp", "plasma-lamp", "starwars-lamp", "desk", "bathroom-heat"]
+                "plug-ids": ["main-lamp", "plasma-lamp", "starwars-lamp", "desk", "bathroom-heat", "phone-charger"]
             }
         },
         "hue": {

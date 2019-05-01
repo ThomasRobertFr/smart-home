@@ -16,7 +16,7 @@ class Weather(Resource):
 
         if type == "forecast":
             if not self.cache_f or not datetime.datetime.now() - self.cache_f_date < datetime.timedelta(hours=1):
-                r = requests.get("http://api.wunderground.com/api/%s/forecast10day/%s.json" % (config.key, config.location))
+                r = requests.get("https://api.darksky.net/forecast/%s/%s?units=si" % (config.key, config.location))
                 self.cache_f = r.json()
                 self.cache_f_date = datetime.datetime.now()
 
@@ -24,8 +24,7 @@ class Weather(Resource):
 
         if type == "hourly":
             if not self.cache_h or not datetime.datetime.now() - self.cache_h_date < datetime.timedelta(hours=1):
-                r = requests.get(
-                    "http://api.wunderground.com/api/%s/hourly10day/%s.json" % (config.key, config.location))
+                r = requests.get("https://api.darksky.net/forecast/%s/%s?units=si&extend=hourly" % (config.key, config.location))
                 self.cache_h = r.json()
                 self.cache_h_date = datetime.datetime.now()
 
