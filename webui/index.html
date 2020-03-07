@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="css/weather-icons.min.css">
     <link rel="stylesheet" href="css/weather-icons-wind.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/classic.min.css"/>
+
 </head>
 <body>
 <!-- 
@@ -228,6 +230,17 @@
                         </div>
                     </div>
 
+                    <div class="command-container" data-device="calendar" data-uri="/calendar/display/switch">
+                        <span class="command-label">Calendar</span>
+                        <div class="command toggle-container">
+                            <div class="text before">Off</div>
+                            <div class="toggle">
+                                <span class="btn"></span>
+                            </div>
+                            <div class="text after">On</div>
+                        </div>
+                    </div>
+
 
                     <h3>Heating</h3>
 
@@ -281,6 +294,23 @@
                     <img id="hue_hs" src="images/hue.png" />
                 </div>
                 <input id="hue_v" type="range" min="0" max="255" />
+            </div>
+
+            <div class="block">
+                <h2><span>Calendar</span></h2>
+                <p id="calendar_list" class="text-center">
+                    <!-- Content generated in JS -->
+                </p>
+                <div id="calendar_view">
+                    <!-- Content generated in JS -->
+                </div>
+                <div id="calendar_go_today">GO TO TODAY</div>
+                <div id="calendar_days">
+                    <div class="wrapper">
+                        <!-- Content generated in JS -->
+                    </div>
+                </div>
+                <input id="calendar_brightness" type="range" min="1" max="16" step="0.15" />
             </div>
         </div>
         <div class="col-lg-4 col-sm-6">
@@ -404,9 +434,32 @@
 
     </div>
 
+    <div class="modal fade" id="calendar-edit" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Edit calendar</h4>
+          </div>
+          <div class="modal-body">
+            <form method="POST" action="/calendar/calendars">
+                <input type="text" class="form-control" id="calendar-name" name="name" />
+                <div id="calendar-color-picker"></div>
+              <input type="hidden" id="calendar-color" name="color" />
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="button" id="calendar-edit-delete" class="btn btn-danger">Delete</button>
+            <button type="button" id="calendar-edit-edit" class="btn btn-primary">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script src="js/jquery-3.1.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/pickr.min.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
