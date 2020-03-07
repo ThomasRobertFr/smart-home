@@ -1,6 +1,6 @@
 from flask_restful import Resource
 from ..sensors import State
-from ..devices import PowerPlug, RemotePilotWire, HueLamp
+from ..devices import PowerPlug, RemotePilotWire, HueLamp, Calendar
 import time
 
 
@@ -53,6 +53,8 @@ class Bedtime(Resource):
 
         RemotePilotWire().put("eco")
         print("> heating eco")
+
+        Calendar().put("brightness", "3")
 
         # HUE TO ORANGE
         HueLamp().send(

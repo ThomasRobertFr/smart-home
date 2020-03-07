@@ -5,3 +5,4 @@ from ._RemotePilotWire import RemotePilotWire
 from ._NAS import NAS
 from ._MistLamp import MistLamp
 from ._Crespin import Crespin
+from ._Calendar import Calendar

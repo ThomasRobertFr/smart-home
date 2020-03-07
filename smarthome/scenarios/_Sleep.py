@@ -1,6 +1,6 @@
 from flask_restful import Resource
 from ..sensors import State
-from ..devices import PowerPlug, RemotePilotWire, HueLamp, NAS
+from ..devices import PowerPlug, RemotePilotWire, HueLamp, NAS, Calendar
 import time
 
 
@@ -47,6 +47,9 @@ class Sleep(Resource):
         for plug in self.actions["plugs"]["config"]["plug-ids"]:
             PowerPlug().put(plug, "off")
         print("> plugs off")
+
+        # CALENDAR OFF
+        Calendar().put("switch", "off")
 
         # NAS OFF
 

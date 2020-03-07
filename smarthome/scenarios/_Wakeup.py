@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from ..devices import HueLamp, Radio, PowerPlug
+from ..devices import HueLamp, Radio, PowerPlug, Calendar
 from ..sensors import State, Threads
 import time
 
@@ -67,7 +67,10 @@ class WakeUp(Resource, Threads.Stoppable):
             {"on": True, "bri": 254, "xy": [0.4974, 0.4152], "transitiontime": self.actions["light"]["options"]["duration"] * 10})
 
         PowerPlug().put(self.actions["heating"]["config"]["plug-id"], "on")
-	
+
+        # CALENDAR
+        Calendar().put("brightness", "1")
+        Calendar().put("switch", "on")
 
         # RADIO
 
@@ -77,6 +80,8 @@ class WakeUp(Resource, Threads.Stoppable):
             "wakeSequence",
             self.actions["radio"]["options"]
         )
+
+        Calendar().put("brightness", "10")
 
         # HEATING
 
