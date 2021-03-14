@@ -17,7 +17,8 @@ api.add_resource(Arrive, '/scenarios/arrive')
 api.add_resource(ArriveOrBedtime, '/scenarios/arrive-or-bedtime')
 
 # devices
-from .devices import HueLamp, Radio, PowerPlug, PowerPlugs, RemotePilotWire, NAS, MistLamp, Crespin, Calendar
+from .devices import HueLamp, Radio, PowerPlug, PowerPlugs, RemotePilotWire, NAS, MistLamp, \
+    Crespin, Calendar, WateringSensor, WateringSensors, ESPEasyLights
 api.add_resource(HueLamp, '/devices/hue-lamp/<id>', '/devices/hue-lamp/<id>/<status>')
 api.add_resource(Radio, '/devices/radio/<action>')
 api.add_resource(RemotePilotWire, '/devices/remote-pilot-wire', '/devices/remote-pilot-wire/<action>')
@@ -27,6 +28,10 @@ api.add_resource(PowerPlug, '/devices/power-plug/<id>', '/devices/power-plug/<id
 api.add_resource(NAS, '/devices/nas', '/devices/nas/<status>')
 api.add_resource(Crespin, '/devices/crespin', '/devices/crespin/<status>')
 api.add_resource(Calendar, '/devices/calendar/<verb>/<param>')
+api.add_resource(WateringSensors, '/devices/watering')
+api.add_resource(WateringSensor, '/devices/watering/<id>', '/devices/watering/<id>/<verb>')
+api.add_resource(ESPEasyLights, '/devices/espeasylights', '/devices/espeasylights/<id>',
+                 '/devices/espeasylights/<id>/<status_or_value>')
 
 # triggers
 from .triggers import CalendarUpdate, CalendarTrigger

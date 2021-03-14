@@ -6,3 +6,5 @@ from ._NAS import NAS
 from ._MistLamp import MistLamp
 from ._Crespin import Crespin
 from ._Calendar import Calendar
+from ._Watering import WateringSensor, WateringSensors
+from ._ESPEasyLights import ESPEasyLights

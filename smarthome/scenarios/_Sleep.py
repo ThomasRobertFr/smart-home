@@ -11,12 +11,8 @@ class Sleep(Resource):
             "default": True,
             "title": "Turn plugs off",
             "config": {
-                "plug-ids": ["main-lamp", "plasma-lamp", "starwars-lamp", "desk", "bathroom-heat"],
+                "plug-ids": ["dining-lamp", "couch-lamp", "desk"],
             }
-        },
-        "heating": {
-            "default": True,
-            "title": "Turn heating to eco mode"
         },
         "light": {
             "default": True,
@@ -58,7 +54,7 @@ class Sleep(Resource):
 
         # HEATING ECO
 
-        RemotePilotWire().put("eco")
+        # RemotePilotWire().put("eco")
         print("> heating eco")
 
         # HUE FADING

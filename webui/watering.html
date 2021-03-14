@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Watering</title>
+
+    <link rel="manifest" href="manifest.json">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/watering.css">
+</head>
+<body>
+
+    <div class="container" role="main">
+        <table id="sensors">
+            <thead>
+                <tr id="sensors_headers">
+                    <th data-key="id" data-type="int">ID</th>
+                    <th data-key="calibrate" data-type="bool">Calibration</th>
+                    <th data-key="calibration_min" data-type="int">Min</th>
+                    <th data-key="calibration_max" data-type="int">Max</th>
+                    <th data-key="calibration_duration" data-type="int" data-append="s">Dur.</th>
+                    <th data-key="watering" data-type="bool">Watering</th>
+                    <th data-key="watering_last_delta" data-type="int" data-show="h_min" data-append=" ago">Last</th>
+                    <th data-key="watering_humidity_threshold" data-type="int" data-append="%">Threshold</th>
+                    <th data-key="watering_humidity_target" data-type="int" data-append="%">Target</th>
+                    <th data-key="watering_cycle_nb_max" data-type="int">Nb</th>
+                    <th data-key="watering_cycle_duration" data-type="int" data-append="s">Dur.</th>
+                    <th data-key="watering_cycle_sleep" data-type="int" data-append="s">Sleep</th>
+                    <th data-key="watering_cooldown" data-type="int" data-show="h_min">Cooldown</th>
+                    <th data-key="measure_interval" data-type="int" data-show="h_min">Deepsleep</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/watering.js"></script>
+</body>
+</html>

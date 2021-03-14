@@ -10,12 +10,8 @@ class Arrive(Resource):
             "default": True,
             "title": "Turn plugs on",
             "config": {
-                "plug-ids": ["main-lamp", "plasma-lamp", "desk", "phone-charger"]
+                "plug-ids": ["dining-lamp", "couch-lamp", "phone-charger"]
             }
-        },
-        "heating": {
-            "default": True,
-            "title": "Turn heating on"
         }
     }
 
@@ -28,7 +24,7 @@ class Arrive(Resource):
         State().put("home")
 
         # HEATING ON
-        RemotePilotWire().put("on")
+        # RemotePilotWire().put("on")
 
         Calendar().put("brightness", "10")
         Calendar().put("switch", "on")

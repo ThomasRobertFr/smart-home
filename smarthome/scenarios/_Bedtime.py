@@ -11,12 +11,8 @@ class Bedtime(Resource):
             "default": True,
             "title": "Turn plugs off",
             "config": {
-                "plug-ids": ["main-lamp", "plasma-lamp"],
+                "plug-ids": ["dining-lamp", "couch-lamp", "desk"],
             }
-        },
-        "heating": {
-            "default": True,
-            "title": "Turn heating to eco mode"
         },
         "light": {
             "default": True,
@@ -51,8 +47,8 @@ class Bedtime(Resource):
 
         # HEATING ECO
 
-        RemotePilotWire().put("eco")
-        print("> heating eco")
+        # RemotePilotWire().put("eco")
+        # print("> heating eco")
 
         Calendar().put("brightness", "3")
 

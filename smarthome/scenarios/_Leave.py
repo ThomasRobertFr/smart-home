@@ -10,7 +10,7 @@ class Leave(Resource):
             "default": True,
             "title": "Turn plugs off",
             "config": {
-                "plug-ids": ["main-lamp", "plasma-lamp", "starwars-lamp", "desk", "bathroom-heat", "phone-charger"]
+                "plug-ids": ["dining-lamp", "couch-lamp", "desk", "phone-charger"]
             }
         },
         "hue": {
@@ -19,14 +19,6 @@ class Leave(Resource):
             "config": {
                 "ids": [1]
             }
-        },
-        "radio": {
-            "default": True,
-            "title": "Turn radio off"
-        },
-        "heating": {
-            "default": True,
-            "title": "Turn heating off"
         }
     }
 
@@ -38,10 +30,10 @@ class Leave(Resource):
         State().put("away")
 
         # HEATING OFF
-        RemotePilotWire().put("off")
+        # RemotePilotWire().put("off")
 
         # RADIO OFF
-        Radio().put("clearQueue")
+        # Radio().put("clearQueue")
 
         # NAS OFF
         NAS().put("off")
