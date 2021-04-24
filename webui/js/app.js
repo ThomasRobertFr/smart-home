@@ -4,7 +4,6 @@ const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Frida
 const dayNamesShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const monthNamesShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
 var pickr = null;
 
 // updates to perform [fct, interval (s), lastUpdateField]
@@ -12,9 +11,9 @@ var updates = [
     [setWeather, 10*60, 0],
     //[updateBackground, 60, 0],
     [updatePowerPlugStatus, 10, 0],
-    [updateRemoteWire, 11, 0],
+    // [updateRemoteWire, 11, 0],
     [updateNAS, 12, 0],
-    [updateCrespinStatus, 35, 0],
+    // [updateCrespinStatus, 35, 0],
     [updateMist, 13, 0],
     [displayHourlyWeather, 10*60, 0],
     [updateHue, 29, 0],
@@ -137,12 +136,14 @@ function updateNAS() {
 }
 
 function updateMist() {
-    $.get('/api/devices/mist-lamp', function(data) {
+    /* TODO update
+    $.get('/api/devices/ir-device/mistlamp', function(data) {
         if (data == true)
             $('[data-device="mist-lamp"] .toggle').addClass("checked");
         else
             $('[data-device="mist-lamp"] .toggle').removeClass("checked");
     });
+    */
 }
 
 function updateHue() {
@@ -160,6 +161,12 @@ function updateHue() {
         var x = rho * Math.sin(phi);
         $("#hue_hs_pos").css("left", ((x + 1)*50)+"%");
         $("#hue_hs_pos").css("top", ((y + 1)*50)+"%");
+    });
+}
+
+function updateESPEasyLights() {
+    $.get('/api/devices/espeasylights', function (data) {
+        // TODO after updating the API to improve it
     });
 }
 
@@ -298,12 +305,15 @@ function set_display(calendar_id) {
     });
 }
 
-function set_day(calendar_id, day_id, state) {
+function set_day(calendar_id, year, month, day, state) {
+    var day_id = month.toString().padStart(2, 0) + "-" + day.toString().padStart(2, 0);
+
     $.ajax({
-        url: "/calendar/calendars/"+calendar_id+"/"+day_id+"/"+state,
+        url: "/calendar/calendars/"+calendar_id+"/"+year+'/'+month+'/'+day+"/"+state,
         type: 'PUT',
         success: function (data) {
             if (state == "on") {
+                console.log(day_id);
                 $('#calendar_day_'+day_id).addClass("active");
                 $('#calendar_day_'+day_id+"_btn").addClass("active");
             }
@@ -333,12 +343,27 @@ function updateCalendar() {
 function show_calendar(calendar) {
     $("#calendar_list .btn-group").removeClass("active");
     $('#calendar_list .btn-group[data-id="'+calendar.id+'"]').addClass("active");
-    $('#calendar_view .circle').css("background-color", "rgb("+calendar.color+")").removeClass("active");
+    $('#calendar_view .circle').css("background-color", "rgb("+calendar.color+")").removeClass("active").removeClass("active-previously");
     $('#calendar_days .btn').removeClass("active");
-    for (var i = 0; i < calendar.days.length; i++) {
-        var day = calendar.days[i];
-        $('#calendar_day_'+day).addClass("active");
-        $('#calendar_day_'+day+"_btn").addClass("active");
+
+    var years = [(parseInt(calendar.current_year) - 1).toString(), calendar.current_year];
+    for (var year_i = 0; year_i < years.length; year_i++) {
+        var year = years[year_i];
+        var months = calendar.days[year];
+        for (var i = 0; i < months.length; i++) {
+            for (var j = 0; j < months[i].length; j++) {
+                if (months[i][j] > 0) {
+                    var day = (i + 1).toString().padStart(2, 0) + "-" + (j + 1).toString().padStart(2, 0);
+                    if (year == calendar.current_year) {
+                        $('#calendar_day_'+day).addClass("active");
+                        $('#calendar_day_'+day+"_btn").addClass("active");
+                    }
+                    else {
+                        $('#calendar_day_'+day).addClass("active-previously");
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -393,6 +418,7 @@ function calendar_html() {
 }
 
 function calendar_days_html() {
+    // TODO change to show past + coming 1 month. Add a + button for any other day
     var out = '';
     var today = new Date();
     var months = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -404,7 +430,7 @@ function calendar_days_html() {
             var cls = "btn btn-default";
             if ((i == today.getMonth() + 1) && (j == today.getDate()))
                 cls = "btn btn-primary today";
-            out += '<button type="button" class="'+cls+'" data-day="'+day_id+'" id="calendar_day_'+day_id+'_btn">'+j+'</button>';
+            out += '<button type="button" class="'+cls+'" data-year="'+today.getFullYear()+'" data-month="'+i+'" data-day="'+j+'" id="calendar_day_'+day_id+'_btn">'+j+'</button>';
         }
         out += '</div></div>';
     }
@@ -471,12 +497,12 @@ $(document).ready(function() {
         runToggle(this);
     });
 
-    $('#switches .toggle-container .before').click(function () { vibrate();
+    $('#switches .toggle-container .before').click(function () { vibrate(); // "ON" text
         $(this).parent().find('.toggle').removeClass("checked");
         runToggle(this);
     });
 
-    $('#switches .toggle-container .after').click(function () { vibrate();
+    $('#switches .toggle-container .after').click(function () { vibrate(); // "OFF" text
         $(this).parent().find('.toggle').addClass("checked");
         runToggle(this);
     });
@@ -496,12 +522,23 @@ $(document).ready(function() {
 
 
     /**
-     ************ MIST **************
+     ************ IR REMOTES BUTTONS **************
      */
 
-    $('[data-device="mist-lamp"] button[data-command]').click(function () { vibrate();
+    $('[data-device="ir-remote"] button[data-command]').click(function () { vibrate();
         $.ajax($(this).parents("[data-uri]").data("uri")+"/"+$(this).data("command"), {
             'method': 'PUT'
+        });
+    });
+
+    /**
+     ************ ESP EASY DIMMABLE SLIDERS ***********
+     */
+
+     $('[data-device="espeasylights"].slider').change(function () { vibrate();
+        $.ajax({
+            url: $(this).data("uri") + "/" + $(this).val(),
+            type: 'PUT'
         });
     });
 
@@ -571,9 +608,11 @@ $(document).ready(function() {
     $("#calendar_days .btn").click(function () {
         $(this).toggleClass("active");
         var state = $(this).hasClass("active") ? "on": "off";
-        var day_id = $(this).data("day");
+        var year = $(this).data("year");
+        var month = $(this).data("month");
+        var day = $(this).data("day");
         var calendar_id = $("#calendar_list .btn-group.active").data("id");
-        set_day(calendar_id, day_id, state);
+        set_day(calendar_id, year, month, day, state);
     });
 
     pickr = Pickr.create({

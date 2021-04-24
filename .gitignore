@@ -3,3 +3,5 @@
 /config-private.yml
 
 *.pyc
+.DS_Store
+._.DS_Store

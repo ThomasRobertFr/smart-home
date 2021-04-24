@@ -18,54 +18,6 @@
 
 </head>
 <body>
-<!-- 
-    <div id="header-info">
-        <div class="header-info-block" id="header-day">
-            <div class="dayname">???</div>
-            <div class="day">??</div>
-            <div class="month">????</div>
-        </div>
-        <div class="header-info-block" id="header-time">??:??</div>
-        <div class="header-info-block" id="header-weather-icon">
-            <i data-toggle="tooltip" data-placement="bottom" title="Unknown" class="wi wi-na"></i>
-        </div>
-        <div class="header-info-block" id="header-weather-temp">
-            <div id="header-weather-temp-1"><span>?</span>°C</div>
-            <div id="header-weather-temp-2">
-                <span>?</span> &ndash; <span>?</span>°
-            </div>
-        </div>
-        <div class="header-info-block" id="header-weather-add">
-            <div id="header-weather-add-1">
-                <i class="wi wi-raindrop"></i> <span>?</span>%
-            </div>
-            <div id="header-weather-add-2">
-                <i class="wi wi-strong-wind" data-toggle="tooltip" data-placement="bottom" title="Unknown"></i> <span>?</span> km/h
-            </div>
-        </div>
-    </div>
-
-    <div id="header-content">
-        <button id="btn-wakeup" class="btn btn-lg btn-default" data-uri="/api/scenarios/wakeup">
-            <i class="fa fa-bell"></i></button>
-        <button id="btn-leave" class="btn btn-lg btn-default" data-state="out" data-uri="/api/scenarios/leave">
-            <i class="fa fa-sign-out"></i></button>
-        <button id="btn-arrive" class="btn btn-lg btn-default" data-state="home" data-uri="/api/scenarios/arrive">
-            <i class="fa fa-sign-in"></i></button>
-        <button id="btn-party" class="btn btn-lg btn-default" data-state="simple" data-uri="/api/scenarios/party">
-            <i class="fa fa-users"></i></button>
-        <button id="btn-bedtime" class="btn btn-lg btn-default" data-state="simple" data-uri="/api/scenarios/bedtime">
-            <i class="wi wi-sunset"></i></button>
-        <button id="btn-sleep" class="btn btn-lg btn-default" data-state="simple" data-uri="/api/scenarios/sleep">
-            <i class="fa fa-bed"></i></button>
-    </div>
-
-    <header>
-        <div id="header-container">
-        </div>
-    </header>
- -->
-
     <header>
         <div id="header-info">
             <div class="header-info-block" id="header-day">
@@ -100,8 +52,8 @@
                 <i class="fa fa-sign-out"></i></button>
             <button id="btn-arrive" class="btn btn-lg btn-default" data-state="home" data-uri="/api/scenarios/arrive">
                 <i class="fa fa-sign-in"></i></button>
-            <button id="btn-party" class="btn btn-lg btn-default" data-state="simple" data-uri="/api/scenarios/party">
-                <i class="fa fa-users"></i></button>
+<!--            <button id="btn-party" class="btn btn-lg btn-default" data-state="simple" data-uri="/api/scenarios/party">-->
+<!--                <i class="fa fa-users"></i></button>-->
             <button id="btn-bedtime" class="btn btn-lg btn-default" data-state="simple" data-uri="/api/scenarios/bedtime">
                 <i class="wi wi-sunset"></i></button>
             <button id="btn-sleep" class="btn btn-lg btn-default" data-state="simple" data-uri="/api/scenarios/sleep">
@@ -115,10 +67,100 @@
             <div class="block" id="switches">
                 <h2><span>Switches</span></h2>
                 <div class="col-lg-12">
-                    <h3>Lights</h3>
+                    <h3>Livingroom</h3>
 
-                    <div class="command-container" data-device="power-plug" data-id="main-lamp" data-uri="/api/devices/power-plug/main-lamp">
-                        <span class="command-label">Main</span>
+                    <div class="command-container" data-device="power-plug" data-id="couch-lamp" data-uri="/api/devices/power-plug/couch-lamp">
+                        <span class="command-label">Couch lamp</span>
+                        <div class="command toggle-container">
+                            <div class="text before">Off</div>
+                            <div class="toggle">
+                                <span class="btn"></span>
+                            </div>
+                            <div class="text after">On</div>
+                        </div>
+                    </div>
+
+                    <div class="command-container" data-device="power-plug" data-id="dining-lamp" data-uri="/api/devices/power-plug/dining-lamp">
+                        <span class="command-label">Dining lamp</span>
+                        <div class="command toggle-container">
+                            <div class="text before">Off</div>
+                            <div class="toggle">
+                                <span class="btn"></span>
+                            </div>
+                            <div class="text after">On</div>
+                        </div>
+                    </div>
+
+                    <div class="command-container" data-device="power-plug" data-id="fridge-lamp" data-uri="/api/devices/power-plug/fridge-lamp">
+                        <span class="command-label">Fridge lamp</span>
+                        <div class="command toggle-container">
+                            <div class="text before">Off</div>
+                            <div class="toggle">
+                                <span class="btn"></span>
+                            </div>
+                            <div class="text after">On</div>
+                        </div>
+                    </div>
+
+                    <div class="command-container" data-device="calendar" data-uri="/calendar/display/switch">
+                        <span class="command-label">Calendar</span>
+                        <div class="command toggle-container">
+                            <div class="text before">Off</div>
+                            <div class="toggle">
+                                <span class="btn"></span>
+                            </div>
+                            <div class="text after">On</div>
+                        </div>
+                    </div>
+
+                    <h3>Bedroom</h3>
+
+                    <div class="command-container" data-device="power-plug" data-id="desk" data-uri="/api/devices/power-plug/desk">
+                        <span class="command-label">Main lamp</span>
+                        <div class="command toggle-container">
+                            <div class="text before">Off</div>
+                            <div class="toggle">
+                                <span class="btn"></span>
+                            </div>
+                            <div class="text after">On</div>
+                        </div>
+                    </div>
+
+                    <div class="command-container" data-device="power-plug" data-id="pixar-lamp" data-uri="/api/devices/power-plug/pixar-lamp">
+                        <span class="command-label">Pixar lamp</span>
+                        <div class="command toggle-container">
+                            <div class="text before">Off</div>
+                            <div class="toggle">
+                                <span class="btn"></span>
+                            </div>
+                            <div class="text after">On</div>
+                        </div>
+                    </div>
+
+                    <div class="command-container" data-device="espeasylights" data-id="fairy" data-uri="/api/devices/espeasylights/fairy">
+                        <span class="command-label">Fairy lights</span>
+                        <div class="command toggle-container">
+                            <div class="text before">Off</div>
+                            <div class="toggle">
+                                <span class="btn"></span>
+                            </div>
+                            <div class="text after">On</div>
+                        </div>
+                    </div>
+
+                    <div class="command-container" data-device="espeasylights" data-id="bb8" data-uri="/api/devices/espeasylights/bb8">
+                        <span class="command-label">BB-8</span>
+                        <div class="command toggle-container">
+                            <div class="text before">Off</div>
+                            <div class="toggle">
+                                <span class="btn"></span>
+                            </div>
+                            <div class="text after">On</div>
+                        </div>
+                    </div>
+
+                    <div class="command-container" data-device="espeasylights" data-id="bed" data-uri="/api/devices/espeasylights/bed">
+                        <span class="command-label">Bed</span>
                         <div class="command toggle-container">
                             <div class="text before">Off</div>
                             <div class="toggle">
@@ -139,29 +181,7 @@
                         </div>
                     </div>
 
-                    <div class="command-container" data-device="power-plug" data-id="starwars-lamp" data-uri="/api/devices/power-plug/starwars-lamp">
-                        <span class="command-label">Star Wars</span>
-                        <div class="command toggle-container">
-                            <div class="text before">Off</div>
-                            <div class="toggle">
-                                <span class="btn"></span>
-                            </div>
-                            <div class="text after">On</div>
-                        </div>
-                    </div>
-
-                    <div class="command-container" data-device="power-plug" data-id="plasma-lamp" data-uri="/api/devices/power-plug/plasma-lamp">
-                        <span class="command-label">Plasma</span>
-                        <div class="command toggle-container">
-                            <div class="text before">Off</div>
-                            <div class="toggle">
-                                <span class="btn"></span>
-                            </div>
-                            <div class="text after">On</div>
-                        </div>
-                    </div>
-
-                    <div class="command-container" data-device="mist-lamp" data-uri="/api/devices/mist-lamp">
+                    <div class="command-container" data-device="ir-remote" data-id="mistlamp" data-uri="/api/devices/ir-remote/mistlamp">
                         <span class="command-label">Mist Lamp</span>
                         <div class="command toggle-container">
                             <div class="text before">Off</div>
@@ -177,8 +197,8 @@
                             <button type="button" class="btn btn-default" data-command="mist"><i class="fa fa-clock-o fa-fw"></i></button>
                             <button type="button" class="btn btn-default" data-command="bri"><i class="wi wi-day-sunny wi-fw"></i></button>
                         </div>
-
                     </div>
+
                 </div>
                 <div class="col-lg-12">
                     <h3>Devices</h3>
@@ -208,8 +228,8 @@
                         </div>
                     </div>
 
-                    <div class="command-container" data-device="power-plug" data-id="desk" data-uri="/api/devices/power-plug/desk">
-                        <span class="command-label">Screen & BT</span>
+                    <div class="command-container" data-device="ir-remote" data-id="tv" data-uri="/api/devices/ir-remote/tv">
+                        <span class="command-label">TV</span>
                         <div class="command toggle-container">
                             <div class="text before">Off</div>
                             <div class="toggle">
@@ -219,29 +239,7 @@
                         </div>
                     </div>
 
-                    <div class="command-container" data-device="crespin" data-uri="/api/devices/crespin">
-                        <span class="command-label">Crespin</span>
-                        <div class="command toggle-container">
-                            <div class="text before">Off</div>
-                            <div class="toggle">
-                                <span class="btn"></span>
-                            </div>
-                            <div class="text after">On</div>
-                        </div>
-                    </div>
-
-                    <div class="command-container" data-device="calendar" data-uri="/calendar/display/switch">
-                        <span class="command-label">Calendar</span>
-                        <div class="command toggle-container">
-                            <div class="text before">Off</div>
-                            <div class="toggle">
-                                <span class="btn"></span>
-                            </div>
-                            <div class="text after">On</div>
-                        </div>
-                    </div>
-
-
+                    <!--
                     <h3>Heating</h3>
 
                     <div class="command-container" data-device="remote-pilot-wire" data-values="off,eco,on" data-uri="/api/devices/remote-pilot-wire">
@@ -269,11 +267,13 @@
                             <div class="text after">On</div>
                         </div>
                     </div>
+                    -->
                 </div>
             </div>
         </div>
 
         <div class="col-lg-4 col-sm-6">
+            <!--
             <div class="block" id="radio">
                 <h2><span>Radio</span></h2>
                 <p class="text-center">
@@ -287,6 +287,8 @@
                     </span>
                 </p>
             </div>
+            -->
+
             <div class="block">
                 <h2><span>Hue</span></h2>
                 <div id="hue_hs_container">
@@ -297,20 +299,16 @@
             </div>
 
             <div class="block">
-                <h2><span>Calendar</span></h2>
-                <p id="calendar_list" class="text-center">
-                    <!-- Content generated in JS -->
-                </p>
-                <div id="calendar_view">
-                    <!-- Content generated in JS -->
-                </div>
-                <div id="calendar_go_today">GO TO TODAY</div>
-                <div id="calendar_days">
-                    <div class="wrapper">
-                        <!-- Content generated in JS -->
-                    </div>
-                </div>
-                <input id="calendar_brightness" type="range" min="1" max="16" step="0.15" />
+                <h2><span>Fairy lights</span></h2>
+
+                <p class="text-center">Fairy lights</p>
+                <input class="slider" data-device="espeasylights" data-id="fairy" data-uri="/api/devices/espeasylights/fairy" type="range" min="1" max="100" step="0.1">
+
+                <p class="text-center">BB-8</p>
+                <input class="slider" data-device="espeasylights" data-id="bb8" data-uri="/api/devices/espeasylights/bb8" type="range" min="1" max="100" step="0.1">
+
+                <p class="text-center">Bed lights</p>
+                <input class="slider" data-device="espeasylights" data-id="bed" data-uri="/api/devices/espeasylights/bed" type="range" min="1" max="100" step="0.1">
             </div>
         </div>
         <div class="col-lg-4 col-sm-6">
@@ -328,11 +326,30 @@
                 </div>
             </div>
 
+
+            <div class="block">
+                <h2><span>Calendar</span></h2>
+                <p id="calendar_list" class="text-center">
+                    <!-- Content generated in JS -->
+                </p>
+                <div id="calendar_view">
+                    <!-- Content generated in JS -->
+                </div>
+                <div id="calendar_go_today">GO TO TODAY</div>
+                <div id="calendar_days">
+                    <div class="wrapper">
+                        <!-- Content generated in JS -->
+                    </div>
+                </div>
+                <input id="calendar_brightness" type="range" min="1" max="16" step="0.15" />
+            </div>
+
             <div class="block" id="running-seqs">
                 <h2><span>Running sequences</span></h2>
                 <p class="text-center small">No sequence running</p>
             </div>
 
+            <!--
             <div class="block" id="crespin" data-uri="/api/devices/crespin">
                 <h2><span>Crespin Mobile</span></h2>
                 <p class="text-center">
@@ -424,7 +441,6 @@
                 </table>
             </div>
 
-            <!--
             <div class="block">
                 <h2><span>Calendar</span></h2>
             </div>

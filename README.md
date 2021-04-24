@@ -2,42 +2,29 @@
 
 This repository contains the code for the my small and personal smart-home project.
 
-# TODOs
+# Overview
 
-* Display home state
-* Scenarios options handling (python + ui)
-    * Early wake up option
-* Improve scenarios:
-    * Heating based on inside and outside temp
-    * Lights based on sun altitude
-    * Add movie scenario?
-* Add auto triggers:
-    * light on based on home state + sunset
-    * heating based on home state + temperatures
-* Schedule events in calendar
-* Better radio widget
-* Voice recognition
-* Velib status
-* Use _Embedded Google Assistant SDK_ (yet to be released) or _Alexa Voice Service_ for voice control + feedback
+## Overall architecture
 
-# Hardware
+TODO
 
-* **Server:** Raspberry Pi
-* **Devices:**
-    * Philips Hue bride
-    * Philips Hue color lamp bulb
-    * 8 Etekcity RF-controlled power-plug adapters
-    * Speakers + jack
-    * NAS + wire soldered on the power-on switch
-    * USB microphone
-* **Electronics:**
-    * 5V to 3.3V adapter
-    * RF 433 MHz transmitter & receiver
-    * IR transmitter & receiver
-    * Temperature sensor (DHT11)
-    * Motion sensor (PIR)
+## Devices controled
 
-# Software
+* Power Plugs with RF Remote (433 MHz)
+* Philips Hue Lights
+* ESP8266 LED lights (custom)
+* ESP8266 plants watering (custom)
+* [Elias Crespin-inspired motorized suspended decoration](http://www.eliascrespin.net/) w/ Pi-zero-W (custom)
+* [Everyday Calendar inspired by Simone Giertz](https://www.simonegiertz.com/every-day-calendar) w/ Pi-zero-W (custom)
+* Devices with infrared remote (TV & essential oil diffuser)
+* NAS via soldering on the power-on switch (custom)
+
+## Sensors
+
+* Temperature sensor (DHT11)
+* **TODO** Motion sensor (PIR)
+
+# Setup
 
 ## Packages
 
@@ -227,3 +214,12 @@ end remote
 */10 * * * * curl -X GET http://<API_URL>/triggers/calendar/update
 * * * * *    curl -X GET http://<API_URL>/triggers/calendar/trigger
 ```
+
+
+# TODOs
+
+* Better integrate Domoticz in UI
+* Home state integration
+* Add auto triggers:
+    * light on based on home state + sun elevation
+* Schedule events in calendar

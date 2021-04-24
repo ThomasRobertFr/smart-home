@@ -8,13 +8,13 @@ config = _config.get().espeasylights
 
 
 def value_to_pwm(value):
-    """Transforms value in [0, 100] to a pwm in [0, 1024] with sqrt shape."""
-    return round(math.sqrt(value) * 102.4)
+    """Transforms value in [1, 100] to a pwm in [1, 1024]"""
+    return math.ceil((value / 100.) ** 2 * 1024)
 
 
 def pwm_to_value(pwm):
-    """Transforms pwm value in [0, 1024] to a value in [0, 100] with square shape."""
-    return round((pwm / 102.4) ** 2)
+    """Reverse of value_to_pwm"""
+    return math.ceil(math.sqrt(pwm / 1024.) * 100)
 
 
 class ESPEasyLights(Resource):
@@ -57,6 +57,5 @@ class ESPEasyLights(Resource):
             else:
                 pwm = value_to_pwm(float(status_or_value))
                 requests.get(f"http://{config[id].ip}/control?cmd=PWM,{config[id].gpio},{pwm}")
-
         else:
             abort(500, message=f"Wrongly configured light {id}, mode {switch['mode']} unknown")

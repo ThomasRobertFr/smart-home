@@ -14,13 +14,6 @@ google_calendar:
   scopes: https://www.googleapis.com/auth/calendar.readonly
   app_name: Smart Light
 
-google_home:
-  project_id: secret
-  device_model_id: secret
-  credentials: data/google_home_credentials.json
-  device_config: data/google_home_device_config.json
-
-
 nas:
   gpio: 22
   url: http://nas/web/login.asp
@@ -46,22 +39,44 @@ remote_pilot_wire:
     - bedroom-heat-1
     - bedroom-heat-2
 
-mist_lamp:
-  id: mistlamp
-  codes:
-    power: KEY_POWER
-    light: KEY_POWER2
-    brightness: KEY_BRIGHTNESS_CYCLE
-    mist: BTN_MODE
+ir_remote:
+  - id: mistlamp
+    codes:
+      power: KEY_POWER
+      light: KEY_POWER2
+      brightness: KEY_BRIGHTNESS_CYCLE
+      mist: BTN_MODE
+  - id: tv
+    codes:
+      power: KEY_POWER
+
+espeasylights:
+  fairy:
+    ip: 192.168.1.11
+    gpio: 16
+    mode: dimmer
+  bb8:
+    ip: 192.168.1.11
+    gpio: 5
+    mode: dimmer
+  bed:
+    ip: 192.168.1.11
+    gpio: 4
+    mode: dimmer
+
+espcustomdimmer:
+  couchlamp:
+    ip: 192.168.1.12
 
 weather:
   key: secret
   location: lang:FR/q/France/Paris%2005%20Pantheon
 
 location:
-  latitude: 48
-  longitude: 2
-  timezone: 2
+  latitude: 48.8
+  longitude: 2.3
+  timezone: 1
+  timezone_name: Europe/Paris
 
 temperature:
   gpio: 25

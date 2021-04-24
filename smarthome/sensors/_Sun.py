@@ -2,6 +2,7 @@ from flask_restful import Resource
 import math
 from babel.dates import format_date
 from datetime import datetime, timedelta
+import pytz
 from ..misc import config as _config
 config = _config.get().location
 
@@ -9,11 +10,19 @@ config = _config.get().location
 class Sun(Resource):
 
     def _get_elevation(self, date=datetime.now(), time_N=100):
+        """Calculate the elevation of the sun. This computation is based on an Excel sheet provided
+        by NOAA, saved in `data/NOAA_Solar_Calculations_day.xls`, and provided at
+        https://www.esrl.noaa.gov/gmd/grad/solcalc/calcdetails.html.
+        """
         # params
+        day = date.toordinal() + 2 - datetime(1900, 1, 1).toordinal()
         lat = math.radians(config.latitude)
         long = math.radians(config.longitude)
-        tz = config.timezone
-        day = date.toordinal() + 2 - datetime(1900, 1, 1).toordinal()
+        if config.timezone_name:
+            tz = datetime.now(pytz.timezone(config.timezone_name))
+            tz = float(tz.utcoffset().total_seconds() / 60 / 60)
+        else:
+            tz = float(config.timezone)
 
         # consts
         eliptic = math.radians(23)

@@ -625,7 +625,11 @@ input[type=range]::-webkit-slider-thumb {
     opacity: 0;
 }
 
-#calendar_view .circle.active {
+#calendar_view .circle.active-previously {
+    opacity: 0.3;
+}
+
+#calendar_view .circle.active, #calendar_view .circle.active.active-previously {
     opacity: 1;
 }
 

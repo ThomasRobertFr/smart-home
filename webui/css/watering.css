@@ -1,0 +1,72 @@
+.icon-on { color: #0052a7; }
+.icon-off { color: #861f00; }
+
+.fa-stack {
+    width: 1.25em !important;
+    height: 1em !important;
+    line-height: 1.4em !important;
+}
+
+.sparkline {
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.edit-active .field {
+    border: 1px solid;
+    cursor: pointer;
+    padding: 1px 2.5px;
+    border-radius: 3px;
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+.edit-active .field:hover {
+    color: #333;
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+
+.sparkline .apexcharts-canvas {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+tr.sensor {
+    cursor: pointer;
+}
+
+#sensors td, #sensors th {
+    padding: 8px 4px;
+}
+
+#sensors_headers_titles th {
+    border: none;
+}
+
+#sensors_headers th {
+    border-top: none;
+    padding-top: 0px;
+}
+
+#sensors_headers_titles .th-title {
+    font-size: 88%;
+  text-align: center;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+}
+#sensors_headers_titles .th-title:before {
+    border-top: 2px solid #dfdfdf;
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    right: 17px;
+    bottom: 0;
+    z-index: -1;
+}
+#sensors_headers_titles .th-title span {
+  background: #fff;
+  padding: 0 15px;
+}

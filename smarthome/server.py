@@ -1,6 +1,5 @@
 from flask import Flask, Response
 from flask_restful import Api
-#import threading
 
 # flask init
 app = Flask(__name__)
@@ -17,12 +16,12 @@ api.add_resource(Arrive, '/scenarios/arrive')
 api.add_resource(ArriveOrBedtime, '/scenarios/arrive-or-bedtime')
 
 # devices
-from .devices import HueLamp, Radio, PowerPlug, PowerPlugs, RemotePilotWire, NAS, MistLamp, \
-    Crespin, Calendar, WateringSensor, WateringSensors, ESPEasyLights
+from .devices import HueLamp, Radio, PowerPlug, PowerPlugs, RemotePilotWire, NAS, IRRemote, \
+    Crespin, Calendar, WateringSensor, WateringSensors, ESPEasyLights, ESPCustomDimmer
 api.add_resource(HueLamp, '/devices/hue-lamp/<id>', '/devices/hue-lamp/<id>/<status>')
 api.add_resource(Radio, '/devices/radio/<action>')
 api.add_resource(RemotePilotWire, '/devices/remote-pilot-wire', '/devices/remote-pilot-wire/<action>')
-api.add_resource(MistLamp, '/devices/mist-lamp', '/devices/mist-lamp/<command>')
+api.add_resource(IRRemote, '/devices/ir-remote/<id>', '/devices/ir-remote/<id>/<command>')
 api.add_resource(PowerPlugs, '/devices/power-plugs')
 api.add_resource(PowerPlug, '/devices/power-plug/<id>', '/devices/power-plug/<id>/<status>')
 api.add_resource(NAS, '/devices/nas', '/devices/nas/<status>')
@@ -32,6 +31,8 @@ api.add_resource(WateringSensors, '/devices/watering')
 api.add_resource(WateringSensor, '/devices/watering/<id>', '/devices/watering/<id>/<verb>')
 api.add_resource(ESPEasyLights, '/devices/espeasylights', '/devices/espeasylights/<id>',
                  '/devices/espeasylights/<id>/<status_or_value>')
+api.add_resource(ESPCustomDimmer, '/devices/espcustomdimmer', '/devices/espcustomdimmer/<id>',
+                 '/devices/espcustomdimmer/<id>/<status_or_value>')
 
 # triggers
 from .triggers import CalendarUpdate, CalendarTrigger
@@ -46,6 +47,7 @@ api.add_resource(Temperature, '/sensors/temperature')
 api.add_resource(Threads, '/sensors/threads', '/sensors/threads/<id>')
 api.add_resource(Weather, '/sensors/weather', '/sensors/weather/<type>')
 
+
 # sun SVG
 @app.route("/sun.svg")
 def homepage():
@@ -53,7 +55,6 @@ def homepage():
     resp.headers['Content-Type'] = 'image/svg+xml'
     resp.data = Sun().get_svg()
     return resp
-
 
 
 def run_debug():
