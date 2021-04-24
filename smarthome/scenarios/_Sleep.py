@@ -1,7 +1,6 @@
 from flask_restful import Resource
 from ..sensors import State
-from ..devices import PowerPlug, RemotePilotWire, HueLamp, NAS, Calendar
-import time
+from ..devices import PowerPlug, HueLamp, NAS, Calendar
 
 
 class Sleep(Resource):
@@ -51,11 +50,6 @@ class Sleep(Resource):
 
         NAS().put("off")
         print("> NAS off")
-
-        # HEATING ECO
-
-        # RemotePilotWire().put("eco")
-        print("> heating eco")
 
         # HUE FADING
         #if not hue_already_on:

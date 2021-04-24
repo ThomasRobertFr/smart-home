@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from ..devices import Radio, PowerPlug, RemotePilotWire, NAS, HueLamp, Calendar
+from ..devices import PowerPlug, NAS, HueLamp, Calendar
 from ..sensors import State
 
 
@@ -28,12 +28,6 @@ class Leave(Resource):
     def put(self):
 
         State().put("away")
-
-        # HEATING OFF
-        # RemotePilotWire().put("off")
-
-        # RADIO OFF
-        # Radio().put("clearQueue")
 
         # NAS OFF
         NAS().put("off")

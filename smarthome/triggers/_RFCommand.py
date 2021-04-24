@@ -1,3 +1,4 @@
+"""
 import time
 import requests
 from datetime import datetime, timedelta
@@ -53,5 +54,5 @@ while True:
                 requests.put("http://raspi/api/%s" % url)
 
     time.sleep(0.01)
-
+"""
 

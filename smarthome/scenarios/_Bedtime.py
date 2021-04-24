@@ -1,7 +1,6 @@
 from flask_restful import Resource
 from ..sensors import State
-from ..devices import PowerPlug, RemotePilotWire, HueLamp, Calendar
-import time
+from ..devices import PowerPlug, HueLamp, Calendar
 
 
 class Bedtime(Resource):
@@ -36,19 +35,12 @@ class Bedtime(Resource):
 
         # HUE ON
         HueLamp().put(self.actions["light"]["config"]["hue-id"], "on")
-        #hue_already_on = PowerPlug().get(self.actions["light"]["config"]["plug-id"])["status"] == 1
-        #PowerPlug().put(self.actions["light"]["config"]["plug-id"], "on")
 
         # PLUGS OFF
 
         for plug in self.actions["plugs"]["config"]["plug-ids"]:
             PowerPlug().put(plug, "off")
         print("> plugs off")
-
-        # HEATING ECO
-
-        # RemotePilotWire().put("eco")
-        # print("> heating eco")
 
         Calendar().put("brightness", "3")
 

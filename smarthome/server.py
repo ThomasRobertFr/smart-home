@@ -16,11 +16,11 @@ api.add_resource(Arrive, '/scenarios/arrive')
 api.add_resource(ArriveOrBedtime, '/scenarios/arrive-or-bedtime')
 
 # devices
-from .devices import HueLamp, Radio, PowerPlug, PowerPlugs, RemotePilotWire, NAS, IRRemote, \
+from .devices import HueLamp, PowerPlug, PowerPlugs, NAS, IRRemote, \
     Crespin, Calendar, WateringSensor, WateringSensors, ESPEasyLights, ESPCustomDimmer
 api.add_resource(HueLamp, '/devices/hue-lamp/<id>', '/devices/hue-lamp/<id>/<status>')
-api.add_resource(Radio, '/devices/radio/<action>')
-api.add_resource(RemotePilotWire, '/devices/remote-pilot-wire', '/devices/remote-pilot-wire/<action>')
+# api.add_resource(Radio, '/devices/radio/<action>')
+# api.add_resource(RemotePilotWire, '/devices/remote-pilot-wire', '/devices/remote-pilot-wire/<action>')
 api.add_resource(IRRemote, '/devices/ir-remote/<id>', '/devices/ir-remote/<id>/<command>')
 api.add_resource(PowerPlugs, '/devices/power-plugs')
 api.add_resource(PowerPlug, '/devices/power-plug/<id>', '/devices/power-plug/<id>/<status>')

@@ -10,6 +10,7 @@ config = _config.get().crespin
 parser = reqparse.RequestParser()
 parser.add_argument('data')
 
+
 class Crespin(Resource):
 
     status = "unkn"

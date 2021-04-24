@@ -1,3 +1,4 @@
+"""
 from flask_restful import Resource
 from ._PowerPlug import PowerPlug
 from ..misc import config as _config
@@ -28,3 +29,4 @@ class RemotePilotWire(Resource):
         else:
             PowerPlug().put(self.ids[1], "off")
             PowerPlug().put(self.ids[0], "on")
+"""

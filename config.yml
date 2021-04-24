@@ -67,6 +67,8 @@ espeasylights:
 espcustomdimmer:
   couchlamp:
     ip: 192.168.1.12
+    min: 200
+    max: 1024
 
 weather:
   key: secret

@@ -535,7 +535,7 @@ $(document).ready(function() {
      ************ ESP EASY DIMMABLE SLIDERS ***********
      */
 
-     $('[data-device="espeasylights"].slider').change(function () { vibrate();
+     $('[data-device="espeasylights"].slider, [data-device="espcustomdimmer"].slider').change(function () { vibrate();
         $.ajax({
             url: $(this).data("uri") + "/" + $(this).val(),
             type: 'PUT'
