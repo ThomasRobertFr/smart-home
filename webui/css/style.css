@@ -182,6 +182,7 @@ header {
 
 .command-container {
     margin: 5px 0;
+    display: flex;
 }
 
 .command-container .command-label {
@@ -191,10 +192,14 @@ header {
     text-transform: capitalize;
     font-weight: bold;
     padding-right: 8px;
+    padding-top: 6px;
     vertical-align: middle;
 }
 
-
+.slider-container {
+    display: inline-block;
+    flex-grow: 1;
+}
 
 
 #weather {

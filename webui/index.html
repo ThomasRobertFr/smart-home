@@ -52,8 +52,6 @@
                 <i class="fa fa-sign-out"></i></button>
             <button id="btn-arrive" class="btn btn-lg btn-default" data-state="home" data-uri="/api/scenarios/arrive">
                 <i class="fa fa-sign-in"></i></button>
-<!--            <button id="btn-party" class="btn btn-lg btn-default" data-state="simple" data-uri="/api/scenarios/party">-->
-<!--                <i class="fa fa-users"></i></button>-->
             <button id="btn-bedtime" class="btn btn-lg btn-default" data-state="simple" data-uri="/api/scenarios/bedtime">
                 <i class="wi wi-sunset"></i></button>
             <button id="btn-sleep" class="btn btn-lg btn-default" data-state="simple" data-uri="/api/scenarios/sleep">
@@ -63,256 +61,128 @@
 
 
     <div class="container" role="main">
-        <div class="col-lg-4 col-sm-6">
-            <div class="block" id="switches">
+        <div class="col-lg-3 col-sm-6">
+            <div class="block">
                 <h2><span>Switches</span></h2>
-                <div class="col-lg-12">
-                    <h3>Livingroom</h3>
 
-                    <div class="command-container" data-device="espcustomdimmer" data-id="couchlamp" data-uri="/api/devices/espcustomdimmer/couchlamp">
-                        <span class="command-label">Couch lamp</span>
-                        <div class="command toggle-container">
-                            <div class="text before">Off</div>
-                            <div class="toggle">
-                                <span class="btn"></span>
-                            </div>
-                            <div class="text after">On</div>
-                        </div>
-                    </div>
+                <h3>Livingroom</h3>
 
-                    <div class="command-container" data-device="power-plug" data-id="dining-lamp" data-uri="/api/devices/power-plug/dining-lamp">
-                        <span class="command-label">Dining lamp</span>
-                        <div class="command toggle-container">
-                            <div class="text before">Off</div>
-                            <div class="toggle">
-                                <span class="btn"></span>
-                            </div>
-                            <div class="text after">On</div>
-                        </div>
-                    </div>
-
-                    <div class="command-container" data-device="power-plug" data-id="fridge-lamp" data-uri="/api/devices/power-plug/fridge-lamp">
-                        <span class="command-label">Fridge lamp</span>
-                        <div class="command toggle-container">
-                            <div class="text before">Off</div>
-                            <div class="toggle">
-                                <span class="btn"></span>
-                            </div>
-                            <div class="text after">On</div>
-                        </div>
-                    </div>
-
-                    <div class="command-container" data-device="calendar" data-uri="/calendar/display/switch">
-                        <span class="command-label">Calendar</span>
-                        <div class="command toggle-container">
-                            <div class="text before">Off</div>
-                            <div class="toggle">
-                                <span class="btn"></span>
-                            </div>
-                            <div class="text after">On</div>
-                        </div>
-                    </div>
-
-                    <h3>Bedroom</h3>
-
-                    <div class="command-container" data-device="power-plug" data-id="desk" data-uri="/api/devices/power-plug/desk">
-                        <span class="command-label">Main lamp</span>
-                        <div class="command toggle-container">
-                            <div class="text before">Off</div>
-                            <div class="toggle">
-                                <span class="btn"></span>
-                            </div>
-                            <div class="text after">On</div>
-                        </div>
-                    </div>
-
-                    <div class="command-container" data-device="power-plug" data-id="pixar-lamp" data-uri="/api/devices/power-plug/pixar-lamp">
-                        <span class="command-label">Pixar lamp</span>
-                        <div class="command toggle-container">
-                            <div class="text before">Off</div>
-                            <div class="toggle">
-                                <span class="btn"></span>
-                            </div>
-                            <div class="text after">On</div>
-                        </div>
-                    </div>
-
-                    <div class="command-container" data-device="espeasylights" data-id="fairy" data-uri="/api/devices/espeasylights/fairy">
-                        <span class="command-label">Fairy lights</span>
-                        <div class="command toggle-container">
-                            <div class="text before">Off</div>
-                            <div class="toggle">
-                                <span class="btn"></span>
-                            </div>
-                            <div class="text after">On</div>
-                        </div>
-                    </div>
-
-                    <div class="command-container" data-device="espeasylights" data-id="bb8" data-uri="/api/devices/espeasylights/bb8">
-                        <span class="command-label">BB-8</span>
-                        <div class="command toggle-container">
-                            <div class="text before">Off</div>
-                            <div class="toggle">
-                                <span class="btn"></span>
-                            </div>
-                            <div class="text after">On</div>
-                        </div>
-                    </div>
-
-                    <div class="command-container" data-device="espeasylights" data-id="bed" data-uri="/api/devices/espeasylights/bed">
-                        <span class="command-label">Bed</span>
-                        <div class="command toggle-container">
-                            <div class="text before">Off</div>
-                            <div class="toggle">
-                                <span class="btn"></span>
-                            </div>
-                            <div class="text after">On</div>
-                        </div>
-                    </div>
-
-                    <div class="command-container" data-device="hue-lamp" data-id="1" data-uri="/api/devices/hue-lamp/1">
-                        <span class="command-label">Bedside</span>
-                        <div class="command toggle-container">
-                            <div class="text before">Off</div>
-                            <div class="toggle">
-                                <span class="btn"></span>
-                            </div>
-                            <div class="text after">On</div>
-                        </div>
-                    </div>
-
-                    <div class="command-container" data-device="ir-remote" data-id="mistlamp" data-uri="/api/devices/ir-remote/mistlamp">
-                        <span class="command-label">Mist Lamp</span>
-                        <div class="command toggle-container">
-                            <div class="text before">Off</div>
-                            <div class="toggle">
-                                <span class="btn"></span>
-                            </div>
-                            <div class="text after">On</div>
-                        </div>
-                        <br>
-                        <span class="command-label"></span>
-                        <div class="btn-group btn-group-xs" style="margin: 5px 20px">
-                            <button type="button" class="btn btn-default" data-command="light"><i class="fa fa-lightbulb-o fa-fw"></i></button>
-                            <button type="button" class="btn btn-default" data-command="mist"><i class="fa fa-clock-o fa-fw"></i></button>
-                            <button type="button" class="btn btn-default" data-command="bri"><i class="wi wi-day-sunny wi-fw"></i></button>
-                        </div>
-                    </div>
-
+                <div class="command-container switch" data-idx="2">
+                    <span class="command-label">Couch lamp</span>
+                    <div class="command toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
                 </div>
-                <div class="col-lg-12">
-                    <h3>Devices</h3>
 
-                    <div class="command-container" data-device="nas" data-values="off,void,on" data-uri="/api/devices/nas">
-                        <span class="command-label toggle3-text">NAS</span>
-                        <div class="command toggle3-container">
-                            <div class="toggle3-text text before">Off</div>
-                            <div class="toggle3">
-                                <div class="middle disabled"><div class="text">Busy</div><div class="circle"></div></div>
-                                <span class="btn"></span>
-                                <div class="left-btn"></div>
-                                <div class="right-btn"></div>
-                            </div>
-                            <div class="toggle3-text text after">On</div>
-                        </div>
-                    </div>
+                <div class="command-container switch" data-idx="3">
+                    <span class="command-label">Dining lamp</span>
+                    <div class="command toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                </div>
 
-                    <div class="command-container" data-device="power-plug" data-id="phone-charger" data-uri="/api/devices/power-plug/phone-charger">
-                        <span class="command-label">Phone charger</span>
-                        <div class="command toggle-container">
-                            <div class="text before">Off</div>
-                            <div class="toggle">
-                                <span class="btn"></span>
-                            </div>
-                            <div class="text after">On</div>
-                        </div>
-                    </div>
+                <div class="command-container switch" data-idx="15">
+                    <span class="command-label">Fridge lamp</span>
+                    <div class="command toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                </div>
 
-                    <div class="command-container" data-device="ir-remote" data-id="tv" data-uri="/api/devices/ir-remote/tv">
-                        <span class="command-label">TV</span>
-                        <div class="command toggle-container">
-                            <div class="text before">Off</div>
-                            <div class="toggle">
-                                <span class="btn"></span>
-                            </div>
-                            <div class="text after">On</div>
-                        </div>
-                    </div>
+                <div class="command-container switch" data-idx="7">
+                    <span class="command-label">Calendar</span>
+                    <div class="command toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                </div>
 
-                    <!--
-                    <h3>Heating</h3>
 
-                    <div class="command-container" data-device="remote-pilot-wire" data-values="off,eco,on" data-uri="/api/devices/remote-pilot-wire">
-                        <span class="command-label toggle3-text">Bedroom</span>
-                        <div class="command toggle3-container">
-                            <div class="toggle3-text text before">Off</div>
-                            <div class="toggle3">
-                                <div class="middle"><div class="text">Eco</div><div class="circle"></div></div>
-                                <span class="btn"></span>
-                                <div class="left-btn"></div>
-                                <div class="center-btn"></div>
-                                <div class="right-btn"></div>
-                            </div>
-                            <div class="toggle3-text text after">On</div>
-                        </div>
-                    </div>
+                <h3>Bedroom</h3>
 
-                    <div class="command-container" data-device="power-plug" data-id="bathroom-heat" data-uri="/api/devices/power-plug/bathroom-heat">
-                        <span class="command-label">Bathroom</span>
-                        <div class="command toggle-container">
-                            <div class="text before">Off</div>
-                            <div class="toggle">
-                                <span class="btn"></span>
-                            </div>
-                            <div class="text after">On</div>
-                        </div>
-                    </div>
-                    -->
+                <div class="command-container switch" data-idx="4">
+                    <span class="command-label">Main lamp</span>
+                    <div class="command toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                </div>
+
+                <div class="command-container switch" data-idx="8">
+                    <span class="command-label">Bedside</span>
+                    <div class="command toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                </div>
+
+                <div class="command-container switch" data-idx="14">
+                    <span class="command-label">Pixar lamp</span>
+                    <div class="command toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                </div>
+
+                <div class="command-container switch" data-idx="16">
+                    <span class="command-label">Fairy lights</span>
+                    <div class="command toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                </div>
+
+                <div class="command-container switch" data-idx="17">
+                    <span class="command-label">BB-8</span>
+                    <div class="command toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                </div>
+
+                <div class="command-container switch" data-idx="20">
+                    <span class="command-label">Bed</span>
+                    <div class="command toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                </div>
+
+                <h3>Devices</h3>
+
+                <div class="command-container switch" data-idx="19">
+                    <span class="command-label">TV</span>
+                    <div class="command toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                </div>
+
+                <div class="command-container switch" data-idx="18">
+                    <span class="command-label">Mist lamp</span>
+                    <div class="command toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                </div>
+
+                <div class="command-container switch" data-idx="5">
+                    <span class="command-label">NAS</span>
+                    <div class="command toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                </div>
+
+                <div class="command-container switch" data-idx="6">
+                    <span class="command-label">Phone charger</span>
+                    <div class="command toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-4 col-sm-6">
-            <!--
-            <div class="block" id="radio">
-                <h2><span>Radio</span></h2>
-                <p class="text-center">
-                    <span class="btn-group">
-                        <button class="btn btn-default" data-type="simple" data-uri="/api/devices/radio/play"><i class="fa fa-play"></i></button>
-                        <button class="btn btn-default" data-type="simple" data-uri="/api/devices/radio/pause"><i class="fa fa-pause"></i></button>
-                        <button class="btn btn-default" data-type="simple" data-uri="/api/devices/radio/clearQueue"><i class="fa fa-stop"></i></button>
-                        <button class="btn btn-default" data-type="simple" data-uri="/api/devices/radio/previous"><i class="fa fa-step-backward"></i></button>
-                        <button class="btn btn-default" data-type="simple" data-uri="/api/devices/radio/next"><i class="fa fa-step-forward"></i></button>
-                        <button class="btn btn-default" data-type="simple" data-uri="/api/devices/radio/queueRadio"><i class="fa fa-music"></i></button>
-                    </span>
-                </p>
+        <div class="col-lg-5 col-sm-6">
+            <div class="block">
+                <h2><span>Dimmable lights</span></h2>
+
+                <div class="command-container slider" data-idx="2">
+                    <span class="command-label">Couch lamp</span>
+                    <div class="slider-container"><input type="range" min="1" max="100" step="0.1"></div>
+                </div>
+
+                <div class="command-container slider" data-idx="8">
+                    <span class="command-label">Bedside lamp</span>
+                    <div class="slider-container"><input type="range" min="1" max="100" step="0.1"></div>
+                </div>
+
+                <div class="command-container slider" data-idx="16">
+                    <span class="command-label">Fairy lights</span>
+                    <div class="slider-container"><input type="range" min="1" max="100" step="0.1"></div>
+                </div>
+
+                <div class="command-container slider" data-idx="17">
+                    <span class="command-label">BB-8</span>
+                    <div class="slider-container"><input type="range" min="1" max="100" step="0.1"></div>
+                </div>
+
+                <div class="command-container slider" data-idx="20">
+                    <span class="command-label">Bed</span>
+                    <div class="slider-container"><input type="range" min="1" max="100" step="0.1"></div>
+                </div>
             </div>
-            -->
 
             <div class="block">
-                <h2><span>Hue</span></h2>
-                <div id="hue_hs_container">
+                <h2><span>Bedroom Hue</span></h2>
+                <div id="hue_hs_container" data-idx="8">
                     <div id="hue_hs_pos">+</div>
                     <img id="hue_hs" src="images/hue.png" />
                 </div>
-                <input id="hue_v" type="range" min="0" max="255" />
             </div>
 
-            <div class="block">
-                <h2><span>Fairy lights</span></h2>
 
-                <p class="text-center">Couch lamp</p>
-                <input class="slider" data-device="espcustomdimmer" data-id="couchlamp" data-uri="/api/devices/espcustomdimmer/couchlamp" type="range" min="1" max="100" step="0.1">
-
-                <p class="text-center">Fairy lights</p>
-                <input class="slider" data-device="espeasylights" data-id="fairy" data-uri="/api/devices/espeasylights/fairy" type="range" min="1" max="100" step="0.1">
-
-                <p class="text-center">BB-8</p>
-                <input class="slider" data-device="espeasylights" data-id="bb8" data-uri="/api/devices/espeasylights/bb8" type="range" min="1" max="100" step="0.1">
-
-                <p class="text-center">Bed lights</p>
-                <input class="slider" data-device="espeasylights" data-id="bed" data-uri="/api/devices/espeasylights/bed" type="range" min="1" max="100" step="0.1">
-            </div>
         </div>
         <div class="col-lg-4 col-sm-6">
             <div class="block">
@@ -346,111 +216,7 @@
                 </div>
                 <input id="calendar_brightness" type="range" min="1" max="16" step="0.15" />
             </div>
-
-            <div class="block" id="running-seqs">
-                <h2><span>Running sequences</span></h2>
-                <p class="text-center small">No sequence running</p>
-            </div>
-
-            <!--
-            <div class="block" id="crespin" data-uri="/api/devices/crespin">
-                <h2><span>Crespin Mobile</span></h2>
-                <p class="text-center">
-                    <span class="btn-group">
-                        <button class="btn btn-default" data-command="run"><i class="fa fa-play"></i></button>
-                        <button class="btn btn-default" data-command="pause"><i class="fa fa-pause"></i></button>
-                        <button class="btn btn-default" data-command="totarget"><i class="fa fa-sort"></i></button>
-                    </span>
-                    <span class="btn-group">
-                        <button class="btn btn-default" data-command="data"><i class="fa fa-cloud-download"></i></button>
-                        <button class="btn btn-default" data-command="setdata"><i class="fa fa-cloud-upload"></i></button>
-                    </span>
-                </p>
-                <p class="text-center">
-                    <span class="btn-group">
-                        <input type="text" class="btn btn-default" data-action="delta-val" value="10" size="2">
-                        <button class="btn btn-info" data-action="up"><i class="fa fa-arrow-up"></i></button>
-                        <button class="btn btn-info" data-action="down"><i class="fa fa-arrow-down"></i></button>
-                    </span>
-                    <span class="btn-group">
-                        <button class="btn btn-default active" data-action="target" data-toggle="tooltip" title="Move (target)"><i class="fa fa-arrows-v"></i></button>
-                        <button class="btn btn-default" data-action="position" data-toggle="tooltip" title="Calibrate (position)"><i class="fa fa-cog"></i></button>
-                    </span>
-                    <span class="btn-group">
-                        <button class="btn btn-default" data-action="selectall" data-toggle="tooltip" title="Select all"><i class="fa fa-check-square-o"></i></button>
-                        <button class="btn btn-default active" data-action="multiselect" data-toggle="tooltip" title="Multiple select"><i class="fa fa-plus-square-o"></i></button>
-                        <button class="btn btn-default" data-action="instant" data-toggle="tooltip" title="Instant update"><i class="fa fa-exchange"></i></button>
-                    </span>
-                </p>
-                <table id="crespin-vals">
-                    <tr>
-                        <td>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon">P</span>
-                                <input type="text" class="form-control" data-action="position-val">
-                                <span class="input-group-btn">
-                                   <button class="btn btn-primary" type="button" data-action="setpos"><i class="fa fa-pencil"></i></button>
-                                </span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" style="color: #ccc">T</span>
-                                <input type="text" class="form-control" data-action="target-val">
-                                <span class="input-group-btn">
-                                   <button class="btn btn-primary" type="button" data-action="settarget"><i class="fa fa-pencil"></i></button>
-                                </span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-addon" style="color: #ccc">S</span>
-                                <input type="text" class="form-control" data-action="speed-val">
-                                <span class="input-group-btn">
-                                   <button class="btn btn-primary" type="button" data-action="setspeed"><i class="fa fa-check"></i></button>
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-
-                <table id="crespin-motors">
-                    <tr class="row-1">
-                        <td data-motid="21"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="19"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="17"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="15"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="13"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="11"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="9"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="7"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="5"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="3"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="1"><span class="pos">?</span><br><span class="target">?</span></td>
-                    </tr>
-                    <tr class="row-2">
-                        <td data-motid="20"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="18"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="16"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="14"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="12"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="10"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="8"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="6"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="4"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="2"><span class="pos">?</span><br><span class="target">?</span></td>
-                        <td data-motid="0"><span class="pos">?</span><br><span class="target">?</span></td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="block">
-                <h2><span>Calendar</span></h2>
-            </div>
-            -->
         </div>
-
-
     </div>
 
     <div class="modal fade" id="calendar-edit" tabindex="-1" role="dialog">
@@ -479,6 +245,9 @@
     <script src="js/jquery-3.1.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/pickr.min.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/generic.js"></script>
+    <script src="js/display.js"></script>
+    <script src="js/calendar.js"></script>
+    <script src="js/domoticz.js"></script>
 </body>
 </html>
