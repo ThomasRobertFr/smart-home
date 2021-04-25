@@ -1,3 +1,5 @@
+"""TODO work again on this feature
+
 import threading
 from flask_restful import Resource
 
@@ -41,4 +43,5 @@ class Threads(Resource):
         id = int(id)
         if id in Threads.running:
             Threads.running[id]["stop"] = True
+"""
 

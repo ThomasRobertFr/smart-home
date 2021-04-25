@@ -1,3 +1,5 @@
+"""TODO revive this device
+
 from flask_restful import Resource, reqparse
 import socket
 import os
@@ -50,3 +52,4 @@ class Crespin(Resource):
                 return s.recv(1024).decode()
         except:
             return "ERR Failed to send command"
+"""

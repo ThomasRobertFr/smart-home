@@ -1,7 +1,11 @@
+import itertools
+import os
+
+import pkg_resources
 import yaml
 import pipes
-import itertools
-from . import dotdict
+
+from smarthome.misc.dotdict import DotDictWithNone
 
 
 # Merge data structures
@@ -12,7 +16,7 @@ def merge(a, b):
         return d
 
     if isinstance(a, list) and isinstance(b, list):
-        return [merge(x, y) for x, y in itertools.izip_longest(a, b)]
+        return [merge(x, y) for x, y in itertools.zip_longest(a, b)]
 
     return a if b is None else b
 
@@ -41,27 +45,26 @@ def data_to_env(data, prefix):
 
 # Convert YAML config to .env file
 def export_to_env():
-
-    # Load config files
-    # config = yaml.load(read_file_keep_env("config.yml"))
-    # config_priv = yaml.load(read_file_keep_env("config-private.yml"))
-    # config = merge({}, merge(config, config_priv))
-    config = getDict()
-    envFile = data_to_env(config, "")
-    open(".env", "w").write(envFile)
+    config = get_dict()
+    env_file = data_to_env(config, "")
+    open(".env", "w").write(env_file)
 
 
 # return config
-def getDict():
-    config = yaml.load(open("config.yml", "r"))
-    config_priv = yaml.load(open("config-private.yml", "r"))
+def get_dict():
+    config_priv = {}
+    config_path = pkg_resources.resource_filename("smarthome", "data/config.yml")
+    config_priv_path = pkg_resources.resource_filename("smarthome", "data/config-private.yml")
 
-    return merge({}, merge(config, config_priv))
+    config = yaml.load(open(config_path, "r"), Loader=yaml.FullLoader)
+    if os.path.isfile(config_priv_path):
+        config_priv = yaml.load(open(config_priv_path, "r"), Loader=yaml.FullLoader)
+    return merge(config, config_priv)
 
 
 # return config
 def get():
-    return dotdict.create_dot_dict(getDict())
+    return DotDictWithNone(get_dict())
 
 
 if __name__ == "__main__":

@@ -1,10 +1,10 @@
 #!/bin/bash
 
-RESULT=`ps -x | grep "run.p[y]"`
+RESULT=`ps -x | grep "smarthome.server:ap[p]"`
 
 if [ "${RESULT:-null}" = null ]; then
 	echo "Launch"
-	/home/pi/dev/smart-home/.venv/bin/python /home/pi/dev/smart-home/run.py >> /tmp/smart-home.log 2>&1 &
+	source /home/pi/dev/smart-home/.venv/bin/activate; /home/pi/dev/smart-home/run.sh >> /tmp/smart-home.log 2>&1 &
 else
 	echo "Running"
 fi

@@ -1,27 +1,29 @@
-from flask_restful import Resource
+import math
+
 import requests
+
+from . import Dimmer
 from ..misc import config as _config
+
 config = _config.get().hue
 
 
-class HueLamp(Resource):
+class HueLamp(Dimmer):
+    def __init__(self, light_id: str):
+        self.light_id = light_id
 
-    def get(self, id):
-        url = "http://%s/api/%s/lights/%s" % (config.host, config.username, id)
-        r = requests.get(url)
-        return r.json()
-        # TODO handle errors
+    @property
+    def url(self):
+        return f"http://{config.host}/api/{config.username}/lights/{self.light_id}/state"
 
-    def put(self, id, status):
-        url = "http://%s/api/%s/lights/%s/state" % (config.host, config.username, id)
-        r = requests.put(url, json={"on": (status == "on")})
-        print(r.json())
-        return r.json()
-        # TODO handle errors
+    def on(self):
+        requests.put(self.url, json={"on": True})
 
-    def send(self, id, data):
-        url = "http://%s/api/%s/lights/%s/state" % (config.host, config.username, id)
-        r = requests.put(url, json=data)
-        print(r.json())
-        return r.json()
+    def off(self):
+        requests.put(self.url, json={"on": False})
 
+    def set_level(self, value: float):
+        requests.put(self.url, json={"bri": math.floor(value / 100 * 255)})
+
+    def hue_api_call(self, state: dict):
+        requests.put(self.url, json=state)

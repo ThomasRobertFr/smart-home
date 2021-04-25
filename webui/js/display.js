@@ -68,7 +68,7 @@ function setWeather() {
 }
 
 function updateBackground() {
-    $("#header-container").css("background-image", "url('" + baseURL + "/api/sun.svg?"+Date.now()+"')");
+    $("#header-container").css("background-image", "url('" + baseURL + "/api/sensors/sun.svg?"+Date.now()+"')");
 }
 
 function displayHourlyWeather() {

@@ -1,2 +1,1 @@
-from ._Calendar import CalendarUpdate
-from ._Calendar import CalendarTrigger
+from ._Calendar import Calendar

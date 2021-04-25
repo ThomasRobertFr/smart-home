@@ -1,67 +1,76 @@
-from flask import Flask, Response
-from flask_restful import Api
+from fastapi import FastAPI, Response
 
-# flask init
-app = Flask(__name__)
-api = Api(app)
-
-# scenarios
-from .scenarios import WakeUp, Leave, Sleep, Arrive, Bedtime, Party, ArriveOrBedtime
-api.add_resource(WakeUp, '/scenarios/wakeup')
-api.add_resource(Leave, '/scenarios/leave')
-api.add_resource(Sleep, '/scenarios/sleep')
-api.add_resource(Party, '/scenarios/party')
-api.add_resource(Bedtime, '/scenarios/bedtime')
-api.add_resource(Arrive, '/scenarios/arrive')
-api.add_resource(ArriveOrBedtime, '/scenarios/arrive-or-bedtime')
-
-# devices
-from .devices import HueLamp, PowerPlug, PowerPlugs, NAS, IRRemote, \
-    Crespin, Calendar, WateringSensor, WateringSensors, ESPEasyLights, ESPCustomDimmer
-api.add_resource(HueLamp, '/devices/hue-lamp/<id>', '/devices/hue-lamp/<id>/<status>')
-# api.add_resource(Radio, '/devices/radio/<action>')
-# api.add_resource(RemotePilotWire, '/devices/remote-pilot-wire', '/devices/remote-pilot-wire/<action>')
-api.add_resource(IRRemote, '/devices/ir-remote/<id>', '/devices/ir-remote/<id>/<command>')
-api.add_resource(PowerPlugs, '/devices/power-plugs')
-api.add_resource(PowerPlug, '/devices/power-plug/<id>', '/devices/power-plug/<id>/<status>')
-api.add_resource(NAS, '/devices/nas', '/devices/nas/<status>')
-api.add_resource(Crespin, '/devices/crespin', '/devices/crespin/<status>')
-api.add_resource(Calendar, '/devices/calendar/<verb>/<param>')
-api.add_resource(WateringSensors, '/devices/watering')
-api.add_resource(WateringSensor, '/devices/watering/<id>', '/devices/watering/<id>/<verb>')
-api.add_resource(ESPEasyLights, '/devices/espeasylights', '/devices/espeasylights/<id>',
-                 '/devices/espeasylights/<id>/<status_or_value>')
-api.add_resource(ESPCustomDimmer, '/devices/espcustomdimmer', '/devices/espcustomdimmer/<id>',
-                 '/devices/espcustomdimmer/<id>/<status_or_value>')
-
-# triggers
-from .triggers import CalendarUpdate, CalendarTrigger
-api.add_resource(CalendarUpdate, '/triggers/calendar/update')
-api.add_resource(CalendarTrigger, '/triggers/calendar/trigger')
-
-# sensors
-from .sensors import Sun, Weather, State, Threads, Temperature
-api.add_resource(Sun, '/sensors/sun')
-api.add_resource(State, '/sensors/state')
-api.add_resource(Temperature, '/sensors/temperature')
-api.add_resource(Threads, '/sensors/threads', '/sensors/threads/<id>')
-api.add_resource(Weather, '/sensors/weather', '/sensors/weather/<type>')
+from .devices import Devices
+from .scenarios import Scenarios
+from .triggers import Calendar
+from .sensors import Sun, Weather
 
 
-# sun SVG
-@app.route("/sun.svg")
-def homepage():
-    resp = Response()
-    resp.headers['Content-Type'] = 'image/svg+xml'
-    resp.data = Sun().get_svg()
-    return resp
+app = FastAPI()
+DEVICES = Devices()
+SCENARIOS = Scenarios()
 
 
-def run_debug():
-    app.run(host="0.0.0.0", debug=True, threaded=True)
+@app.get("/devices")
+def get_devices():
+    return DEVICES.list
 
 
-def run():
-    app.run(host="0.0.0.0", debug=False, threaded=True)
+# Could be funny to do something like that, to try
+# for device in devices_list:
+#     @app.get("/devices-by-id/"+device["id"]+"/{state}")
 
 
+@app.get("/devices-by-id/{id}")
+def get_devices_by_id(id: str):
+    return DEVICES.by_id_dict[id]
+
+
+@app.get("/devices-by-idx/{idx}")
+def get_devices_by_idx(idx: int):
+    return DEVICES.by_idx_dict[idx]
+
+
+@app.put("/devices-by-id/{id}/{state}")
+def put_devices_by_id(id: str, state: str):
+    DEVICES.by_id[id].put(state)
+
+
+@app.put("/devices-by-idx/{idx}/{state}")
+def put_devices_by_idx(idx: int, state: str):
+    DEVICES.by_idx[idx].put(state)
+
+
+@app.put("/scenarios-by-id/{id}")
+def put_scenarios_by_id(id: str):
+    SCENARIOS.by_id[id].run()
+
+
+@app.put("/scenarios-by-idx/{idx}")
+def put_scenarios_by_idx(idx: int):
+    SCENARIOS.by_idx[idx].run()
+
+
+@app.get("/sensors/weather")
+@app.get("/sensors/weather/{query}")
+def get_weather(query: Weather.Query = Weather.Query.forecast):
+    return Weather.get(query)
+
+
+@app.get("/sensors/sun.svg")
+def sun_svg():
+    return Response(content=Sun().svg(), media_type='image/svg+xml')
+
+
+@app.get("/triggers/calendar/update")
+def calendar_update():
+    return Calendar().update()
+
+
+@app.get("/triggers/calendar/trigger")
+def calendar_update():
+    return Calendar().trigger()
+
+# Watering
+# api.add_resource(WateringSensors, '/devices/watering')
+# api.add_resource(WateringSensor, '/devices/watering/<id>', '/devices/watering/<id>/<verb>')

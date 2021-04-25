@@ -21,7 +21,7 @@ body > .container {
 }
 
 header {
-    background: url('/api/sun.svg') center center;
+    background: url('/api/sensors/sun.svg') center center;
     overflow: auto;
     height: 175px;
 }
@@ -196,11 +196,11 @@ header {
     vertical-align: middle;
 }
 
-.slider-container {
+.slider-container, .button-container, .toggle-container {
     display: inline-block;
     flex-grow: 1;
+    text-align: center;
 }
-
 
 #weather {
     width: 100%;
@@ -357,10 +357,6 @@ input[type=range]::-webkit-slider-thumb {
 
 #hue_v::-webkit-slider-runnable-track {
     background: linear-gradient(90deg, #b9b9b9, #f3f2f2);;
-}
-
-.toggle-container {
-    display: inline-block;
 }
 
 .toggle-container > * {

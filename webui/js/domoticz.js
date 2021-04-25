@@ -1,7 +1,7 @@
 'use strict';
 
 updates = updates.concat([
-    [updateDomoticz, 10*60, 0],
+    [updateDomoticz, 15, 0],
 ]);
 
 function hsvToRgb(h, s, v) {
@@ -51,6 +51,7 @@ function rgbToHsv(r, g, b) {
 
 
 function updateDomoticz() {
+    /** Update the webpage state based on Domoticz status */
     $.get(domoticzAPI + "type=devices&filter=all&used=true&order=Name", function(data) {
         var devices = data["result"];
         var hue_idx = $("#hue_hs_container").data("idx");
@@ -82,24 +83,8 @@ function runToggle(el) {
     $.get(domoticzAPI + "type=command&param=switchlight&idx=" + el.data('idx') + "&switchcmd=" + state);
 }
 
-function runSlider(el) {
-    var idx = $(el).parents(".slider").data('idx');
-    $.get(domoticzAPI + "type=command&param=switchlight&idx=" + idx + "&switchcmd=Set%20Level&level=" + $(el).val());
-    $.get(domoticzAPI + "type=command&param=switchlight&idx=" + idx + "&switchcmd=On");
-    $('.switch[data-idx='+idx+']').find(".toggle").addClass("checked");
-}
-
 
 $(document).ready(function() {
-
-    // SCENARIOS
-    $('#header-content button[data-uri]').click(function () {
-        vibrate();
-        $.ajax($(this).attr('data-uri'), {
-            'method': 'PUT'
-        });
-    });
-
     // SWITCHES
     $('.switch .toggle').click(function () { vibrate();
         $(this).toggleClass("checked");
@@ -114,9 +99,17 @@ $(document).ready(function() {
         runToggle(this);
     });
 
-    // SLiDERS
+    // SLIDERS
     $('.slider input[type=range]').change(function () { vibrate();
-        runSlider(this);
+        var idx = $(this).parents(".slider").data('idx');
+        $.get(domoticzAPI + "type=command&param=switchlight&idx=" + idx + "&switchcmd=Set%20Level&level=" + $(this).val());
+        $('.switch[data-idx='+idx+']').find(".toggle").addClass("checked");
+    });
+
+    // PUSH BUTTONS
+    $('.push-button').click(function () { vibrate();
+        var idx = $(this).data('idx');
+        $.get(domoticzAPI + "type=command&param=switchlight&idx=" + idx + "&switchcmd=On");
     });
 
     // COLOR
@@ -134,14 +127,5 @@ $(document).ready(function() {
         var colorStr = '{"m":3,"t":0,"r":' + Math.round(rgb[0]) + ',"g":' + Math.round(rgb[1]) + ',"b":' + Math.round(rgb[2]) + ',"cw":0,"ww":0}';
         var bri = $('.slider[data-idx='+idx+'] input[type=range]').val();
         $.get(domoticzAPI + "type=command&param=setcolbrightnessvalue&idx=" + idx + "&color=" + encodeURIComponent(colorStr) + "&brightness=" + bri);
-    });
-    // TODO set color from RGB coming from Domoticz
-
-    // SCENARIOS TODO remove
-    $('#header-content button[data-uri]').click(function () {
-        vibrate();
-        $.ajax($(this).attr('data-uri'), {
-            'method': 'PUT'
-        });
     });
 });

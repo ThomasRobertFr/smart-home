@@ -1,31 +1,30 @@
-from flask_restful import Resource
+import datetime
+import pickle
 
-# google API
+import dateutil.parser
 import httplib2
+import pkg_resources
+import pytz
 from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 
-from ..scenarios import WakeUp
 from ..misc import config as _config
+from ..scenarios import Wakeup
+
 config = _config.get().google_calendar
 
-import pickle
 
-import datetime
-import dateutil.parser
-import pytz
-
-
-class Calendar(Resource):
-
+class Calendar:
+    """Wrapping API for Google Calandar events that can triggen stuff"""
     def get_credentials(self):
-        store = Storage(config.credentials_path)
+        credentials_path = pkg_resources.resource_filename("smarthome", config.credentials_path)
+        store = Storage(credentials_path)
         credentials = store.get()
         if not credentials or credentials.invalid:
-            flow = client.flow_from_clientsecrets(
-                config.client_secret_path, config.scopes)
+            client_secret_path = pkg_resources.resource_filename("smarthome", config.client_secret_path)
+            flow = client.flow_from_clientsecrets(client_secret_path, config.scopes)
             flow.user_agent = config.app_name
             flow.params['access_type'] = 'offline'
             credentials = tools.run_flow(flow, store)
@@ -44,17 +43,20 @@ class Calendar(Resource):
         now = (datetime.datetime.utcnow() - datetime.timedelta(hours=3)).isoformat() + 'Z'
         events_result = service.events().list(
             calendarId=config.calendar_id, timeMin=now, maxResults=20, singleEvents=True,
-            orderBy='startTime').execute()
+            orderBy='startTime'
+        ).execute()
         return events_result.get('items', [])
 
     def save_events(self, events):
-        f = open(config.events_path, "wb")
+        events_path = pkg_resources.resource_filename("smarthome", config.events_path)
+        f = open(events_path, "wb")
         pickle.dump(events, f)
         f.close()
 
     def read_events(self):
+        events_path = pkg_resources.resource_filename("smarthome", config.events_path)
         try:
-            f = open(config.events_path, "rb")
+            f = open(events_path, "rb")
             events = pickle.load(f)
             f.close()
             if not (isinstance(events, list)):
@@ -64,10 +66,10 @@ class Calendar(Resource):
             return []
 
     def get_previous(self):
+        previous_run_path = pkg_resources.resource_filename("smarthome", config.previous_run_path)
         try:
-            f = open(config.previous_run_path, "rb")
-            previous = pickle.load(f)
-            f.close()
+            with open(previous_run_path, "rb") as f:
+                previous = pickle.load(f)
             if not (isinstance(previous, list)):
                 previous = []
             return previous
@@ -75,11 +77,11 @@ class Calendar(Resource):
             return []
 
     def save_previous(self, previous):
+        previous_run_path = pkg_resources.resource_filename("smarthome", config.previous_run_path)
         if len(previous) > 30:
             previous = previous[-30:]
-        f = open(config.previous_run_path, "wb")
-        pickle.dump(previous, f)
-        f.close()
+        with open(previous_run_path, "wb") as f:
+            pickle.dump(previous, f)
 
     def process_events(self, events, previous=[]):
 
@@ -99,7 +101,7 @@ class Calendar(Resource):
                 print("Waking up at %s, lighting up" % start_str)
                 previous.append(start_str)
                 self.save_previous(previous)
-                WakeUp().put()
+                Wakeup().run()
 
     def update(self):
         events = self.download_calendar()
@@ -110,13 +112,3 @@ class Calendar(Resource):
         events = self.read_events()
         previous = self.get_previous()
         self.process_events(events, previous)
-
-
-class CalendarUpdate(Resource):
-    def get(self):
-        return Calendar().update()
-
-
-class CalendarTrigger(Resource):
-    def get(self):
-        return Calendar().trigger()

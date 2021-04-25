@@ -1,3 +1,6 @@
+"""
+TODO adapt to fastapi
+
 import copy
 import distutils.util
 import os
@@ -185,4 +188,4 @@ class WateringSensor(Resource):
     def delete(self, id):
         WateringSensors().remove_sensor(id)
         return "OK"
-
+"""

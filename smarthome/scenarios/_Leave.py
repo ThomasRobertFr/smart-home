@@ -1,47 +1,11 @@
-from flask_restful import Resource
-from ..devices import PowerPlug, NAS, HueLamp, Calendar
-from ..sensors import State
+from . import Scenario
+from ..devices import Devices
 
 
-class Leave(Resource):
+class Leave(Scenario):
+    def run(self):
+        devices = Devices()
 
-    actions = {
-        "plugs": {
-            "default": True,
-            "title": "Turn plugs off",
-            "config": {
-                "plug-ids": ["dining-lamp", "couch-lamp", "desk", "phone-charger"]
-            }
-        },
-        "hue": {
-            "default": True,
-            "title": "Turn off hue lamps",
-            "config": {
-                "ids": [1]
-            }
-        }
-    }
-
-    def get(self):
-        return self.actions
-
-    def put(self):
-
-        State().put("away")
-
-        # NAS OFF
-        NAS().put("off")
-
-        # CALENDAR OFF
-        Calendar().put("switch", "off")
-
-        # HUE OFF
-        for id in self.actions["hue"]["config"]["ids"]:
-            HueLamp().put(id, "off")
-
-        # PLUGS OFF
-        for plug in self.actions["plugs"]["config"]["plug-ids"]:
-            PowerPlug().put(plug, "off")
-
-
-
+        for device_id in {"bedside", "calendar", "dining-lamp", "couch-lamp", "desk"}:
+            if device_id in devices.by_id:
+                devices.by_id[device_id].off()

@@ -13,6 +13,7 @@ TODO
 * Power Plugs with RF Remote (433 MHz)
 * Philips Hue Lights
 * ESP8266 LED lights (custom)
+* ESP8266 220V dimmer (custom)
 * ESP8266 plants watering (custom)
 * [Elias Crespin-inspired motorized suspended decoration](http://www.eliascrespin.net/) w/ Pi-zero-W (custom)
 * [Everyday Calendar inspired by Simone Giertz](https://www.simonegiertz.com/every-day-calendar) w/ Pi-zero-W (custom)
@@ -40,18 +41,7 @@ dnsmasq nginx php5-fpm
 ## Python
 python python-pip python3 python3-pip
 
-## Text-to-speech
-lame alsa-mixer libttspico-utils sox
 
-# Python packages
-
-## pip
-google-api-python-client requests pytz python-dateutil
-
-## DHT library
-git clone https://github.com/adafruit/Adafruit_Python_DHT.git
-cd Adafruit_Python_DHT
-sudo python3 setup.py install
 ```
 
 ## dnsmask setup
@@ -68,22 +58,22 @@ server=192.168.1.254 # Default DNS
 local=/local/ # Pattern for local domains
 ```
 
+`/etc/hosts` file:
+
+```
+192.168.1.10	raspi
+192.168.1.1	wifi
+192.168.1.2	nas
+192.168.1.3	hue
+```
+
 **Auto-startup:** `sudo systemctl enable dnsmasq`
-
-## Mopidy (MPD music server with Google Music)
-
-```
-wget -q -O - https://apt.mopidy.com/mopidy.gpg | sudo apt-key add -
-sudo wget -q -O /etc/apt/sources.list.d/mopidy.list https://apt.mopidy.com/jessie.list
-sudo apt-get install mopidy
-sudo pip install mopidy-gmusic
-```
 
 ## Web server
 
 `sudo /etc/init.d/nginx start`
 
-Comfiguration in `sites-enabled/default`:
+Comfiguration in `/etc/nginx/sites-enabled/default`:
 
 ```
 server {
@@ -106,12 +96,17 @@ server {
 
     # Redirect API calls
 	location ~ ^/api/(.*)$ {
-		proxy_pass http://<API_URL>/$1$is_args$args;
+		proxy_pass http://127.0.0.1:5000/$1$is_args$args;
 	}
+
+    # Redirect calls to calendar API
+    location ~ ^/calendar/(.*)$ {
+        proxy_pass http://192.168.1.20:5000/$1$is_args$args;
+    }
 
     # Redirect HUE calls
 	location ~ ^/hue/(.*)$ {
-		proxy_pass http://<HUE_URL>/api/<HUE_USERNAME>/$1$is_args$args;
+		proxy_pass http://192.168.1.3/api/vyUE5f3VOJRd8xVnvwcRVCZ9dX1UZnqg5uwQlLJD/$1$is_args$args;
 	}
 
     # Regular files are served
@@ -218,7 +213,8 @@ end remote
 
 # TODOs
 
-* Better integrate Domoticz in UI
+* Reintegrate Watering device in the API
+* Add IRRemote specific commands in API and front
 * Home state integration
 * Add auto triggers:
     * light on based on home state + sun elevation

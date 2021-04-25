@@ -1,22 +1,17 @@
-from flask_restful import Resource
 import subprocess
-from ..misc import config as _config, dotdict
+from typing import Dict
 
-config = _config.get().ir_remote
-devices = {dev["id"]: dotdict.create_dot_dict(dev) for dev in config}
-for x in devices.values():
-    x.on = False
+from . import PushButton
 
 
-class IRRemote(Resource):
-    devices = devices
+class IRRemote(PushButton):
+    def __init__(self, remote_id: str, codes: Dict[str, str]):
+        self.remote_id = remote_id
+        self.codes = codes
 
-    def get(self, id):
-        return devices[id].on
+    def push(self, command="default"):
+        subprocess.call(["irsend", "SEND_ONCE", self.remote_id, self.codes[command]])
 
-    def put(self, id, command):
-        if command == "on" or command == "off" or command == "power":
-            command = "power"
-            IRRemote.devices[id].on = not IRRemote.devices[id].on
-
-        subprocess.call(["irsend", "SEND_ONCE", id, IRRemote.devices[id].codes[command]])
+    @property
+    def commands(self):
+        return list(self.codes.keys())

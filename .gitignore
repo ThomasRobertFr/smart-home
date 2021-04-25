@@ -1,6 +1,6 @@
 /data
 /.idea
-/config-private.yml
+/smarthome/data/config-private.yml
 
 *.pyc
 .DS_Store

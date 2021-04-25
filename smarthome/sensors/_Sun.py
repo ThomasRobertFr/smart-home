@@ -1,4 +1,3 @@
-from flask_restful import Resource
 import math
 from babel.dates import format_date
 from datetime import datetime, timedelta
@@ -7,9 +6,10 @@ from ..misc import config as _config
 config = _config.get().location
 
 
-class Sun(Resource):
+class Sun:
 
-    def _get_elevation(self, date=datetime.now(), time_N=100):
+    @staticmethod
+    def get_elevation(date=datetime.now(), time_N=100):
         """Calculate the elevation of the sun. This computation is based on an Excel sheet provided
         by NOAA, saved in `data/NOAA_Solar_Calculations_day.xls`, and provided at
         https://www.esrl.noaa.gov/gmd/grad/solcalc/calcdetails.html.
@@ -62,10 +62,8 @@ class Sun(Resource):
 
         return solar_elevation
 
-    def get(self):
-        return self._get_elevation()
-
-    def get_svg(self):
+    @staticmethod
+    def svg():
         # plot config
         width = 3000
         height = 175
@@ -83,7 +81,7 @@ class Sun(Resource):
         # elevations data
         elevations = []
         for i in range(nb_days):
-            elevations += self._get_elevation(date=date, time_N=nb_pts)
+            elevations += Sun.get_elevation(date=date, time_N=nb_pts)
             date += timedelta(days=1)
 
         # elevation path
@@ -261,7 +259,3 @@ class Sun(Resource):
                            debug=str(now))
 
         return out.strip()
-
-
-
-

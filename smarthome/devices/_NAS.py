@@ -1,54 +1,36 @@
-from flask_restful import Resource
-import requests
-from datetime import datetime, timedelta
+try:
+    from RPi import GPIO
+except:
+    import warnings
+    warnings.warn("Lib RPi not found, using mock for testing on a local machine")
+    class GPIO:
+        BCM = OUT = HIGH = LOW = False
+        setmode = setup = output = lambda *args: False
 import time
-from RPi import GPIO
-from ..misc import config as _config
-config = _config.get().nas
+import requests
+
+from smarthome.devices import Switch
 
 
-class NAS(Resource):
-
-    status = "unkn"
-    status_time = datetime.now() - timedelta(days=100)
-
-    def __init__(self):
+class NAS(Switch):
+    def __init__(self, gpio: int, url: str):
+        self.gpio = gpio
+        self.url = url
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(config.gpio, GPIO.OUT)
-        GPIO.output(config.gpio, GPIO.HIGH)
+        GPIO.setup(self.gpio, GPIO.OUT)
+        GPIO.output(self.gpio, GPIO.HIGH)
 
-    def get(self):
-        # if starting, give it time
-        if NAS.status == "starting" and (datetime.now() - NAS.status_time).total_seconds() < 130:
-            return NAS.status
-        if NAS.status == "shutdown" and (datetime.now() - NAS.status_time).total_seconds() < 60:
-            return NAS.status
+    def on(self):
+        GPIO.output(self.gpio, GPIO.LOW)
+        time.sleep(1)
+        GPIO.output(self.gpio, GPIO.HIGH)
 
+    def off(self):
         try:
-            requests.get(config.url, timeout=1)
-            NAS.status = "on"
+            requests.get(self.url, timeout=2)
         except:
-            NAS.status = "off"
-
-        NAS.status_time = datetime.now()
-        return NAS.status
-
-    def put(self, status):
-        if status == "on" and self.get() == "off":
-            NAS.status = "starting"
-            NAS.status_time = datetime.now()
-            GPIO.output(config.gpio, GPIO.LOW)
-            time.sleep(1)
-            GPIO.output(config.gpio, GPIO.HIGH)
-
-        elif status == "off" and self.get() == "on":
-            NAS.status = "shutdown"
-            NAS.status_time = datetime.now()
-            GPIO.output(config.gpio, GPIO.LOW)
+            raise ValueError("Could not find NAS running so did not stop it")
+        else:
+            GPIO.output(self.gpio, GPIO.LOW)
             time.sleep(7)
-            GPIO.output(config.gpio, GPIO.HIGH)
-
-# static GPIO init
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(config.gpio, GPIO.OUT)
-GPIO.output(config.gpio, GPIO.HIGH)
+            GPIO.output(self.gpio, GPIO.HIGH)

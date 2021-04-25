@@ -41,11 +41,6 @@ function updateCalendar() {
     $.get(baseURL + "/calendar/calendars", function(data) {
         display_calendar_list(data);
         $.get(baseURL + "/calendar/display", function (display_data) {
-            $("#calendar_brightness").val(Math.sqrt(display_data.brightness));
-            if (display_data["switch"] == "on")
-                $('[data-device="calendar"] .toggle').addClass("checked");
-            else
-                $('[data-device="calendar"] .toggle').removeClass("checked");
             show_calendar(display_data.calendar);
             calendar_scroll_today();
         });
@@ -244,12 +239,5 @@ $(document).ready(function() {
             }
         });
         $("#calendar-edit").modal("hide");
-    });
-
-    $("#calendar_brightness").change(function () {
-        $.ajax({
-            url: baseURL + '/calendar/display/brightness/'+Math.round(Math.pow($("#calendar_brightness").val(), 2)),
-            type: 'PUT'
-	    });
     });
 });

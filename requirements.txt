@@ -1,0 +1,16 @@
+python-dateutil
+httplib2
+Flask
+flask_restful
+RPi
+rpi_rf
+pyyaml
+babel
+Adafruit_DHT
+# google-assistant-library==1.0.0
+argparse>=1.4.0,<2
+# google-auth>=1.0.1,<2
+oauth2client
+google-api-python-client
+uvicorn[standard]
+FastAPI
