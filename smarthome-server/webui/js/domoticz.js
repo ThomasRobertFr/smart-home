@@ -58,9 +58,11 @@ function updateDomoticz() {
         for (var i in devices) {
             if (devices[i].Status == "Off") {
                 $('.switch[data-idx='+devices[i].idx+']').find(".toggle").removeClass("checked");
+                $('.slider[data-idx='+devices[i].idx+']').addClass("slider-off");
             }
             else {
                 $('.switch[data-idx='+devices[i].idx+']').find(".toggle").addClass("checked");
+                $('.slider[data-idx='+devices[i].idx+']').removeClass("slider-off");
             }
             $('.slider[data-idx='+devices[i].idx+']').find("input").val(devices[i].LevelInt);
             if (devices[i].idx == hue_idx) {
@@ -79,8 +81,15 @@ function updateDomoticz() {
 
 function runToggle(el) {
     el = $(el).parents(".switch");
-    var state = el.find(".toggle").hasClass("checked") ? "On" : "Off";
-    $.get(domoticzAPI + "type=command&param=switchlight&idx=" + el.data('idx') + "&switchcmd=" + state);
+    var idx = el.data('idx');
+    if (el.find(".toggle").hasClass("checked")) {
+        $.get(domoticzAPI + "type=command&param=switchlight&idx=" + idx + "&switchcmd=On");
+        $('.slider[data-idx=' + idx + ']').removeClass("slider-off");
+    }
+    else {
+        $.get(domoticzAPI + "type=command&param=switchlight&idx=" + idx + "&switchcmd=Off");
+        $('.slider[data-idx=' + idx + ']').addClass("slider-off");
+    }
 }
 
 
@@ -103,7 +112,8 @@ $(document).ready(function() {
     $('.slider input[type=range]').change(function () { vibrate();
         var idx = $(this).parents(".slider").data('idx');
         $.get(domoticzAPI + "type=command&param=switchlight&idx=" + idx + "&switchcmd=Set%20Level&level=" + $(this).val());
-        $('.switch[data-idx='+idx+']').find(".toggle").addClass("checked");
+        $('.switch[data-idx=' + idx + ']').find(".toggle").addClass("checked");
+        $('.slider[data-idx=' + idx + ']').removeClass("slider-off");
     });
 
     // PUSH BUTTONS
