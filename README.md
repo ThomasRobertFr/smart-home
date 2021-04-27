@@ -6,7 +6,7 @@ The folders are:
 
 * `smarthome-server`: main folder with the code of the server that handles the smart-home project
 * `everyday-calendar`: code for the small server that handles my version of the Everyday Calendar
-* `esp8266-ac-dimmer`: code for the ESP8266 that handles the dimming of an 220V LED bulb from IKEA
+* `esp8266-ac-dimmer`: code for the ESP8266 that handles the dimming of an 230V LED bulb from IKEA
    based on a [Robodyn Dimmer](https://github.com/RobotDynOfficial/RBDDimmer)
 * `esp8266-watering`: code for ESP8266 handling watering of my plants
 
@@ -21,7 +21,7 @@ TODO
 * Power Plugs with RF Remote (433 MHz)
 * Philips Hue Lights
 * ESP8266 LED lights (custom)
-* ESP8266 220V dimmer (custom)
+* ESP8266 230V dimmer (custom)
 * ESP8266 plants watering (custom)
 * [Elias Crespin-inspired motorized suspended decoration](http://www.eliascrespin.net/) w/ Pi-zero-W (custom)
 * [Everyday Calendar inspired by Simone Giertz](https://www.simonegiertz.com/every-day-calendar) w/ Pi-zero-W (custom)
