@@ -1,36 +1,56 @@
 import abc
-import copy
-from typing import Type, List, Dict
+import logging
+from typing import Dict
 
-from ..misc.utils import load_from_string_import
-from ..misc import config as _config
+import requests
+
+from smarthome.misc import config as _config
+from smarthome.misc.wrappers import Wrapper, WrapperSet
+
+config = _config.get()
 
 
-class Device:
+class Device(Wrapper):
     @abc.abstractmethod
     def put(self, value: str):
-        pass
+        """Change the status of this device based on provided value (accepted values will depend on
+        the implementation of the device).
+        """
 
-    @staticmethod
-    def load_from_dict(device: dict) -> 'Device':
-        device_class: Type[Device] = load_from_string_import(device["class"])
-        device = copy.deepcopy(device)
-        for k in {"id", "idx", "class"}:
-            if k in device:
-                device.pop(k)
+    @abc.abstractmethod
+    def get_domoticz_url(self, value: str) -> str:
+        """Return the end of the URL to change the status of this device via Domoticz."""
+
+    def put_domoticz(self, value: str, catch_error: bool = False) -> bool:
+        """Change the status of this device via Domoticz. This will end up calling this code back
+        via `put` but will register the changed state in Domoticz. We could probably do this in
+        many other ways like sending a message to Domoticz's MQTT but for now this will do the
+        trick.
+        """
+        if not isinstance(value, str):
+            value = str(value)
+        url = "[not defined]"
         try:
-            return device_class(**device)
+            assert config.domoticz.base_url_json.endswith("json.htm?")
+            url = f"{config.domoticz.base_url_json}idx={self.idx}&{self.get_domoticz_url(value)}"
+            req = requests.get(url)
+            req.raise_for_status()
+            if req.json().get("status") != "OK":
+                raise RuntimeError(f"Domoticz did not return status=OK, got {req.json()}")
+            return True
         except Exception as e:
-            raise ValueError(f"Impossible to create object for device {device}") from e
+            if catch_error:
+                logging.error(f"Failed during domoticz call to {url}: {e}")
+                return False
+            else:
+                raise RuntimeError(f"Failed during domoticz call to {url}: {e}") from e
 
 
-class Devices:
-    def __init__(self):
-        self.list: List[dict] = [{"id": id, **device} for id, device in _config.get_dict()["devices"].items()]
-        self.by_id_dict: Dict[str, dict] = {device["id"]: device for device in self.list}
-        self.by_idx_dict: Dict[str, dict] = {device["idx"]: device for device in self.list}
-        self.by_id: Dict[str, Device] = {device["id"]: Device.load_from_dict(device) for device in self.list}
-        self.by_idx: Dict[str, Device] = {device["idx"]: Device.load_from_dict(device) for device in self.list}
+class Devices(WrapperSet[Device]):
+    def __init__(self, devices: Dict[str, dict] = None):
+        if devices is None:
+            devices = _config.get_dict()["devices"]
+        super().__init__(Device, devices)
 
 
 class PushButton(Device):
@@ -40,14 +60,17 @@ class PushButton(Device):
 
     def put(self, value: str):
         value = value.lower().strip()
-        if value == "on":
-            self.push()
-        elif value == "off":
-            self.push()
-        elif value == "push":
+        if value in {"on", "off", "push"}:
             self.push()
         else:
-            raise ValueError("Invalid value")
+            raise ValueError(f"Invalid value '{value}' (on, off, push)")
+
+    def get_domoticz_url(self, value: str) -> str:
+        value = value.lower().strip()
+        if value in {"on", "off", "push"}:
+            return "type=command&param=switchlight&switchcmd=On"
+        else:
+            raise ValueError(f"Invalid value '{value}' (on, off, push)")
 
 
 class Switch(Device):
@@ -66,7 +89,16 @@ class Switch(Device):
         elif value == "off":
             self.off()
         else:
-            raise ValueError("Invalid value")
+            raise ValueError(f"Invalid value '{value}' (on, off)")
+
+    def get_domoticz_url(self, value: str) -> str:
+        value = value.lower().strip()
+        if value == "on":
+            return "type=command&param=switchlight&switchcmd=On"
+        elif value == "off":
+            return "type=command&param=switchlight&switchcmd=Off"
+        else:
+            raise ValueError(f"Invalid value '{value}' (on, off)")
 
 
 class Dimmer(Switch):
@@ -78,12 +110,26 @@ class Dimmer(Switch):
     def put(self, value: str):
         # Try with parent first
         try:
-            super().put(value)
+            return super().put(value)
         except ValueError:
             pass
 
         # Else try with our set_level
         try:
             self.set_level(float(value))
-        except ValueError as e:
-            raise ValueError("Invalid value") from e
+        except ValueError:
+            raise ValueError(f"Invalid value '{value}' (on, off or float for level)")
+
+    def get_domoticz_url(self, value: str) -> str:
+        # Try with parent first
+        try:
+            return super().get_domoticz_url(value)
+        except ValueError:
+            pass
+
+        # Else try with our set_level
+        try:
+            value = float(value)
+            return f"type=command&param=switchlight&switchcmd=Set%20Level&level={value}"
+        except ValueError:
+            raise ValueError(f"Invalid value '{value}' (on, off or float for level)")

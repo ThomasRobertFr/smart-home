@@ -11,7 +11,6 @@ from oauth2client import tools
 from oauth2client.file import Storage
 
 from ..misc import config as _config
-from ..scenarios import Wakeup
 
 config = _config.get().google_calendar
 
@@ -101,7 +100,8 @@ class Calendar:
                 print("Waking up at %s, lighting up" % start_str)
                 previous.append(start_str)
                 self.save_previous(previous)
-                Wakeup().run()
+                from smarthome.server import SCENARIOS
+                SCENARIOS["wakeup"].run()
 
     def update(self):
         events = self.download_calendar()

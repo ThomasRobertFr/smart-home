@@ -2,14 +2,15 @@ import math
 
 import requests
 
-from . import Dimmer
-from ..misc import config as _config
+from smarthome.devices import Dimmer
+from smarthome.misc import config as _config
 
 config = _config.get().hue
 
 
 class HueLamp(Dimmer):
-    def __init__(self, light_id: str):
+    def __init__(self, id: str, idx: int, light_id: str):
+        super().__init__(id, idx)
         self.light_id = light_id
 
     @property

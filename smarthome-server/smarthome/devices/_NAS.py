@@ -13,7 +13,8 @@ from smarthome.devices import Switch
 
 
 class NAS(Switch):
-    def __init__(self, gpio: int, url: str):
+    def __init__(self, id: str, idx: int, gpio: int, url: str):
+        super().__init__(id, idx)
         self.gpio = gpio
         self.url = url
         GPIO.setmode(GPIO.BCM)

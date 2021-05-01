@@ -2,6 +2,9 @@ hue:
   host: hue
   username: secret
 
+domoticz:
+  base_url_json: http://192.168.1.10:8080/json.htm?
+
 google_calendar:
   client_secret_path: data/client_secret.json
   credentials_path: data/smart-light.json
@@ -122,20 +125,70 @@ devices:
 scenarios:
   wakeup:
     idx: 10
-    class: smarthome.scenarios.Wakeup
+    class: smarthome.scenarios.BasicScenarioWithHue
+    devices:
+      calendar: 50
+    hue_id: bedside
+    hue_calls:
+      - {"on": True, "bri": 0, "xy": [0.674, 0.322], "transitiontime": 0}
+      - {"on": True, "bri": 254, "xy": [0.4974, 0.4152], "transitiontime": 6000}
 
   sleep:
     idx: 13
-    class: smarthome.scenarios.Sleep
+    class: smarthome.scenarios.BasicScenarioWithHue
+    devices:
+      calendar: off
+      couch-lamp: off
+      dining-lamp: off
+      fridge-lamp: off
+      desk-lamp: off
+      pixar-lamp: off
+      fairy-lights: off
+      bb-8: off
+      bed: off
+    hue_id: bedside
+    hue_calls:
+      - {"on": True, "transitiontime": 0}
+      - {"on": False, "bri": 0, "xy": [0.674, 0.322], "transitiontime": 450}
 
   bedtime:
     idx: 12
-    class: smarthome.scenarios.Bedtime
+    class: smarthome.scenarios.BasicScenarioWithHue
+    devices:
+      calendar: off
+      couch-lamp: off
+      dining-lamp: off
+      fridge-lamp: off
+      desk-lamp: off
+      pixar-lamp: off
+      fairy-lights: 50
+      bb-8: 50
+      bed: 50
+    hue_id: bedside
+    hue_calls:
+      - {"on": True, "bri": 150, "xy": [0.5239,0.4136], "transitiontime": 3000}
 
   arrive:
     idx: 9
-    class: smarthome.scenarios.Arrive
+    class: smarthome.scenarios.BasicScenario
+    devices:
+      couch-lamp: on
+      dining-lamp: on
+      fridge-lamp: off
+      calendar: 50
+      bedside: on
 
   leave:
     idx: 11
-    class: smarthome.scenarios.Leave
+    class: smarthome.scenarios.BasicScenario
+    devices:
+      couch-lamp: off
+      dining-lamp: off
+      fridge-lamp: off
+      calendar: off
+      desk-lamp: off
+      bedside: off
+      pixar-lamp: off
+      fairy-lights: off
+      bb-8: off
+      bed: off

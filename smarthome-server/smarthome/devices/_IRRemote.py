@@ -1,11 +1,12 @@
 import subprocess
 from typing import Dict
 
-from . import PushButton
+from smarthome.devices import PushButton
 
 
 class IRRemote(PushButton):
-    def __init__(self, remote_id: str, codes: Dict[str, str]):
+    def __init__(self, id: str, idx: int, remote_id: str, codes: Dict[str, str]):
+        super().__init__(id, idx)
         self.remote_id = remote_id
         self.codes = codes
 

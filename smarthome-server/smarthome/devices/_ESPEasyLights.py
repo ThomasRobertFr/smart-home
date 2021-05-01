@@ -5,7 +5,8 @@ from smarthome.devices import Dimmer
 
 
 class ESPEasyDimmer(Dimmer):
-    def __init__(self, host: str, gpio: int):
+    def __init__(self, id: str, idx: int, host: str, gpio: int):
+        super().__init__(id, idx)
         self.host = host
         self.gpio = gpio
 

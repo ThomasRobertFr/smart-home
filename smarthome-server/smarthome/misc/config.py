@@ -58,7 +58,7 @@ def get_dict():
 
     config = yaml.load(open(config_path, "r"), Loader=yaml.FullLoader)
     if os.path.isfile(config_priv_path):
-        config_priv = yaml.load(open(config_priv_path, "r"), Loader=yaml.FullLoader)
+        config_priv = yaml.full_load(open(config_priv_path, "r"))
     return merge(config, config_priv)
 
 

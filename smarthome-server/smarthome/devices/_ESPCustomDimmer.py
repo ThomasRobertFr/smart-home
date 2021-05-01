@@ -6,7 +6,8 @@ from . import Dimmer
 
 
 class ESPCustomDimmer(Dimmer):
-    def __init__(self, host: str, min=0, max=1024):
+    def __init__(self, id: str, idx: int, host: str, min=0, max=1024):
+        super().__init__(id, idx)
         self.host = host
         self.min = min
         self.max = max

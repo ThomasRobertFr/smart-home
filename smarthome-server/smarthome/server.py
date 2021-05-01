@@ -13,7 +13,12 @@ SCENARIOS = Scenarios()
 
 @app.get("/devices")
 def get_devices():
-    return DEVICES.list
+    return DEVICES.list_dict
+
+
+@app.get("/scenarios")
+def get_devices():
+    return SCENARIOS.list_dict
 
 
 # Could be funny to do something like that, to try
@@ -33,12 +38,12 @@ def get_devices_by_idx(idx: int):
 
 @app.put("/devices-by-id/{id}/{state}")
 def put_devices_by_id(id: str, state: str):
-    DEVICES.by_id[id].put(state)
+    DEVICES[id].put(state)
 
 
 @app.put("/devices-by-idx/{idx}/{state}")
 def put_devices_by_idx(idx: int, state: str):
-    DEVICES.by_idx[idx].put(state)
+    DEVICES[idx].put(state)
 
 
 @app.put("/scenarios-by-id/{id}")
@@ -49,6 +54,22 @@ def put_scenarios_by_id(id: str):
 @app.put("/scenarios-by-idx/{idx}")
 def put_scenarios_by_idx(idx: int):
     SCENARIOS.by_idx[idx].run()
+
+
+@app.put("/devices-and-scenarios-by-id/{id}/{state}")
+def put_devices_or_scenarios_by_id(id: str, state: str):
+    if id in DEVICES:
+        DEVICES[id].put(state)
+    elif state == "on":
+        SCENARIOS[id].run()
+
+
+@app.put("/devices-and-scenarios-by-idx/{idx}/{state}")
+def put_devices_or_scenarios_by_idx(idx: int, state: str):
+    if idx in DEVICES:
+        DEVICES[idx].put(state)
+    elif state == "on":
+        SCENARIOS[idx].run()
 
 
 @app.get("/sensors/weather")

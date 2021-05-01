@@ -8,8 +8,8 @@ except:
         def enable_tx(self): pass
         def tx_code(self, code, duration, pulse): print(f"Sending code {pulse}/{code}")
 
-from . import Switch
-from ..misc import config as _config
+from smarthome.devices import Switch
+from smarthome.misc import config as _config
 
 config = _config.get().rf
 
@@ -18,7 +18,8 @@ RFDEVICE.enable_tx()
 
 
 class RFRemote(Switch):
-    def __init__(self, remote: str):
+    def __init__(self, id: str, idx: int, remote: str):
+        super().__init__(id, idx)
         if remote not in config.remotes:
             raise ValueError(f"Unkown remote {remote}, available are {list(config.remotes.keys())}")
         self.pulse = config.remotes[remote][0]
