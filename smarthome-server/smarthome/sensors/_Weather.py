@@ -7,6 +7,7 @@ import pkg_resources
 import requests
 
 from ..misc import config as _config
+
 config = _config.get().weather
 
 
@@ -41,13 +42,15 @@ class Weather:
             return cache
         else:
             if query == cls.Query.forecast:
-                r = requests.get(f"https://api.darksky.net/forecast/{config.key}/{config.location}?units=si")
+                r = requests.get(
+                    f"https://api.darksky.net/forecast/{config.key}/{config.location}?units=si")
                 out = r.json()
             elif query == cls.Query.hourly:
-                r = requests.get(f"https://api.darksky.net/forecast/{config.key}/{config.location}?units=si&extend=hourly")
+                r = requests.get(
+                    f"https://api.darksky.net/forecast/{config.key}/{config.location}?units=si&extend=hourly"
+                )
                 out = r.json()
             else:
                 raise ValueError(f"Unknown weather query {query}")
             cls._set_cache(query, out)
             return out
-

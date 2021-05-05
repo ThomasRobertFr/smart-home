@@ -1,8 +1,8 @@
 import copy
-from typing import Type, List, Dict, Union, Generic, TypeVar
+from typing import Dict, Generic, List, Type, TypeVar, Union
 
-from smarthome.misc.utils import load_from_string_import
 from smarthome.misc import config as _config
+from smarthome.misc.utils import load_from_string_import
 
 config = _config.get()
 

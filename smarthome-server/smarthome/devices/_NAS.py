@@ -1,12 +1,14 @@
+# yapf: disable
 try:
     from RPi import GPIO
 except:
-    import warnings
-    warnings.warn("Lib RPi not found, using mock for testing on a local machine")
+    import warnings; warnings.warn("Lib RPi not found, using mock for testing on a local machine")
     class GPIO:
         BCM = OUT = HIGH = LOW = False
         setmode = setup = output = lambda *args: False
+# yapf: enable
 import time
+
 import requests
 
 from smarthome.devices import Switch

@@ -6,8 +6,7 @@ import httplib2
 import pkg_resources
 import pytz
 from apiclient import discovery
-from oauth2client import client
-from oauth2client import tools
+from oauth2client import client, tools
 from oauth2client.file import Storage
 
 from ..misc import config as _config
@@ -22,7 +21,8 @@ class Calendar:
         store = Storage(credentials_path)
         credentials = store.get()
         if not credentials or credentials.invalid:
-            client_secret_path = pkg_resources.resource_filename("smarthome", config.client_secret_path)
+            client_secret_path = pkg_resources.resource_filename("smarthome",
+                                                                 config.client_secret_path)
             flow = client.flow_from_clientsecrets(client_secret_path, config.scopes)
             flow.user_agent = config.app_name
             flow.params['access_type'] = 'offline'
@@ -40,10 +40,11 @@ class Calendar:
 
         # Load events
         now = (datetime.datetime.utcnow() - datetime.timedelta(hours=3)).isoformat() + 'Z'
-        events_result = service.events().list(
-            calendarId=config.calendar_id, timeMin=now, maxResults=20, singleEvents=True,
-            orderBy='startTime'
-        ).execute()
+        events_result = service.events().list(calendarId=config.calendar_id,
+                                              timeMin=now,
+                                              maxResults=20,
+                                              singleEvents=True,
+                                              orderBy='startTime').execute()
         return events_result.get('items', [])
 
     def save_events(self, events):

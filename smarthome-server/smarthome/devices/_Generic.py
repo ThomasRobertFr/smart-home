@@ -16,11 +16,9 @@ class Device(Wrapper):
         """Change the status of this device based on provided value (accepted values will depend on
         the implementation of the device).
         """
-
     @abc.abstractmethod
     def get_domoticz_url(self, value: str) -> str:
         """Return the end of the URL to change the status of this device via Domoticz."""
-
     def put_domoticz(self, value: str, catch_error: bool = False) -> bool:
         """Change the status of this device via Domoticz. This will end up calling this code back
         via `put` but will register the changed state in Domoticz. We could probably do this in

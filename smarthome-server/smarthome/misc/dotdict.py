@@ -8,7 +8,6 @@ class DotDict(dict):
     We use this instead of EastDict mostly for the `get_dict`, `flatten`, `unflatten` methods that
     do not exist in EasyDict.
     """
-
     def __init__(self, dic: dict):
         super().__init__(dic)
         for k, v in self.items():

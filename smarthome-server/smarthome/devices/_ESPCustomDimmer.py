@@ -23,12 +23,10 @@ class ESPCustomDimmer(Dimmer):
 
     def level_to_dimmerval(self, level):
         """Transforms level in [1, 100] to a dimmerval in [1, 1024]"""
-        zero_one = (level / 100.) ** 2
+        zero_one = (level / 100.)**2
         return math.ceil(self.min + zero_one * (self.max - self.min))
 
     def dimmerval_to_level(self, dimmerval):
         """Reverse of level_to_dimmerval"""
         zero_one = dimmerval / (self.max - self.min) - self.min
         return math.ceil(math.sqrt(zero_one) * 100)
-
-

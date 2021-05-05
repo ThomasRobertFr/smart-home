@@ -19,5 +19,5 @@ class EverydayCalendar(Dimmer):
     @staticmethod
     def level_to_brigtness(level):
         """Transforms level in [1, 100] to a dimmerval in [1, 156]"""
-        zero_one = (level / 100.) ** 2
+        zero_one = (level / 100.)**2
         return math.ceil(zero_one * 256)

@@ -1,12 +1,13 @@
+# yapf: disable
 try:
     from rpi_rf import RFDevice
 except:
-    import warnings
-    warnings.warn("Lib rpi_rf not found, using mock for testing on a local machine")
+    import warnings; warnings.warn("Lib rpi_rf not found, using mock for testing on a local machine")
     class RFDevice:
         def __init__(self, tx): pass
         def enable_tx(self): pass
         def tx_code(self, code, duration, pulse): print(f"Sending code {pulse}/{code}")
+# yapf: enable
 
 from smarthome.devices import Switch
 from smarthome.misc import config as _config

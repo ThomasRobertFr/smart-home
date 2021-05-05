@@ -1,11 +1,15 @@
 import math
-from babel.dates import format_date
 from datetime import datetime, timedelta
+
 import pytz
+from babel.dates import format_date
+
 from ..misc import config as _config
+
 config = _config.get().location
 
 
+# yapf: disable
 class Sun:
 
     @staticmethod
@@ -259,3 +263,4 @@ class Sun:
                            debug=str(now))
 
         return out.strip()
+# yapf: enable

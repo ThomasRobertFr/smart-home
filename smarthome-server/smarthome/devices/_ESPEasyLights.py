@@ -1,4 +1,5 @@
 import math
+
 import requests
 
 from smarthome.devices import Dimmer
@@ -22,7 +23,7 @@ class ESPEasyDimmer(Dimmer):
     @staticmethod
     def value_to_pwm(value):
         """Transforms value in [1, 100] to a pwm in [1, 1024]"""
-        return math.ceil((value / 100.) ** 2 * 1024)
+        return math.ceil((value / 100.)**2 * 1024)
 
     @staticmethod
     def pwm_to_value(pwm):

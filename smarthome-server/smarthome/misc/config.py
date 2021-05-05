@@ -1,9 +1,9 @@
 import itertools
 import os
+import pipes
 
 import pkg_resources
 import yaml
-import pipes
 
 from smarthome.misc.dotdict import DotDictWithNone
 

@@ -36,8 +36,6 @@ dnsmasq nginx php5-fpm
 
 ## Python
 python python-pip python3 python3-pip
-
-
 ```
 
 ## dnsmask setup
@@ -154,7 +152,7 @@ LIRCMD_CONF=""
 
 Install a receiving IR diode (VS1838B):
 
-![VS1838B.png]()
+![](VS1838B.png)
 
 To test the receiver:
 
@@ -419,6 +417,7 @@ we use simple 2N222 transistors and PWM to control diodes brightness.
 # TODOs
 
 * Reintegrate Watering device in the API
+* Add threads to handle slow calls + add fading feature based on this
 * Add IRRemote specific commands in API and front
 * Home state integration
 * Add auto triggers:

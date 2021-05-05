@@ -5,7 +5,7 @@ from typing import Dict, List
 
 from ..devices import Device, HueLamp
 from ..misc import config as _config
-from ..misc.wrappers import WrapperSet, Wrapper
+from ..misc.wrappers import Wrapper, WrapperSet
 
 
 class Scenario(Wrapper):
@@ -33,7 +33,8 @@ class BasicScenario(Scenario):
 
         super().__init__(id, idx)
         self.devices: Dict[Device, str] = {
-            DEVICES[device]: process_val(val) for device, val in devices.items()
+            DEVICES[device]: process_val(val)
+            for device, val in devices.items()
         }
 
     def run(self):
@@ -47,8 +48,13 @@ class BasicScenario(Scenario):
 
 
 class BasicScenarioWithHue(BasicScenario):
-    def __init__(self, id: str, idx: int, devices: Dict[str, str],
-                 hue_calls: List[dict], hue_id: str = None, hue_idx: int = None):
+    def __init__(self,
+                 id: str,
+                 idx: int,
+                 devices: Dict[str, str],
+                 hue_calls: List[dict],
+                 hue_id: str = None,
+                 hue_idx: int = None):
         from smarthome.server import DEVICES
 
         super().__init__(id, idx, devices)
