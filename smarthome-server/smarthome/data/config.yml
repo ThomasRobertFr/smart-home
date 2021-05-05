@@ -148,8 +148,8 @@ scenarios:
       bed: off
     hue_id: bedside
     hue_calls:
-      - {"on": True, "transitiontime": 0}
-      - {"on": False, "bri": 0, "xy": [0.674, 0.322], "transitiontime": 450}
+      - {"on": True, "bri": 0, "xy": [0.674, 0.322], "transitiontime": 0}
+      - {"on": False, "transitiontime": 0}
 
   bedtime:
     idx: 12
