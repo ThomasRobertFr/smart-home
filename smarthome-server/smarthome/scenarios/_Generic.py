@@ -23,7 +23,7 @@ class Scenarios(WrapperSet[Scenario]):
 
 class BasicScenario(Scenario):
     def __init__(self, id: str, idx: int, devices: Dict[str, str]):
-        from smarthome.server import DEVICES
+        from smarthome.api import DEVICES
 
         def process_val(v):
             if isinstance(v, bool):
@@ -55,7 +55,7 @@ class BasicScenarioWithHue(BasicScenario):
                  hue_calls: List[dict],
                  hue_id: str = None,
                  hue_idx: int = None):
-        from smarthome.server import DEVICES
+        from smarthome.api import DEVICES
 
         super().__init__(id, idx, devices)
         self.hue_calls = hue_calls

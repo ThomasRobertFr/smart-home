@@ -1,3 +1,4 @@
+#define ARDUINOJSON_USE_LONG_LONG 1
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>

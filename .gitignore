@@ -1,5 +1,10 @@
 .idea
+.vscode
+.pio
+
+# Private files
 /smarthome-server/smarthome/data
+/esp8266-watering/include/wifi_setup.h
 
 *.pyc
 .DS_Store

@@ -9,7 +9,7 @@ updates = updates.concat([
 
 function set_display(calendar_id) {
     $.ajax({
-        url: baseURL + "/calendar/display/calendar/"+calendar_id,
+        url: calendarURL + "display/calendar/"+calendar_id,
         method: "PUT",
         success: function(data) {
             show_calendar(data);
@@ -21,7 +21,7 @@ function set_day(calendar_id, year, month, day, state) {
     var day_id = month.toString().padStart(2, 0) + "-" + day.toString().padStart(2, 0);
 
     $.ajax({
-        url: baseURL + "/calendar/calendars/"+calendar_id+"/"+year+'/'+month+'/'+day+"/"+state,
+        url: calendarURL + "calendars/"+calendar_id+"/"+year+'/'+month+'/'+day+"/"+state,
         type: 'PUT',
         success: function (data) {
             if (state == "on") {
@@ -38,9 +38,9 @@ function set_day(calendar_id, year, month, day, state) {
 }
 
 function updateCalendar() {
-    $.get(baseURL + "/calendar/calendars", function(data) {
+    $.get(calendarURL + "calendars", function(data) {
         display_calendar_list(data);
-        $.get(baseURL + "/calendar/display", function (display_data) {
+        $.get(calendarURL + "display", function (display_data) {
             show_calendar(display_data.calendar);
             calendar_scroll_today();
         });
@@ -93,10 +93,10 @@ function display_calendar_list(data) {
     });
 
     $("#calendar_list .btn-edit").on("click", function () {
-        $.get(baseURL + "/calendar/calendars/" + $(this).parent().data("id"), function (data) {
+        $.get(calendarURL + "calendars/" + $(this).parent().data("id"), function (data) {
             $("#calendar-name").val(data.name);
             $("#calendar-edit").modal('show');
-            $('#calendar-edit form').attr('action', baseURL + '/calendar/calendars/'+data.id);
+            $('#calendar-edit form').attr('action', calendarURL + 'calendars/'+data.id);
             setTimeout(function(){ pickr.setColor('rgb('+ data.color +')'); }, 250);
         });
     });
@@ -104,7 +104,7 @@ function display_calendar_list(data) {
     $("#calendar_list .btn-add").on("click", function () {
         $("#calendar-edit").modal('show');
         $("#calendar-name").val("");
-        $('#calendar-edit form').attr('action', baseURL + '/calendar/calendars');
+        $('#calendar-edit form').attr('action', calendarURL + 'calendars');
         setTimeout(function(){ pickr.setColor('rgb(177, 177, 177)'); }, 250);
     });
 }
@@ -235,7 +235,7 @@ $(document).ready(function() {
             url: form.attr('action'),
             success: function (data) {
                 display_calendar_list(data);
-                $.get(baseURL + "/calendar/display/calendar", show_calendar);
+                $.get(calendarURL + "display/calendar", show_calendar);
             }
         });
         $("#calendar-edit").modal("hide");

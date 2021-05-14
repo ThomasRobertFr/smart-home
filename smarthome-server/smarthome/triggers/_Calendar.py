@@ -101,7 +101,7 @@ class Calendar:
                 print("Waking up at %s, lighting up" % start_str)
                 previous.append(start_str)
                 self.save_previous(previous)
-                from smarthome.server import SCENARIOS
+                from smarthome.api import SCENARIOS
                 SCENARIOS["wakeup"].run()
 
     def update(self):

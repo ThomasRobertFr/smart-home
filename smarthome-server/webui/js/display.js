@@ -25,7 +25,7 @@ function updateTime() {
 }
 
 function setWeather() {
-    $.get(baseURL + "/api/sensors/weather", function(data) {
+    $.get(apiURL + "sensors/weather", function(data) {
         data = data.daily.data[0];
         $("#header-weather-temp-2 span:last").html(Math.round(data.temperatureHigh));
         $("#header-weather-temp-2 span:first").html(Math.round(data.temperatureLow));
@@ -68,7 +68,7 @@ function setWeather() {
 }
 
 function updateBackground() {
-    $("#header-container").css("background-image", "url('" + baseURL + "/api/sensors/sun.svg?"+Date.now()+"')");
+    $("#header-container").css("background-image", "url('" + apiURL + "sensors/sun.svg?"+Date.now()+"')");
 }
 
 function displayHourlyWeather() {
@@ -99,7 +99,7 @@ function displayHourlyWeather() {
         "mostlysunny": "f00c" // "wi-day-sunny-overcast"
     };
 
-    $.get(baseURL + "/api/sensors/weather/hourly", function (data) {
+    $.get(apiURL + "sensors/weather/hourly", function (data) {
         $("#header-weather-temp-1 span").html(Math.round(data.currently.temperature));
 
         data = data.hourly.data

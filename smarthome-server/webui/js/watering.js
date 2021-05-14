@@ -100,9 +100,8 @@ function editItem(id, key) {
     if (new_val == null)
         return;
     var req = $.ajax({
-        type: "PUT",
-        url: "/api/devices/watering/" + id + "/edit",
-        data: {"key": key, "value": new_val},
+        type: "PATCH",
+        url: "/api/watering/" + id + "?" + $.param({"key": key, "value": new_val}),
         async: false
     });
 
@@ -115,7 +114,7 @@ function editItem(id, key) {
 function deleteSensor(id) {
     $.ajax({
         type: "DELETE",
-        url: "/api/devices/watering/" + id
+        url: "/api/watering/" + id
     });
 }
 
@@ -200,13 +199,6 @@ function activateButtons() {
         showCharts($(this), $("#sensors").data("sensors")[id]);
     })
 
-    $(".btn-show").unbind("click").on("click", function (e) {
-        e.stopPropagation();
-        var tr = $(this).parent().parent();
-        var id = tr.data("id");
-        showCharts($("#sensors").data("sensors")[id]);
-    });
-
     $(".btn-remove").unbind("click").on("click", function (e) {
         e.stopPropagation();
         var tr = $(this).parent().parent();
@@ -265,8 +257,8 @@ function addLine(data) {
             )]);
     }
     var options = {
-        series: [{ data: measures_sparkline}],
-        chart: { type: 'area', width: 55, height: 22, sparkline: {enabled: true}, animations: {enabled: false}},
+        series: [{data: measures_sparkline}],
+        chart: {type: 'area', width: 55, height: 22, sparkline: {enabled: true}, animations: {enabled: false}},
         yaxis: {show: false, min: -8, max: 108},
         xaxis: {type: 'datetime'},
         annotations: {
@@ -283,7 +275,7 @@ function addLine(data) {
 }
 
 $(document).ready(function (){
-    $.get("/api/devices/watering", function (data) {
+    $.get("/api/watering?full=true", function (data) {
         $("#sensors").data("sensors", data);
         for (var id in data) {
             addLine(data[id]);
@@ -297,7 +289,7 @@ $(document).ready(function (){
 
         $.ajax({
             type: "POST",
-            url: url,
+            url: "/api/watering/"+ id +"?full=true",
             success: function(data) {
                addLine(data);
                $("#sensors").data("sensors")[id] = data;
