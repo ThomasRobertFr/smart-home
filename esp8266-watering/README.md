@@ -25,13 +25,18 @@ It needs to be able to call the watering API of the `smarthome-server` project.
 
 The schematics of this project is quite simple:
 
-![](Watering.png)
+![](schematics.png)
 
 All this is build with a PCB-like board soldered on the right side of the
 NodeMCU ESP8266 dev board following this compact and wierd design:
 
-![](Watering_PCB.png)
+![](pcb_schematics.png)
 
-In real life it looks like this:
+In real life, the PCB looks like this:
 
-![](Watering_real.jpg)
+![](pcb_real.jpg)
+
+And the device put in place:
+
+![](watering_real.jpg)
+

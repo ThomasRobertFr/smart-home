@@ -4,6 +4,33 @@ side of this project consists in controlling many motors. Since I wanted to cont
 this device via wifi, it is controled by a Raspberry Pi Zero W. I think now I would use an ESP8266
 instead for simpler real time management.
 
+# Images of the project
+
+Assembly of ULN2003 and 74HC595 motor control and first test
+
+![](1_ULN2003_assembly.jpg)
+
+![](2_ULN2003_test.jpg)
+
+First POC
+
+![](3_POC.jpg)
+
+Full assembly on a wood board
+
+![](4a_full_assembly.jpg)
+
+![](4b_full_assembly.jpg)
+
+![](4c_full_assembly.jpg)
+
+![](4d_full_assembly.jpg)
+
+![](4e_full_assembly.jpg)
+
+Final install on the wall
+
+![](5_final_install.jpg)
 
 
 # Parts list
