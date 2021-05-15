@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RESULT=`ps -x | grep "smarthome.server:ap[p]"`
+RESULT=`ps -x | grep "smarthome.api:ap[p]"`
 
 if [ "${RESULT:-null}" = null ]; then
 	echo "Launch"
