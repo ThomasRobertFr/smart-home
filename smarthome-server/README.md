@@ -1,8 +1,8 @@
 # Smart home server
 
-## Overall architecture
-
-TODO
+This is a custom home automation project. This folder contains the code for the
+web server at the center of this project. It also relies on other softwares
+and various devices, as described in this first section.
 
 ## Devices controled
 
@@ -20,6 +20,40 @@ TODO
 
 * Temperature sensor (DHT11)
 * **TODO** Motion sensor (PIR)
+
+
+## Overall architecture
+
+This project handles interractions between different elements. Here is an overview
+of the network **[N]** / software **[S]** / hardware **[H]** architecture:
+
+* **[N]** 192.168.1.10 : Central Raspberry PI v3 server
+  * **[S]** Nginx exposing:
+    * `smarthome-server/webui` on `/` (frontend of `smarthome-server`)
+    * `localhost:5000` on `/api` (backend of `smarthome-server` with FastAPI)
+    * `192.168.1.20:5000` on `/calendar` (redirection to the smart calendar)
+    * `http://192.168.1.3/api/<token>` on `/hue` (redirection to the HUE bridge with token)
+  * **[S]** lirc to send queries to:
+      * **[H]** IR LEDs (VS1838B) in front of relevant devices
+  * **[H]** 433 MHz RF transitting chip
+  * **[H]** wires soldered to my NAS power-switch button to start/stop it
+  * **[H]** temperature sensor
+
+* **[N]** 192.168.1.2 : NAS
+
+* **[N]** 192.168.1.3 : Hue Bridge to communicate with:
+  * **[H]** color bulb
+
+* **[N]** 192.168.1.11 : ESP-8266 to control 5V LED lights
+  * **[S]** ESP-Easy installed on it
+    * **[H]** 2 5V LED ribbon and 1 5V LED light
+
+* **[N]** 192.168.1.12 : [AC Dimmer server](../esp8266-ac-dimmer) on ESP-8266
+  * **[H]** [Robodync AC Light Dimmer Module](https://github.com/RobotDynOfficial/RBDDimmer)
+
+* **[N]** 192.168.1.20 : [Smart calendar](../everyday-calendar/README.md) on Raspberry Pi Zero W
+  * **[S]** Flask server on port `5000`
+    * **[H]** WS2813 LED strip with 366 LEDs
 
 # Setup
 
@@ -416,7 +450,6 @@ we use simple 2N222 transistors and PWM to control diodes brightness.
 
 # TODOs
 
-* Reintegrate Watering device in the API
 * Add threads to handle slow calls + add fading feature based on this
 * Add IRRemote specific commands in API and front
 * Home state integration
