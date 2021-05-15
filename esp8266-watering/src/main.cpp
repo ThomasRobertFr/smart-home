@@ -5,7 +5,7 @@
 #include <ESP8266HTTPClient.h>
 #include <WiFiClient.h>
 #include "wifi_setup.h"
-#include "debug.h"
+#include "device1.h"
 
 struct SensorData {
     String id;
@@ -104,7 +104,13 @@ void wifiConnect(unsigned int max_time_sec = 60) {
     /* Connect to wifi, return when connected. If takes more than `max_time_sec` to connect, enter
      * deep sleep mode for `deep_sleep_min`.
     */
+   if (WiFi.status() == WL_CONNECTED) {
+       Serial.println("Already connected to Wifi");
+       return;
+   }
 
+    // RTC use for faster Wifi connection is based on this work:
+    // https://www.bakke.online/index.php/2017/06/24/esp8266-wifi-power-reduction-avoiding-network-scan/
     // The ESP8266 RTC memory is arranged into blocks of 4 bytes. The access methods read and write 4 bytes at a time, so the RTC data structure should be padded to a 4-byte multiple.
     struct {
     uint32_t crc32;   // 4 bytes
@@ -128,7 +134,7 @@ void wifiConnect(unsigned int max_time_sec = 60) {
     WiFi.persistent(false); // don't save info to flash!!!
     if (rtcValid) {
         Serial.println("Using RTC data (fixed IP, existing wifi channel)...");
-        // WiFi.config(IPAddress(rtcData.ip), IPAddress(rtcData.gateway), IPAddress(rtcData.subnet)); // this line caused GET request to fail even though we are WL_CONNECTED
+        WiFi.config(IPAddress(rtcData.ip), IPAddress(rtcData.gateway), IPAddress(rtcData.subnet));
         WiFi.begin(ssid, password, rtcData.channel, rtcData.bssid, true);
     }
     else
@@ -178,16 +184,32 @@ void wifiConnect(unsigned int max_time_sec = 60) {
 void httpGetSensor(String url, SensorData& sensor) {
     StaticJsonDocument<jsonCapacity> doc;
 
-    // send HTTP request
-    http.useHTTP10(true);
-    http.begin(client, url.c_str());
-    int responseCode = http.GET();
-    if (responseCode != HTTP_CODE_OK) {
-        Serial.print("GET: bad response code: ");
-        Serial.println(responseCode);
-        cleanRTCMemory(); // in case the GET failed because of bad IP for example
-        deepSleep();
+    // GET request with retry
+    int responseCode = -1;
+    unsigned int maxRetry = 15;
+    unsigned int retries = 0;
+    while (responseCode != HTTP_CODE_OK) {
+        // abandon if tried too many times
+        retries++;
+        if (retries > maxRetry) {
+            Serial.println("Retried too many times to GET, sleeping for 10 min");
+            cleanRTCMemory(); // in case the GET failed because of bad IP for example
+            deepSleep();
+        }
+
+        // send HTTP request
+        http.useHTTP10(true);
+        http.begin(client, url.c_str());
+        responseCode = http.GET();
+
+        // if failed, wait a bit
+        if (responseCode != HTTP_CODE_OK) {
+            Serial.print("GET: bad response code: ");
+            Serial.println(responseCode);
+            delay(1500);
+        }
     }
+    
 
     // read JSON, check for error
     DeserializationError err = deserializeJson(doc, http.getStream());
@@ -218,9 +240,10 @@ void httpGetSensor(String url, SensorData& sensor) {
 }
 
 void httpPostJSON(String url, String &json) {
+    wifiConnect();
     http.begin(client, url.c_str());
     http.addHeader("Content-Type", "application/json");
-    http.PUT(json);
+    http.POST(json);
     http.end();
 }
 
@@ -260,7 +283,7 @@ String calibration(SensorData &sensor) {
 
     uint8_t pinStatus = LOW;
     String calibrations = "";
-    
+
     while (millis() - start < sensor.calibration_duration * 1000) {
         // oscillate LED
         pinStatus = pinStatus == LOW ? HIGH : LOW;
@@ -304,10 +327,10 @@ void watering(SensorData &sensor) {
         while ((sensor.force_watering || humidity < sensor.watering_humidity_target) && sensor.postJSON_watering < sensor.watering_cycle_nb_max) {
             Serial.print("Watering... ");
 
-            digitalWrite(sensor.pinMotor, sensor.pinMotor == LED_BUILTIN ? LOW : HIGH);
+            analogWrite(sensor.pinMotor, sensor.pinMotor == LED_BUILTIN ? 0 : PWMRANGE * 0.75);
             delay(sensor.watering_cycle_duration * 1000); // water for watering_cycle_duration
             digitalWrite(sensor.pinMotor, sensor.pinMotor == LED_BUILTIN ? HIGH : LOW);
-            delay(sensor.watering_cycle_sleep * 1000); // wait for watering_cycle_sleep to diffuse
+            delay(sensor.watering_cycle_sleep * 1000); // wait for watering_cycle_sleep for water to diffuse
 
             humidity_raw = analogMeasure();
             humidity = getHumidity(humidity_raw, sensor);
