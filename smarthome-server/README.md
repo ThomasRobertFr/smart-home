@@ -70,6 +70,9 @@ dnsmasq nginx php5-fpm
 
 ## Python
 python python-pip python3 python3-pip
+
+# Domoticz
+mosquitto
 ```
 
 ## dnsmask setup
@@ -122,10 +125,10 @@ server {
 	auth_basic "Home";
 	auth_basic_user_file /etc/nginx/htpasswd/default.htpasswd;
 
-    # Redirect API calls
-	location ~ ^/api/(.*)$ {
-		proxy_pass http://127.0.0.1:5000/$1$is_args$args;
-	}
+    # Redirect API calls (outdated)
+	# location ~ ^/api/(.*)$ {
+	# 	proxy_pass http://127.0.0.1:5000/$1$is_args$args;
+	# }
 
     # Redirect calls to calendar API
     location ~ ^/calendar/(.*)$ {
@@ -139,7 +142,8 @@ server {
 
     # Regular files are served
 	location / {
-		try_files $uri $uri/ =404;
+	    proxy_pass http://127.0.0.1:5000/$1$is_args$args;
+		# try_files $uri $uri/ =404;  # serve the files normally
 	}
 
 	# Handle PHP
@@ -264,6 +268,23 @@ end remote
 * Test remote commands: `irsend LIST mistlamp ""`
 * Send command: `irsend SEND_ONCE mistlamp KEY_POWER`
 
+## Smarthome server (this package!)
+
+Install [Poetry](https://python-poetry.org/docs/), see the doc to configure it as
+you which, and do `poetry install` of this project to install all dependancies.
+
+This will create commands `smarthome-server` and `smarthome-api-server` to serve
+respectively the front + API or just the API. 
+
+In `crontab -e` you should add:
+
+```
+* * * * *    source /home/pi/dev/smart-home/.venv/bin/activate && ./continuous-run.sh > /dev/null 2>&1
+*/10 * * * * curl -X GET http://localhost:5000/triggers/calendar/update >/dev/null 2>&1
+* * * * *    curl -X GET http://localhost:5000/triggers/calendar/trigger >/dev/null 2>&1
+```
+
+
 ## Domoticz & Homebridge
 
 - Domoticz: Gestion centralisée de périphériques domotiques et permet de créer des scénarios autour
@@ -310,9 +331,18 @@ URL : [http://192.168.1.10:8080](http://192.168.1.10:8080)
 
 In `Setup > Hardware`
 
-Ajouter les périphériques Hue et un périphérique Dummy pour pouvoir rajouter des capteurs/interrupteurs virtuels. Dans le Dummy, rajouter 1 interrupteur par device et sequence géré par l'API `smart-home`.
+Add:
 
-We also add a LUA script that will call the API to effectively turn on or off the devices. For this
+* Philips Hue Bridge with the [token](https://developers.meethue.com/develop/get-started-2/)
+* MQTT (mosquitto package to install), `localhost:1883`)
+* A Dummy device to add all devices provided by the smarthome API
+
+Add the devices with "Create virtual sensors" and configure them:
+
+![](devices.png)
+
+To makes calls to the API when virtual devices are activate, we use a LUA script
+that will call the API to effectively turn on or off the devices. For this
 in `Setup > More options > Events` we do `+ > Lua > All`.
 
 We use the following script :
@@ -411,11 +441,6 @@ end
 return commandArray
 ```
 
-In addition, we enalble the MQTT server (`sudo apt-get install mosquitto`) in Domoticz hardware. It
-allows a better sync of devices state with Homebridge.
-
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/86ddf83b-6df8-4418-979b-31ff2cbdae33/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/86ddf83b-6df8-4418-979b-31ff2cbdae33/Untitled.png)
-
 **Homebridge**
 
 URL : [http://192.168.1.10:8581/](http://192.168.1.10:8581/)
@@ -431,14 +456,6 @@ Homebridge devrait récupérer tous les devices Domoticz dans l'onglet Accessoir
 
 Dans Google Home, aller dans `+ > Configurer un appareil > Fonctionne avec Google` et chercher
 Homebridge. Jouer ensuite avec les configs des devices pour les mettre dans des pieces.
-
-## Smart-home crons
-
-```
-* * * * *    cd /home/pi/dev/smart-home && ./continuous-run.sh
-*/10 * * * * curl -X GET http://<API_URL>/triggers/calendar/update
-* * * * *    curl -X GET http://<API_URL>/triggers/calendar/trigger
-```
 
 ## ESP-Easy
 

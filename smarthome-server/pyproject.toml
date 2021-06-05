@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "smarthome"
+version = "0.1"
+description = "Personal smart-home server to run my custom home automation, for fun"
+readme = "README.md"
+authors = ["Thomas Robert <check-my-email-on-website@thomas-robert.fr>"]
+repository = "https://github.com/ThomasRobertFr/smart-home"
+
+[tool.poetry.dependencies]
+python = ">=3.7.0,<4.0"
+
+python-dateutil = ">= 2.0"
+httplib2 = ">= 0.15"
+RPi = {version = ">=0.0.1", markers = "platform_machine == 'armv7l'"}
+rpi_rf = {version = ">=0.9", markers = "platform_machine == 'armv7l'"}
+pyyaml = ">= 5.0.0"
+babel = ">= 2.0"
+Adafruit_DHT = {version = ">=1.4", markers = "platform_machine == 'armv7l'"}
+argparse = ">=1.4.0,<2"
+oauth2client = "^4.1.0"
+google-api-python-client = "^2.7.0"
+FastAPI = "^0.65.0"
+uvicorn = {extras = ["standard"], version = "^0.14.0"}
+aiofiles = "^0.7.0"
+tinydb = "^4.4.0"
+
+[tool.poetry.dev-dependencies]
+ipython = ">= 7.24"
+
+[tool.poetry.scripts]
+smarthome-api-server = 'smarthome.server:api_server'
+smarthome-server = 'smarthome.server:full_server'
+
+
+[build-system]
+requires = ["poetry>=1.1.0"]
+build-backend = "poetry.masonry.api"
