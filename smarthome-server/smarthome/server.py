@@ -1,16 +1,25 @@
 """Run a server with the smart home API on `/api` and the static files on `/`"""
 import os
 
+import pkg_resources
+import smarthome.api
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-
-import smarthome.api
+from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(smarthome.api.app.router, prefix="/api")
 app.mount("/",
-          StaticFiles(directory=os.path.join(os.path.dirname(__file__), "../webui"), html=True),
+          StaticFiles(directory=pkg_resources.resource_filename("smarthome", "webui"), html=True),
           name="static")
 
 

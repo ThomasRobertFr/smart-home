@@ -29,10 +29,9 @@ of the network **[N]** / software **[S]** / hardware **[H]** architecture:
 
 * **[N]** 192.168.1.10 : Central Raspberry PI v3 server
   * **[S]** Nginx exposing:
-    * `smarthome-server/webui` on `/` (frontend of `smarthome-server`)
-    * `localhost:5000` on `/api` (backend of `smarthome-server` with FastAPI)
+    * `localhost:5000` (command `smarthome-server`) on `/` (frontend + API of `smarthome-server` with FastAPI)
     * `192.168.1.20:5000` on `/calendar` (redirection to the smart calendar)
-    * `http://192.168.1.3/api/<token>` on `/hue` (redirection to the HUE bridge with token)
+    * `192.168.1.3/api/<token>` on `/hue` (redirection to the HUE bridge with token)
   * **[S]** lirc to send queries to:
       * **[H]** IR LEDs (VS1838B) in front of relevant devices
   * **[H]** 433 MHz RF transitting chip
@@ -71,8 +70,8 @@ dnsmasq nginx php5-fpm
 ## Python
 python python-pip python3 python3-pip
 
-# Domoticz
-mosquitto
+# Smarthome setup
+mosquitto rabbitmq-server
 ```
 
 ## dnsmask setup
@@ -114,21 +113,21 @@ server {
     # Enable PHP index
     index index.html index.php;
 
-	server_name _;
+    server_name _;
 
     # Allow access from local IP without password, outside with password
     # Please create the /etc/nginx/htpasswd/default.htpasswd file
-	satisfy any;
-	allow 192.168.0.0/16;
-	allow 127.0.0.1/32;
-	deny all;
-	auth_basic "Home";
-	auth_basic_user_file /etc/nginx/htpasswd/default.htpasswd;
+    satisfy any;
+    allow 192.168.0.0/16;
+    allow 127.0.0.1/32;
+    deny all;
+    auth_basic "Home";
+    auth_basic_user_file /etc/nginx/htpasswd/default.htpasswd;
 
     # Redirect API calls (outdated)
-	# location ~ ^/api/(.*)$ {
-	# 	proxy_pass http://127.0.0.1:5000/$1$is_args$args;
-	# }
+    # location ~ ^/api/(.*)$ {
+    #     proxy_pass http://127.0.0.1:5000/$1$is_args$args;
+    # }
 
     # Redirect calls to calendar API
     location ~ ^/calendar/(.*)$ {
@@ -136,23 +135,234 @@ server {
     }
 
     # Redirect HUE calls
-	location ~ ^/hue/(.*)$ {
-		proxy_pass http://192.168.1.3/api/<hue_token>/$1$is_args$args;
-	}
+    location ~ ^/hue/(.*)$ {
+        proxy_pass http://192.168.1.3/api/<hue_token>/$1$is_args$args;
+    }
 
-    # Regular files are served
-	location / {
-	    proxy_pass http://127.0.0.1:5000/$1$is_args$args;
-		# try_files $uri $uri/ =404;  # serve the files normally
-	}
+    # Call smarhome-server on / (front + API)
+    location / {
+        proxy_pass http://127.0.0.1:5000/$1$is_args$args;
+        # try_files $uri $uri/ =404;  # serve the files normally
+    }
 
-	# Handle PHP
-	location ~ \.php$ {
-		include snippets/fastcgi-php.conf;
-		fastcgi_pass unix:/var/run/php5-fpm.sock;
-	}
+    # Handle PHP
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+    }
 }
 ```
+
+## Smarthome server (this package!)
+
+Install [Poetry](https://python-poetry.org/docs/), see the doc to configure it as
+you which, and do `poetry install` of this project to install all dependancies.
+
+This will create commands `smarthome-server` and `smarthome-api-server` to serve
+respectively the front + API or just the API. 
+
+In `crontab -e` you should add:
+
+```
+* * * * *    cd /home/pi/dev/smart-home && . .venv/bin/activate && ./continuous-run.sh > /dev/null 2>&1
+*/10 * * * * curl -X GET http://localhost/api/triggers/calendar/update >/dev/null 2>&1
+* * * * *    curl -X GET http://localhost/api/triggers/calendar/trigger >/dev/null 2>&1
+```
+
+## Celery / Rabbit MQ
+
+To be able to handle scenarios that can change over a time (eg. progressive dimming of
+lights, activation of something after 10 min, etc.), we use a task queue so that the
+"content" of the scenario can be handled outside of the API's web server.
+
+We use Celery and Rabbit MQ for this.
+
+To run Rabbit MQ, just do `sudo service rabbitmq-server start`.
+
+The Celery workers can be ran with `celery -A smarthome.celery worker --loglevel=INFO`,
+this is done automatically by `continuous-run.sh`
+
+
+## Domoticz & Homebridge
+
+- Domoticz: Gestion centralisée de périphériques domotiques et permet de créer des scénarios autour
+- Homebridge: Peut centraliser plusieurs hardwares domotiques standard, mais surtout, permet de se connecter aux assistants vocaux
+
+### Install
+
+**Domoticz**
+
+[https://www.domoticz.com/wiki/Raspberry_Pi](https://www.domoticz.com/wiki/Raspberry_Pi)
+
+```bash
+curl -L https://install.domoticz.com | bash
+```
+
+Installs a web server on ports 8080 and 443
+
+**Homebridge**
+
+[https://github.com/homebridge/homebridge/wiki/Install-Homebridge-on-Raspbian](https://github.com/homebridge/homebridge/wiki/Install-Homebridge-on-Raspbian)
+
+```bash
+# setup repo
+curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -
+
+# install Node.js
+sudo apt install -y nodejs gcc g++ make python net-tools
+
+# test node is working
+node -v
+
+# Install Homebridge and Homebridge Config UI X using the following command:
+sudo npm install -g --unsafe-perm homebridge homebridge-config-ui-x
+
+# To setup Homebridge as a service that will start on boot you can use the provided hb-service command.
+sudo hb-service install --user homebridge
+```
+
+### Configuration
+
+**Domoticz**
+
+URL : [http://192.168.1.10:8080](http://192.168.1.10:8080)
+
+In `Setup > Hardware`
+
+Add:
+
+* Philips Hue Bridge with the [token](https://developers.meethue.com/develop/get-started-2/)
+* MQTT (mosquitto package to install), `localhost:1883`)
+* A Dummy device to add all devices provided by the smarthome API
+
+Add the devices with "Create virtual sensors" and configure them:
+
+![](devices.png)
+
+To makes calls to the API when virtual devices are activate, we use a LUA script
+that will call the API to effectively turn on or off the devices. For this
+in `Setup > More options > Events` we do `+ > Lua > All`.
+
+We use the following script :
+
+```lua
+commandArray = {}
+
+BASE_URL = "http://192.168.1.10/api/devices-and-scenarios-by-idx/"
+
+ -- Define forbidden / push-button devices. Useless values I just want to test if idx within the keys
+forbidden_devices = {}
+forbidden_devices[8] = "devices/bedside"  -- HUE lamp to call only directly to Hue Bridge
+
+devices_to_reset = {}
+devices_to_reset[9] = "scenarios/arrive"
+devices_to_reset[10] = "scenarios/wakeup"
+devices_to_reset[11] = "scenarios/leave"
+devices_to_reset[12] = "scenarios/bedtime"
+devices_to_reset[13] = "scenarios/sleep"
+devices_to_reset[18] = "devices/mistlamp"
+devices_to_reset[19] = "devices/tv"
+
+if devicechanged then
+    for devname, devstatus in pairs(devicechanged) do
+        idx = otherdevices_idx[devname]
+
+        if not forbidden_devices[idx] then
+            if(devstatus == 'Off') then
+                os.execute("curl -X PUT "..BASE_URL..idx.."/off");
+            elseif(devstatus == 'On') then
+                os.execute("curl -X PUT "..BASE_URL..idx.."/on");
+                if devices_to_reset[idx] then
+                    commandArray[devname] = "Off"
+                end
+            elseif (otherdevices_svalues[devname]) then
+                dim_value = otherdevices_svalues[devname]
+                os.execute("curl -X PUT "..BASE_URL..idx.."/"..dim_value);
+            end
+        end
+    end
+end
+```
+
+An old script was like this (kept here if useful later):
+
+```lua
+function getdevname4idx(deviceIDX)
+    for i, v in pairs(otherdevices_idx) do
+        if v == deviceIDX then
+            return i
+        end
+    end
+    return 0
+end
+
+commandArray = {}
+
+BASE_URL = "http://192.168.1.10"
+switches = {} -- idx of device -> URL to call
+switches[7] = "/calendar/display/switch"
+switches[4] = "/api/devices/power-plug/desk"
+-- ...
+
+sequences = {} -- idx of device -> URL to call
+sequences[10] = "/api/scenarios/wakeup"
+-- ...
+
+for idx, url in pairs(switches) do
+    devname = getdevname4idx(idx)
+    if devicechanged and devicechanged[devname] then
+        devstatus = devicechanged[devname]
+
+        if(devstatus == 'Off') then
+            os.execute("curl -X PUT "..BASE_URL..url.."/off");
+        elseif(devstatus == 'On') then
+            os.execute("curl -X PUT "..BASE_URL..url.."/on");
+        -- Handle dimming
+        else
+            if idx == 7 then  -- Calendar
+                raw_value = otherdevices_svalues[devname];
+                dim_value = math.floor(math.pow(raw_value / 100 * 16, 2)); -- Map 0-100 -> 0-16 -^2-> 0-256
+                os.execute("curl -X PUT "..BASE_URL.."/calendar/display/brightness/"..dim_value);
+            end
+        end
+    end
+end
+
+for idx, url in pairs(sequences) do
+    devname = getdevname4idx(idx)
+    if devicechanged and devicechanged[devname] == "On" then
+        os.execute("curl -X PUT "..BASE_URL..url);
+        commandArray[devname] = "Off"
+    end
+end
+
+return commandArray
+```
+
+**Homebridge**
+
+URL : [http://192.168.1.10:8581/](http://192.168.1.10:8581/)
+
+Dans plugins, installer:
+
+- Homebridge Edomoticz: Ne pas activer MQTT si il n'est pas configuré dans Domoticz
+- Homebridge Gsh (Google Smart Home): lier votre compte Google
+
+Homebridge devrait récupérer tous les devices Domoticz dans l'onglet Accessoires
+
+### Google Home
+
+Dans Google Home, aller dans `+ > Configurer un appareil > Fonctionne avec Google` et chercher
+Homebridge. Jouer ensuite avec les configs des devices pour les mettre dans des pieces.
+
+## ESP-Easy
+
+On the ESP-8266 that handles 5V LED dimming, we install ESP Easy for convinience. On the board,
+we use simple 2N222 transistors and PWM to control diodes brightness.
+
+* ESPEasy: https://github.com/letscontrolit/ESPEasy/releases/tag/mega-20210223
+* PyFlasher to install it: https://github.com/marcelstoer/nodemcu-pyflasher
+
 
 ## IR Remotes (lirc)
 
@@ -268,206 +478,9 @@ end remote
 * Test remote commands: `irsend LIST mistlamp ""`
 * Send command: `irsend SEND_ONCE mistlamp KEY_POWER`
 
-## Smarthome server (this package!)
-
-Install [Poetry](https://python-poetry.org/docs/), see the doc to configure it as
-you which, and do `poetry install` of this project to install all dependancies.
-
-This will create commands `smarthome-server` and `smarthome-api-server` to serve
-respectively the front + API or just the API. 
-
-In `crontab -e` you should add:
-
-```
-* * * * *    source /home/pi/dev/smart-home/.venv/bin/activate && ./continuous-run.sh > /dev/null 2>&1
-*/10 * * * * curl -X GET http://localhost:5000/triggers/calendar/update >/dev/null 2>&1
-* * * * *    curl -X GET http://localhost:5000/triggers/calendar/trigger >/dev/null 2>&1
-```
-
-
-## Domoticz & Homebridge
-
-- Domoticz: Gestion centralisée de périphériques domotiques et permet de créer des scénarios autour
-- Homebridge: Peut centraliser plusieurs hardwares domotiques standard, mais surtout, permet de se connecter aux assistants vocaux
-
-### Install
-
-**Domoticz**
-
-[https://www.domoticz.com/wiki/Raspberry_Pi](https://www.domoticz.com/wiki/Raspberry_Pi)
-
-```bash
-curl -L https://install.domoticz.com | bash
-```
-
-Installs a web server on ports 8080 and 443
-
-**Homebridge**
-
-[https://github.com/homebridge/homebridge/wiki/Install-Homebridge-on-Raspbian](https://github.com/homebridge/homebridge/wiki/Install-Homebridge-on-Raspbian)
-
-```bash
-# setup repo
-curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -
-
-# install Node.js
-sudo apt install -y nodejs gcc g++ make python net-tools
-
-# test node is working
-node -v
-
-# Install Homebridge and Homebridge Config UI X using the following command:
-sudo npm install -g --unsafe-perm homebridge homebridge-config-ui-x
-
-# To setup Homebridge as a service that will start on boot you can use the provided hb-service command.
-sudo hb-service install --user homebridge
-```
-
-### Configuration
-
-**Domoticz**
-
-URL : [http://192.168.1.10:8080](http://192.168.1.10:8080)
-
-In `Setup > Hardware`
-
-Add:
-
-* Philips Hue Bridge with the [token](https://developers.meethue.com/develop/get-started-2/)
-* MQTT (mosquitto package to install), `localhost:1883`)
-* A Dummy device to add all devices provided by the smarthome API
-
-Add the devices with "Create virtual sensors" and configure them:
-
-![](devices.png)
-
-To makes calls to the API when virtual devices are activate, we use a LUA script
-that will call the API to effectively turn on or off the devices. For this
-in `Setup > More options > Events` we do `+ > Lua > All`.
-
-We use the following script :
-
-```lua
-commandArray = {}
-
-BASE_URL = "http://192.168.1.10/api/devices-and-scenarios-by-idx/"
-
- -- Define forbidden / push-button devices. Useless values I just want to test if idx within the keys
-forbidden_devices = {}
-forbidden_devices[8] = "devices/bedside"  -- HUE lamp to call only directly to Hue Bridge
-
-devices_to_reset = {}
-devices_to_reset[9] = "scenarios/arrive"
-devices_to_reset[10] = "scenarios/wakeup"
-devices_to_reset[11] = "scenarios/leave"
-devices_to_reset[12] = "scenarios/bedtime"
-devices_to_reset[13] = "scenarios/sleep"
-devices_to_reset[18] = "devices/mistlamp"
-devices_to_reset[19] = "devices/tv"
-
-if devicechanged then
-    for devname, devstatus in pairs(devicechanged) do
-        idx = otherdevices_idx[devname]
-
-        if not forbidden_devices[idx] then
-            if(devstatus == 'Off') then
-        		os.execute("curl -X PUT "..BASE_URL..idx.."/off");
-       	    elseif(devstatus == 'On') then
-       	        os.execute("curl -X PUT "..BASE_URL..idx.."/on");
-       	        if devices_to_reset[idx] then
-       	            commandArray[devname] = "Off"
-                end
-            elseif (otherdevices_svalues[devname]) then
-                dim_value = otherdevices_svalues[devname]
-           	    os.execute("curl -X PUT "..BASE_URL..idx.."/"..dim_value);
-            end
-        end
-    end
-end
-```
-
-An old script was like this (kept here if useful later):
-
-```lua
-function getdevname4idx(deviceIDX)
-	for i, v in pairs(otherdevices_idx) do
-		if v == deviceIDX then
-			return i
-		end
-	end
-	return 0
-end
-
-commandArray = {}
-
-BASE_URL = "http://192.168.1.10"
-switches = {} -- idx of device -> URL to call
-switches[7] = "/calendar/display/switch"
-switches[4] = "/api/devices/power-plug/desk"
--- ...
-
-sequences = {} -- idx of device -> URL to call
-sequences[10] = "/api/scenarios/wakeup"
--- ...
-
-for idx, url in pairs(switches) do
-    devname = getdevname4idx(idx)
-    if devicechanged and devicechanged[devname] then
-        devstatus = devicechanged[devname]
-
-        if(devstatus == 'Off') then
-    		os.execute("curl -X PUT "..BASE_URL..url.."/off");
-       	elseif(devstatus == 'On') then
-       		os.execute("curl -X PUT "..BASE_URL..url.."/on");
-       	-- Handle dimming
-       	else
-       	    if idx == 7 then  -- Calendar
-       	        raw_value = otherdevices_svalues[devname];
-                dim_value = math.floor(math.pow(raw_value / 100 * 16, 2)); -- Map 0-100 -> 0-16 -^2-> 0-256
-                os.execute("curl -X PUT "..BASE_URL.."/calendar/display/brightness/"..dim_value);
-   	        end
-   	    end
-    end
-end
-
-for idx, url in pairs(sequences) do
-    devname = getdevname4idx(idx)
-    if devicechanged and devicechanged[devname] == "On" then
-        os.execute("curl -X PUT "..BASE_URL..url);
-        commandArray[devname] = "Off"
-    end
-end
-
-return commandArray
-```
-
-**Homebridge**
-
-URL : [http://192.168.1.10:8581/](http://192.168.1.10:8581/)
-
-Dans plugins, installer:
-
-- Homebridge Edomoticz: Ne pas activer MQTT si il n'est pas configuré dans Domoticz
-- Homebridge Gsh (Google Smart Home): lier votre compte Google
-
-Homebridge devrait récupérer tous les devices Domoticz dans l'onglet Accessoires
-
-### Google Home
-
-Dans Google Home, aller dans `+ > Configurer un appareil > Fonctionne avec Google` et chercher
-Homebridge. Jouer ensuite avec les configs des devices pour les mettre dans des pieces.
-
-## ESP-Easy
-
-On the ESP-8266 that handles 5V LED dimming, we install ESP Easy for convinience. On the board,
-we use simple 2N222 transistors and PWM to control diodes brightness.
-
-* ESPEasy: https://github.com/letscontrolit/ESPEasy/releases/tag/mega-20210223
-* PyFlasher to install it: https://github.com/marcelstoer/nodemcu-pyflasher
 
 # TODOs
 
-* Add threads to handle slow calls + add fading feature based on this
 * Add IRRemote specific commands in API and front
 * Home state integration
 * Add auto triggers:

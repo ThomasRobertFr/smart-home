@@ -1,4 +1,14 @@
 import importlib
+import sys
+
+if sys.version_info >= (3, 8):
+    from typing import TypedDict as TypedDictOriginal
+else:
+    TypedDictOriginal = object
+
+
+class TypedDict(TypedDictOriginal):
+    pass
 
 
 def load_from_string_import(import_path: str):

@@ -2,9 +2,8 @@ import traceback
 
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
+from smarthome import celery, watering
 from starlette.middleware.cors import CORSMiddleware
-
-from smarthome import watering
 
 from .devices import Devices
 from .scenarios import Scenarios
@@ -14,7 +13,6 @@ from .triggers import Calendar
 app = FastAPI()
 DEVICES = Devices()
 SCENARIOS = Scenarios()
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -100,6 +98,16 @@ def calendar_update():
 @app.get("/triggers/calendar/trigger", tags=["triggers"])
 def calendar_update():
     return Calendar().trigger()
+
+
+@app.get("/sequences", tags=["sequences"])
+def get_sequences():
+    return celery.list_sequences()
+
+
+@app.delete("/sequences/{id}", tags=["sequences"])
+def stop_chain(id: str):
+    return celery.stop_sequence(id)
 
 
 app.include_router(watering.api.router)

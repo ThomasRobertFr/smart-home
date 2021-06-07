@@ -3,7 +3,6 @@ import logging
 from typing import Dict
 
 import requests
-
 from smarthome.misc import config as _config
 from smarthome.misc.wrappers import Wrapper, WrapperSet
 
@@ -16,9 +15,15 @@ class Device(Wrapper):
         """Change the status of this device based on provided value (accepted values will depend on
         the implementation of the device).
         """
+
     @abc.abstractmethod
     def get_domoticz_url(self, value: str) -> str:
         """Return the end of the URL to change the status of this device via Domoticz."""
+
+    def get_full_domoticz_url(self, value: str) -> str:
+        assert config.domoticz.base_url_json.endswith("json.htm?")
+        return f"{config.domoticz.base_url_json}idx={self.idx}&{self.get_domoticz_url(value)}"
+
     def put_domoticz(self, value: str, catch_error: bool = False) -> bool:
         """Change the status of this device via Domoticz. This will end up calling this code back
         via `put` but will register the changed state in Domoticz. We could probably do this in
@@ -29,8 +34,7 @@ class Device(Wrapper):
             value = str(value)
         url = "[not defined]"
         try:
-            assert config.domoticz.base_url_json.endswith("json.htm?")
-            url = f"{config.domoticz.base_url_json}idx={self.idx}&{self.get_domoticz_url(value)}"
+            url = self.get_full_domoticz_url(value)
             req = requests.get(url)
             req.raise_for_status()
             if req.json().get("status") != "OK":

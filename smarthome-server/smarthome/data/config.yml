@@ -125,7 +125,7 @@ devices:
 scenarios:
   wakeup:
     idx: 10
-    class: smarthome.scenarios.BasicScenarioWithHue
+    class: smarthome.scenarios.ParametricScenario
     devices:
       calendar: 50
     hue_id: bedside
@@ -135,7 +135,7 @@ scenarios:
 
   sleep:
     idx: 13
-    class: smarthome.scenarios.BasicScenarioWithHue
+    class: smarthome.scenarios.ParametricScenario
     devices:
       calendar: off
       couch-lamp: off
@@ -153,7 +153,7 @@ scenarios:
 
   bedtime:
     idx: 12
-    class: smarthome.scenarios.BasicScenarioWithHue
+    class: smarthome.scenarios.ParametricScenario
     devices:
       calendar: off
       couch-lamp: off
@@ -161,16 +161,27 @@ scenarios:
       fridge-lamp: off
       desk-lamp: off
       pixar-lamp: off
-      fairy-lights: 50
-      bb-8: 50
-      bed: 50
+    dimmings:
+      fairy-lights:
+        start: 65
+        end: 1
+        duration: 3600
+      bb-8:
+        start: 100
+        end: 1
+        duration: 3600
+      bed:
+        start: 65
+        end: 1
+        duration: 3600
     hue_id: bedside
     hue_calls:
-      - {"on": True, "bri": 150, "xy": [0.5239,0.4136], "transitiontime": 3000}
+      - {"on": True, "bri": 150, "xy": [0.5239,0.4136], "transitiontime": 0}
+      - {"on": True, "bri": 1, "xy": [0.5239,0.4136], "transitiontime": 36000}
 
   arrive:
     idx: 9
-    class: smarthome.scenarios.BasicScenario
+    class: smarthome.scenarios.ParametricScenario
     devices:
       couch-lamp: on
       dining-lamp: on
@@ -180,7 +191,7 @@ scenarios:
 
   leave:
     idx: 11
-    class: smarthome.scenarios.BasicScenario
+    class: smarthome.scenarios.ParametricScenario
     devices:
       couch-lamp: off
       dining-lamp: off
