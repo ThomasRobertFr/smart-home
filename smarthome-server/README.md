@@ -1,7 +1,7 @@
 # Smart home server
 
 This is a custom home automation project. This folder contains the code for the
-web server at the center of this project. It also relies on other softwares
+web server at the center of this project. It also relies on other software
 and various devices, as described in this first section.
 
 ## Devices controled
@@ -165,21 +165,21 @@ In `crontab -e` you should add:
 
 ```
 * * * * *    cd /home/pi/dev/smart-home && . .venv/bin/activate && ./continuous-run.sh > /dev/null 2>&1
-*/10 * * * * curl -X GET http://localhost/api/triggers/calendar/update >/dev/null 2>&1
-* * * * *    curl -X GET http://localhost/api/triggers/calendar/trigger >/dev/null 2>&1
+*/10 * * * * curl -X GET http://127.0.0.1/api/triggers/calendar/update >/dev/null 2>&1
+* * * * *    curl -X GET http://127.0.0.1/api/triggers/calendar/trigger >/dev/null 2>&1
 ```
 
 ## Celery / Rabbit MQ
 
-To be able to handle scenarios that can change over a time (eg. progressive dimming of
+To be able to handle scenarios that can change over a time (e.g. progressive dimming of
 lights, activation of something after 10 min, etc.), we use a task queue so that the
-"content" of the scenario can be handled outside of the API's web server.
+"content" of the scenario can be handled outside the API's web server.
 
 We use Celery and Rabbit MQ for this.
 
 To run Rabbit MQ, just do `sudo service rabbitmq-server start`.
 
-The Celery workers can be ran with `celery -A smarthome.celery worker --loglevel=INFO`,
+The Celery workers can be run with `celery -A smarthome.sequences worker --loglevel=INFO`,
 this is done automatically by `continuous-run.sh`
 
 
@@ -239,7 +239,7 @@ Add the devices with "Create virtual sensors" and configure them:
 
 ![](devices.png)
 
-To makes calls to the API when virtual devices are activate, we use a LUA script
+To makes calls to the API when virtual devices are activated, we use a LUA script
 that will call the API to effectively turn on or off the devices. For this
 in `Setup > More options > Events` we do `+ > Lua > All`.
 
@@ -486,3 +486,4 @@ end remote
 * Add auto triggers:
     * light on based on home state + sun elevation
 * Schedule events in calendar
+* In watering, remove / downsample old data point

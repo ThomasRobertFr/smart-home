@@ -10,11 +10,11 @@ else
 	echo "Running Smarthome Server"
 fi
 
-RESULT=`ps -x | grep "celery -A smarthome.celer[y]"`
+RESULT=`ps -x | grep "celery -A smarthome.sequence[s]"`
 
 if [ "${RESULT:-null}" = null ]; then
 	echo "Launch Celery"
-	celery -A smarthome.celery worker --loglevel=INFO >> /tmp/smart-home-celery.log 2>&1 &
+	celery -A smarthome.sequences worker --loglevel=INFO >> /tmp/smart-home-celery.log 2>&1 &
 else
 	echo "Running Celery"
 fi

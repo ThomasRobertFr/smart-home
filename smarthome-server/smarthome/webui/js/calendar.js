@@ -25,7 +25,6 @@ function set_day(calendar_id, year, month, day, state) {
         type: 'PUT',
         success: function (data) {
             if (state == "on") {
-                console.log(day_id);
                 $('#calendar_day_'+day_id).addClass("active");
                 $('#calendar_day_'+day_id+"_btn").addClass("active");
             }

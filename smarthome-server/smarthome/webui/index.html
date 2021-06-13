@@ -10,7 +10,6 @@
     <link rel="manifest" href="manifest.json">
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/weather-icons.min.css">
     <link rel="stylesheet" href="css/weather-icons-wind.min.css">
     <link rel="stylesheet" href="css/style.css">
@@ -45,11 +44,11 @@
         </div>
 
         <div id="header-content">
-            <button class="btn btn-lg btn-default push-button" data-idx="10"><i class="fa fa-bell"></i></button>
-            <button class="btn btn-lg btn-default push-button" data-idx="11"><i class="fa fa-sign-out"></i></button>
-            <button class="btn btn-lg btn-default push-button" data-idx="9"><i class="fa fa-sign-in"></i></button>
-            <button class="btn btn-lg btn-default push-button" data-idx="12"><i class="wi wi-sunset"></i></button>
-            <button class="btn btn-lg btn-default push-button" data-idx="13"><i class="fa fa-bed"></i></button>
+            <button class="btn btn-lg btn-default push-button" data-idx="10"><i class="fad fa-lg fa-alarm-clock"></i></button>
+            <button class="btn btn-lg btn-default push-button" data-idx="11"><i class="fad fa-lg fa-portal-exit"></i></button>
+            <button class="btn btn-lg btn-default push-button" data-idx="9"><i class="fad fa-lg fa-portal-enter"></i></button>
+            <button class="btn btn-lg btn-default push-button" data-idx="12"><i class="fad fa-lg fa-sunset"></i></button>
+            <button class="btn btn-lg btn-default push-button" data-idx="13"><i class="fad fa-lg fa-bed"></i></button>
         </div>
     </header>
 
@@ -63,22 +62,54 @@
 
                 <div class="command-container switch" data-idx="2">
                     <span class="command-label">Couch lamp</span>
-                    <div class="toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                    <div class="toggle-container">
+                        <div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div>
+                        <div class="sequence-running hide">
+                            <span class="fa-layers fa-fw fa-2x">
+                                <i class="fad fa-robot" data-fa-transform="shrink-3"></i>
+                                <i class="fad fa-times-circle" data-fa-transform="shrink-5 up-5.5 right-5.5" style="color:#F56557"></i>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="command-container switch" data-idx="3">
                     <span class="command-label">Dining lamp</span>
-                    <div class="toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                    <div class="toggle-container">
+                        <div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div>
+                        <div class="sequence-running hide">
+                            <span class="fa-layers fa-fw fa-2x">
+                                <i class="fad fa-robot" data-fa-transform="shrink-3"></i>
+                                <i class="fad fa-times-circle" data-fa-transform="shrink-5 up-5.5 right-5.5" style="color:#F56557"></i>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="command-container switch" data-idx="15">
                     <span class="command-label">Fridge lamp</span>
-                    <div class="toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                    <div class="toggle-container">
+                        <div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div>
+                        <div class="sequence-running hide">
+                            <span class="fa-layers fa-fw fa-2x">
+                                <i class="fad fa-robot" data-fa-transform="shrink-3"></i>
+                                <i class="fad fa-times-circle" data-fa-transform="shrink-5 up-5.5 right-5.5" style="color:#F56557"></i>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="command-container switch" data-idx="7">
                     <span class="command-label">Calendar</span>
-                    <div class="toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                    <div class="toggle-container">
+                        <div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div>
+                        <div class="sequence-running hide">
+                            <span class="fa-layers fa-fw fa-2x">
+                                <i class="fad fa-robot" data-fa-transform="shrink-3"></i>
+                                <i class="fad fa-times-circle" data-fa-transform="shrink-5 up-5.5 right-5.5" style="color:#F56557"></i>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
 
@@ -86,32 +117,80 @@
 
                 <div class="command-container switch" data-idx="4">
                     <span class="command-label">Main lamp</span>
-                    <div class="toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                    <div class="toggle-container">
+                        <div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div>
+                        <div class="sequence-running hide">
+                            <span class="fa-layers fa-fw fa-2x">
+                                <i class="fad fa-robot" data-fa-transform="shrink-3"></i>
+                                <i class="fad fa-times-circle" data-fa-transform="shrink-5 up-5.5 right-5.5" style="color:#F56557"></i>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="command-container switch" data-idx="8">
                     <span class="command-label">Bedside</span>
-                    <div class="toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                    <div class="toggle-container">
+                        <div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div>
+                        <div class="sequence-running hide">
+                            <span class="fa-layers fa-fw fa-2x">
+                                <i class="fad fa-robot" data-fa-transform="shrink-3"></i>
+                                <i class="fad fa-times-circle" data-fa-transform="shrink-5 up-5.5 right-5.5" style="color:#F56557"></i>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="command-container switch" data-idx="14">
                     <span class="command-label">Pixar lamp</span>
-                    <div class="toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                    <div class="toggle-container">
+                        <div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div>
+                        <div class="sequence-running hide">
+                            <span class="fa-layers fa-fw fa-2x">
+                                <i class="fad fa-robot" data-fa-transform="shrink-3"></i>
+                                <i class="fad fa-times-circle" data-fa-transform="shrink-5 up-5.5 right-5.5" style="color:#F56557"></i>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="command-container switch" data-idx="16">
                     <span class="command-label">Fairy lights</span>
-                    <div class="toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                    <div class="toggle-container">
+                        <div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div>
+                        <div class="sequence-running hide">
+                            <span class="fa-layers fa-fw fa-2x">
+                                <i class="fad fa-robot" data-fa-transform="shrink-3"></i>
+                                <i class="fad fa-times-circle" data-fa-transform="shrink-5 up-5.5 right-5.5" style="color:#F56557"></i>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="command-container switch" data-idx="17">
                     <span class="command-label">BB-8</span>
-                    <div class="toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                    <div class="toggle-container">
+                        <div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div>
+                        <div class="sequence-running hide">
+                            <span class="fa-layers fa-fw fa-2x">
+                                <i class="fad fa-robot" data-fa-transform="shrink-3"></i>
+                                <i class="fad fa-times-circle" data-fa-transform="shrink-5 up-5.5 right-5.5" style="color:#F56557"></i>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="command-container switch" data-idx="20">
                     <span class="command-label">Bed</span>
-                    <div class="toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                    <div class="toggle-container">
+                        <div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div>
+                        <div class="sequence-running hide">
+                            <span class="fa-layers fa-fw fa-2x">
+                                <i class="fad fa-robot" data-fa-transform="shrink-3"></i>
+                                <i class="fad fa-times-circle" data-fa-transform="shrink-5 up-5.5 right-5.5" style="color:#F56557"></i>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <h3>Devices</h3>
@@ -135,12 +214,28 @@
 
                 <div class="command-container switch" data-idx="5">
                     <span class="command-label">NAS</span>
-                    <div class="toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                    <div class="toggle-container">
+                        <div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div>
+                        <div class="sequence-running hide">
+                            <span class="fa-layers fa-fw fa-2x">
+                                <i class="fad fa-robot" data-fa-transform="shrink-3"></i>
+                                <i class="fad fa-times-circle" data-fa-transform="shrink-5 up-5.5 right-5.5" style="color:#F56557"></i>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="command-container switch" data-idx="6">
                     <span class="command-label">Phone charger</span>
-                    <div class="toggle-container"><div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div></div>
+                    <div class="toggle-container">
+                        <div class="text before">Off</div><div class="toggle"><span class="btn"></span></div><div class="text after">On</div>
+                        <div class="sequence-running hide">
+                            <span class="fa-layers fa-fw fa-2x">
+                                <i class="fad fa-robot" data-fa-transform="shrink-3"></i>
+                                <i class="fad fa-times-circle" data-fa-transform="shrink-5 up-5.5 right-5.5" style="color:#F56557"></i>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -254,6 +349,7 @@
 
     <script src="js/jquery-3.1.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/fontawesome.min.js"></script>
     <script src="js/pickr.min.js"></script>
     <script src="js/generic.js"></script>
     <script src="js/display.js"></script>

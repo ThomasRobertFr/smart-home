@@ -170,7 +170,7 @@ function showValue(val, show, append) {
     var icons_mapping = {
         "icons-water": "fa-tint",
         "icons-calibr": "fa-compass",
-        "icons-sensor": "fa-map-marker",
+        "icons-sensor": "fa-tachometer-alt",
     };
     if (icons_mapping[show]) {
         if (val == "false" || val == "f" || val == "no" || !val)

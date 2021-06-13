@@ -4,7 +4,7 @@ import sys
 if sys.version_info >= (3, 8):
     from typing import TypedDict as TypedDictOriginal
 else:
-    TypedDictOriginal = object
+    TypedDictOriginal = dict
 
 
 class TypedDict(TypedDictOriginal):
