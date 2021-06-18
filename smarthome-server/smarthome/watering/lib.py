@@ -1,5 +1,6 @@
 import time
-from typing import List, Tuple
+from datetime import datetime, timedelta
+from typing import Any, List, Tuple
 
 import pkg_resources
 from pydantic import BaseModel
@@ -107,8 +108,37 @@ class WateringDevice(BaseModel):
     def list_devices(cls) -> 'List[WateringDevice]':
         return [cls(**d) for d in DB_TABLE.all()]
 
+    def cleanup_data(self):
+        """Remove old data to not have a too heavy database and also be able to plot stuff without
+        having too much data.
+        """
+        one_month_ago = (datetime.now() - timedelta(weeks=5)).timestamp()
+        one_weeks_ago = (datetime.now() - timedelta(weeks=1)).timestamp()
+
+        def filter_list(l: List[Tuple[int, Any]], subsample_frequency):
+            l_filtered = []
+            t_last = 0
+            for t, v in sorted(l, key=lambda _: _[0]):
+                # More than a month ago: skip
+                if t < one_month_ago:
+                    continue
+                # Between 1 month and 1 week ago, subsample to subsample_frequency
+                elif t < one_weeks_ago and len(l_filtered) and t - t_last < subsample_frequency:
+                    continue
+                else:
+                    l_filtered.append((t, v))
+                    t_last = t
+            return l_filtered
+
+        self.measures = filter_list(self.measures,
+                                    subsample_frequency=timedelta(hours=12).total_seconds())
+        self.calibrations = filter_list(self.calibrations, subsample_frequency=0)
+        self.waterings = filter_list(self.waterings, subsample_frequency=0)
+
     def update_with_report(self, report: WateringReport) -> 'WateringDevice':
         """Apply a report to the device, modifies it in place, returns `self`."""
+
+        self.cleanup_data()  # Start with a cleanup before adding more data
 
         latest_measure_delta = 0
         if report.measures:

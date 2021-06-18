@@ -207,6 +207,33 @@ header {
     opacity: 0.3;
 }
 
+#waterings td {
+    padding: 3px 5px;
+}
+
+#waterings .fa-humidity, #waterings .fa-shower {
+    color: #1a77f0;
+}
+
+#waterings .fa-battery-slash {
+    color: #ffa806;
+}
+
+.cute-button {
+    color: #333;
+    background: #e4e4e4;
+    border-radius: 23px;
+    padding: 8px 13px;
+    margin-top: 5px;
+    display: inline-block;
+    line-height: 1;
+}
+
+.cute-button:hover, .cute-button:focus, .cute-button:active {
+    color: #333;
+    text-decoration: none;
+}
+
 #weather {
     width: 100%;
     overflow: auto;

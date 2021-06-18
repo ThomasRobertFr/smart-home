@@ -168,22 +168,24 @@ function showValue(val, show, append) {
     }
 
     var icons_mapping = {
-        "icons-water": "fa-tint",
+        "icons-water": "fa-shower",
         "icons-calibr": "fa-compass",
-        "icons-sensor": "fa-tachometer-alt",
+        "icons-sensor": "fa-tachometer-alt-fast",
+        "icons-sched": "fa-clock",
+    };
+    var icons_mapping_off = {
+        "icons-calibr": "fa-compass-slash",
+        "icons-sensor": "fa-tachometer-slowest",
     };
     if (icons_mapping[show]) {
-        if (val == "false" || val == "f" || val == "no" || !val)
-            val = '<i class="fad fa-fw '+icons_mapping[show]+'-slash icon-off"></i>';
+        if (val == "false" || val == "f" || val == "no" || !val) {
+            if (icons_mapping_off[show])
+                val = '<i class="fad fa-fw '+icons_mapping_off[show]+' icon-off"></i>';
+            else
+                val = '<span class="fa-stack icon-off"><i class="fad '+icons_mapping[show]+' fa-stack-1x"></i><i class="fas fa-slash fa-stack-1x"></i></span>';
+        }
         else
             val = '<i class="fad fa-fw '+icons_mapping[show]+' icon-on"></i>';
-    }
-
-    if (show == "icons-sched") {
-        if (val == "false" || val == "f" || val == "no" || !val)
-            val = '<span class="fa-stack icon-off"><i class="fad fa-clock fa-stack-1x"></i><i class="fas fa-slash fa-stack-1x"></i></span>';
-        else
-            val = '<i class="fad fa-clock fa-fw icon-on"></i>';
     }
 
     if (append) {
@@ -225,10 +227,6 @@ function activateButtons() {
     });
 }
 
-function clearTable() {
-    $("#sensors tbody").html();
-}
-
 function addLine(data) {
     var html = '<tr class="sensor" data-id="'+data.id+'">';
     html += document.getElementById("sensor-pattern").innerHTML.replace(
@@ -246,15 +244,24 @@ function addLine(data) {
     $("#sensors tbody").append(html);
 
     var measures_sparkline = [];
+    var waterings_times_annotations = [];
+    var nb_days_shown = 5;
     var measures = data.measures;
     for (var i = 0; i < measures.length; i++) {
         var time = measures[i][0] * 1000;
-
-        if (time > Date.now() - 3 * 24 * 60 * 60 * 1000)
+        if (time > Date.now() - nb_days_shown * 24 * 60 * 60 * 1000)
             measures_sparkline.push([time, Math.round(
             100 * (data.calibration_max - measures[i][1]) /
                 (data.calibration_max - data.calibration_min)
             )]);
+    }
+    for (var i = 0; i < data.waterings.length; i++) {
+        var time = data.waterings[i][0] * 1000;
+        if (time > Date.now() - nb_days_shown * 24 * 60 * 60 * 1000) {
+            waterings_times_annotations.push({
+                x: time, borderColor: '#00e396', strokeDashArray: 0, borderWidth: 1.6
+            });
+        }
     }
     var options = {
         series: [{data: measures_sparkline}],
@@ -263,8 +270,10 @@ function addLine(data) {
         xaxis: {type: 'datetime'},
         annotations: {
             yaxis: [
-                {y: data.watering_humidity_target, borderColor: '#00E396', strokeDashArray: 0},
-                {y: data.watering_humidity_threshold, borderColor: '#FEB019', strokeDashArray: 0}]
+                {y: data.watering_humidity_target, borderColor: '#00E396', strokeDashArray: 0, borderWidth: 1.6},
+                {y: data.watering_humidity_threshold, borderColor: '#FEB019', strokeDashArray: 0, borderWidth: 1.6}
+            ],
+            xaxis: waterings_times_annotations,
         },
         stroke: {width: 2},
         tooltip: {enabled: false}

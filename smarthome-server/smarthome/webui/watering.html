@@ -21,29 +21,6 @@
 
         <table id="sensors" class="table table-hover">
             <thead>
-                <!-- <tr id="sensors_headers_titles">
-                    <th></th>
-                    <th colspan="4" class="th-title"><span>Calibration</span></th>
-                    <th colspan="9" class="th-title"><span>Watering</span></th>
-                </tr>
-                <tr id="sensors_headers">
-                    <th data-key="id" data-type="str">ID</th>
-                    <th data-key="calibrate" data-type="bool" data-show="icons-calibr">On?</th>
-                    <th data-key="calibration_duration" data-type="int" data-append="s">Dur.</th>
-                    <th data-key="calibration_min" data-type="int">Min</th>
-                    <th data-key="calibration_max" data-type="int">Max</th>
-                    <th data-key="watering" data-type="bool" data-show="icons-water">On?</th>
-                    <th data-special="measures">Humidity</th>
-                    <th data-key="watering_last_delta"  data-special="waterings" data-type="int" data-show="h_min" data-append=" ago">Watered</th>
-                    <th data-key="watering_humidity_threshold" data-type="int" data-append="%">Thresh</th>
-                    <th data-key="watering_humidity_target" data-type="int" data-append="%">Target</th>
-                    <th data-key="watering_cycle_nb_max" data-type="int" data-append="×">Nb</th>
-                    <th data-key="watering_cycle_duration" data-type="int" data-append="s">Dur.</th>
-                    <th data-key="watering_cycle_sleep" data-type="int" data-append="s">Sleep</th>
-                    <th data-key="watering_cooldown" data-type="int" data-show="h_min">Cooldown</th>
-                    <th data-key="measure_interval" data-type="int" data-show="h_min">Sleep</th>
-                    <th data-special="buttons">Actions</th>
-                </tr>-->
                 <tr id="sensors_headers_titles">
                     <th data-key="id" data-type="str">ID</th>
                     <th class="th-title"><span>Calibration</span></th>
@@ -59,7 +36,8 @@
                     <td>
                         <div class="{sensor_exist,class_hide_if_false}">
                         <span class="sparkline" id="sparkline-{id}"></span>
-                        {all,humidity_last_val,%} <small>({measures,humidity_last_time, ago}, refresh {measure_interval,h_min})</small>
+                        <i class="fad fa-humidity icon-on"></i> {all,humidity_last_val,%}
+                        <small>({measures,humidity_last_time, ago}, refresh {measure_interval,h_min})</small>
                         </div>
                     </td>
                     <td>{watering,icons-water} Last {watering_last_delta,h_min} ago <small>({waterings,waterings_last_val}×)</small></td>
