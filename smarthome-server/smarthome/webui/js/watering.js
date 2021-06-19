@@ -181,8 +181,13 @@ function showValue(val, show, append) {
         if (val == "false" || val == "f" || val == "no" || !val) {
             if (icons_mapping_off[show])
                 val = '<i class="fad fa-fw '+icons_mapping_off[show]+' icon-off"></i>';
-            else
-                val = '<span class="fa-stack icon-off"><i class="fad '+icons_mapping[show]+' fa-stack-1x"></i><i class="fas fa-slash fa-stack-1x"></i></span>';
+            else {
+                val = '<span class="fa-stack icon-off">';
+                val += '<i class="fad '+icons_mapping[show]+' fa-stack-1x"></i>';
+                val += '<i class="fas fa-slash fa-stack-1x"></i>';
+                val += '<i class="fas fa-slash fa-stack-1x" data-fa-transform="down-1.4 left-1.4" style="color: white"></i>';
+                val += '</span>';
+            }
         }
         else
             val = '<i class="fad fa-fw '+icons_mapping[show]+' icon-on"></i>';

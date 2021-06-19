@@ -3,23 +3,11 @@
 var chart;
 
 function addLine(data) {
-    /*
-
-    html += document.getElementById("sensor-pattern").innerHTML.replace(
-        new RegExp(/\{(.+?)\}/g),
-        function (x) {
-            var args = x.slice(1, -1).split(",");
-            var span = (!(typeof args[1] == "string" && args[1].includes("class")) && args[0] != "id" && args[0] != "all" && !Array.isArray(data[args[0]]));
-            var out = span ? '<span class="field" data-id="'+data.id+'" data-key="'+args[0]+'">' : '';
-            out += showValue(args[0] == "all" ? data : data[args[0]], args[1], args[2]);
-            out += span ? '</span>' : '';
-            return out;
-        }
-    );*/
     var humidity = "?";
     var humidity_delta_mins = 0;
     var humidity_delta = "?";
-    var watered = "?";
+    var watered = "";
+    var wateringNeeded = false;
 
     if (data.measures.length) {
         var last_measure = data.measures[data.measures.length - 1];
@@ -33,6 +21,8 @@ function addLine(data) {
         else
             humidity_delta = Math.floor(humidity_delta_mins / 60) + "h" +
                              String(Math.floor(humidity_delta_mins % 60)).padStart(2, '0');
+        if (humidity < data.watering_humidity_threshold)
+            wateringNeeded = true;
     }
     if (data.watering_last_delta) {
         watered = Math.round(data.watering_last_delta / 60 / 60 / 24);
@@ -50,13 +40,16 @@ function addLine(data) {
     html += '<td class="measure"><span data-toggle="tooltip" title="'+humidity_delta+' ago">';
     html += '<i class="fad fa-humidity"></i> ' + humidity + '%';
     if (humidity_delta_mins > data.measure_interval * 1.5 / 60) // warn if too long ago
-        html += ' <i class="fas fa-battery-slash"></i>';
+        html += ' <i class="fas fa-battery-slash alert-color"></i>';
     html += '</span></td>';
+    html += '<td class="watered"><span data-toggle="tooltip" title="Target: '+data.watering_humidity_threshold+'%">';
+    if (watered && !wateringNeeded)
+        html += '<i class="fad fa-shower"></i> ';
+    else if (wateringNeeded)
+        html += '<i class="fad fa-shower alert-color"></i> ';
     if (watered)
-        html += '<td class="watered"><i class="fad fa-shower"></i> ' + watered + '</td>';
-    else
-        html += '<td class="watered"></td>';
-    html += "</tr>";
+        html += watered;
+    html += "</span></td></tr>";
     $("#waterings").append(html);
     $('[data-toggle="tooltip"]').tooltip({container: 'body'});
 

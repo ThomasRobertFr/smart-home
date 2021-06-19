@@ -215,8 +215,8 @@ header {
     color: #1a77f0;
 }
 
-#waterings .fa-battery-slash {
-    color: #ffa806;
+#waterings .alert-color {
+    color: #ffa806 !important;
 }
 
 .cute-button {
