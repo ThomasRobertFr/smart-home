@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from tinydb import Query, TinyDB
 
 DB = TinyDB(pkg_resources.resource_filename("smarthome", "data/watering.json"))
-DB_TABLE = DB.table("watering")
+DB_TABLE = DB.table("watering", cache_size=0)
 
 
 class WateringReport(BaseModel):

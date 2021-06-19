@@ -33,8 +33,8 @@ from tinydb import Query, TinyDB
 app = Celery('smarthome', broker='pyamqp://guest@localhost//')
 
 DB = TinyDB(pkg_resources.resource_filename("smarthome", "data/sequences.json"))
-SEQ_GROUPS_TABLE = DB.table("sequence_groups")
-SEQUENCES_TABLE = DB.table("sequences")
+SEQ_GROUPS_TABLE = DB.table("sequence_groups", cache_size=0)
+SEQUENCES_TABLE = DB.table("sequences", cache_size=0)
 
 
 class Sequence(TypedDict):
@@ -81,7 +81,7 @@ def remove_sequence(id: str):
 
 
 def sequence_exists(id: str) -> bool:
-    return SEQUENCES_TABLE.get(Query().id == id) is not None
+    return SEQUENCES_TABLE.contains(Query().id == id)
 
 
 def get_sequence(id: str) -> Sequence:
@@ -122,7 +122,7 @@ def remove_sequence_group(id: str):
 
 
 def sequence_group_exists(id: str) -> bool:
-    if SEQ_GROUPS_TABLE.get(Query().id == id) is None:
+    if not SEQ_GROUPS_TABLE.contains(Query().id == id):
         return False
     elif not len(list_sequences(group_id=id)):
         remove_sequence_group(id)
