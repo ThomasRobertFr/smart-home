@@ -36,6 +36,7 @@ struct SensorData {
 };
 
 const int jsonCapacity = JSON_OBJECT_SIZE(40);
+const float motorPWM = 0.75;  // This powers motors with PWM to reduce apparent voltage of the battery, cf README
 SensorData sensors[3] = {};
 
 WiFiClient client;
@@ -327,7 +328,7 @@ void watering(SensorData &sensor) {
         while ((sensor.force_watering || humidity < sensor.watering_humidity_target) && sensor.postJSON_watering < sensor.watering_cycle_nb_max) {
             Serial.print("Watering... ");
 
-            analogWrite(sensor.pinMotor, sensor.pinMotor == LED_BUILTIN ? 0 : PWMRANGE * 0.75);
+            analogWrite(sensor.pinMotor, sensor.pinMotor == LED_BUILTIN ? 0 : PWMRANGE * motorPWM);
             delay(sensor.watering_cycle_duration * 1000); // water for watering_cycle_duration
             digitalWrite(sensor.pinMotor, sensor.pinMotor == LED_BUILTIN ? HIGH : LOW);
             delay(sensor.watering_cycle_sleep * 1000); // wait for watering_cycle_sleep for water to diffuse
