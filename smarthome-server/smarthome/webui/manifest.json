@@ -3,5 +3,11 @@
   "name": "Home",
   "start_url": "/",
   "display": "fullscreen",
-  "orientation": "portrait"
+  "orientation": "portrait",
+  "icons": [
+    {
+        "src": "/favicon.svg",
+        "type": "image/svg+xml"
+    }
+  ]
 }
