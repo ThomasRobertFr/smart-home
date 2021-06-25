@@ -2,6 +2,6 @@
 
 int pinCalibrationLED = LED_BUILTIN;
 int nbSensors = 2;
-String sensorIds[2] = {"jardiniere", "ciboulette"};
-int pinSensors[2] = {D1, D2}; // {D1, D2, D3};
-int pinMotors[2] = {LED_BUILTIN, LED_BUILTIN}; // {D5, D6, D7};
+String sensorIds[2] = {"ciboulette", "jardiniere"};
+int pinSensors[3] = {D1, D2, D3};
+int pinMotors[3] = {D5, D6, D7};

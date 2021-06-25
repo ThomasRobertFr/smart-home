@@ -5,7 +5,7 @@
 #include <ESP8266HTTPClient.h>
 #include <WiFiClient.h>
 #include "wifi_setup.h"
-#include "device1.h"
+#include "device3.h"
 
 struct SensorData {
     String id;
