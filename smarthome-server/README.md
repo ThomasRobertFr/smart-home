@@ -71,7 +71,7 @@ dnsmasq nginx php5-fpm
 python python-pip python3 python3-pip
 
 # Smarthome setup
-mosquitto rabbitmq-server
+mosquitto rabbitmq-server mongodb
 ```
 
 ## dnsmask setup

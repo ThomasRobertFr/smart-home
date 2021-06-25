@@ -23,18 +23,18 @@ import logging
 from time import sleep
 from typing import List, Union
 
-import pkg_resources
+import pymongo
 import requests
 from celery import Celery, Task, chain
 from celery.result import AsyncResult
+from pymongo import MongoClient
 from smarthome.misc.utils import TypedDict
-from tinydb import Query, TinyDB
 
 app = Celery('smarthome', broker='pyamqp://guest@localhost//')
-
-DB = TinyDB(pkg_resources.resource_filename("smarthome", "data/sequences.json"))
-SEQ_GROUPS_TABLE = DB.table("sequence_groups", cache_size=0)
-SEQUENCES_TABLE = DB.table("sequences", cache_size=0)
+mongo = MongoClient()
+DB = mongo.smarthome
+SEQ_GROUPS_TABLE: pymongo.collection.Collection = DB.sequence_groups
+SEQUENCES_TABLE: pymongo.collection.Collection = DB.sequences
 
 
 class Sequence(TypedDict):
@@ -74,20 +74,21 @@ def remove_sequence(id: str):
     group_id = None
     if sequence_exists(id):
         group_id = get_sequence(id)["group_id"]
-    SEQUENCES_TABLE.remove(Query().id == id)
+    SEQUENCES_TABLE.delete_one({"id": id})
     # Remove the sequence_group if it was the last sequence in it
     if group_id is not None and not list_sequences(group_id=group_id):
         remove_sequence_group(group_id)
 
 
 def sequence_exists(id: str) -> bool:
-    return SEQUENCES_TABLE.contains(Query().id == id)
+    return SEQUENCES_TABLE.find_one({"id": id}) is not None
 
 
 def get_sequence(id: str) -> Sequence:
-    log = SEQUENCES_TABLE.get(Query().id == id)
+    log = SEQUENCES_TABLE.find_one({"id": id})
     if log is None:
         raise ValueError("No sequence with this ID.")
+    log["_id"] = str(log["_id"])
     return log
 
 
@@ -104,25 +105,26 @@ def list_sequences(group_id: str = None,
                    device_id: str = None,
                    device_idx: int = None) -> List[Sequence]:
     # Init a query that matches everything
-    seq_query = Query()
-    query = seq_query.id != "match_all_by_default"
+    query = {}
     if group_id is not None:
-        query = query & (seq_query.group_id == group_id)
+        query["group_id"] = group_id
     if device_id is not None:
-        query = query & (seq_query.device_id == device_id)
+        query["device_id"] = device_id
     if device_idx is not None:
-        query = query & (seq_query.device_idx == device_idx)
-
-    return SEQUENCES_TABLE.search(query)
+        query["device_idx"] = device_idx
+    sequences = list(SEQUENCES_TABLE.find(query))
+    for s in sequences:
+        s["_id"] = str(s["_id"])
+    return sequences
 
 
 @app.task
 def remove_sequence_group(id: str):
-    SEQ_GROUPS_TABLE.remove(Query().id == id)
+    SEQ_GROUPS_TABLE.delete_one({"id": id})
 
 
 def sequence_group_exists(id: str) -> bool:
-    if not SEQ_GROUPS_TABLE.contains(Query().id == id):
+    if SEQ_GROUPS_TABLE.find_one({"id": id}) is None:
         return False
     elif not len(list_sequences(group_id=id)):
         remove_sequence_group(id)
@@ -134,17 +136,18 @@ def sequence_group_exists(id: str) -> bool:
 def get_sequence_group(id: str) -> SequenceGroupEnriched:
     if not sequence_group_exists(id):
         raise ValueError("No sequence_group with this ID")
-    seq: SequenceGroup = SEQ_GROUPS_TABLE.get(Query().id == id)
-    seq: SequenceGroupEnriched
+    seq: SequenceGroupEnriched = SEQ_GROUPS_TABLE.find_one({"id": id})
+    seq["_id"] = str(seq["_id"])
     seq["sequences"] = list_sequences(group_id=seq["id"])
     return seq
 
 
 def list_sequence_groups() -> List[SequenceGroupEnriched]:
     return [
-        get_sequence_group(seq["id"]) for seq in SEQ_GROUPS_TABLE.all()
+        get_sequence_group(seq["id"])
+        for seq in SEQ_GROUPS_TABLE.find()
         if sequence_group_exists(seq["id"])
-    ]
+    ]  # yapf: disable
 
 
 def stop_sequence_group(group_id: str):
@@ -153,8 +156,11 @@ def stop_sequence_group(group_id: str):
     remove_sequence_group(group_id)
 
 
-def run_sequence(id: str, group_id: Union[str, None], device_id: Union[str, None],
-                 device_idx: Union[int, None], tasks: List[Task]) -> Sequence:
+def run_sequence(id: str,
+                 group_id: Union[str, None],
+                 device_id: Union[str, None],
+                 device_idx: Union[int, None],
+                 tasks: List[Task]) -> Sequence:  # yapf: disable
     """Launch a sequence of celery tasks. Register it in DB. If a sequence with the same ID already
     exist in DB, it will be stopped to be replaced by this one.
     """
@@ -170,12 +176,13 @@ def run_sequence(id: str, group_id: Union[str, None], device_id: Union[str, None
     sequence_obj = chain(*tasks, remove_sequence.si(id))
     res: AsyncResult = sequence_obj.delay()
     seq["tasks"] = res.as_list()
-    SEQUENCES_TABLE.insert(seq)
+    SEQUENCES_TABLE.insert_one(seq)
     return seq
 
 
-def run_sequence_group(name: str, sequences: List[SequenceToRun], use_name_as_id: bool = False) \
-        -> SequenceGroupEnriched:
+def run_sequence_group(name: str,
+                       sequences: List[SequenceToRun],
+                       use_name_as_id: bool = False) -> SequenceGroupEnriched:  # yapf: disable
     """Run a group of sequences, register all in the DB. When the sequences are done they will
     remove themselves from DB. When all the sequences of the group are done, the sequence will be
     removed from DB.
@@ -193,7 +200,7 @@ def run_sequence_group(name: str, sequences: List[SequenceToRun], use_name_as_id
         "name": name,
         "date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
     }
-    SEQ_GROUPS_TABLE.insert(seq_group)
+    SEQ_GROUPS_TABLE.insert_one(seq_group)
 
     seq_group: SequenceGroupEnriched
     seq_group["sequences"] = sequences

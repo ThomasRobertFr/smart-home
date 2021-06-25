@@ -2,12 +2,13 @@ import time
 from datetime import datetime, timedelta
 from typing import Any, List, Tuple
 
-import pkg_resources
+import pymongo
 from pydantic import BaseModel
-from tinydb import Query, TinyDB
+from pymongo import MongoClient
 
-DB = TinyDB(pkg_resources.resource_filename("smarthome", "data/watering.json"))
-DB_TABLE = DB.table("watering", cache_size=0)
+mongo = MongoClient()
+DB = mongo.smarthome
+DB_TABLE: pymongo.collection.Collection = DB.watering
 
 
 class WateringReport(BaseModel):
@@ -43,7 +44,6 @@ class WateringDevice(BaseModel):
     watering_cooldown: int = 60 * 60 * 3  # sleep for 3h after watering
 
     class Config:
-        extra = 'forbid'
         validate_assignment = True
 
     @property
@@ -56,27 +56,24 @@ class WateringDevice(BaseModel):
         return int(time.time()) - int(self.watering_last)
 
     def is_in_db(self) -> bool:
-        query = Query()
-        return bool(DB_TABLE.get(query.id == self.id))
+        return DB_TABLE.find_one({"id": self.id}) is not None
 
     def insert_in_db(self) -> 'WateringDevice':
         if self.is_in_db():
             raise ValueError(f"Device {self.id} in DB, cannot insert it")
-        DB_TABLE.insert(self.dict())
+        DB_TABLE.insert_one(self.dict())
         return self
 
     def update_in_db(self) -> 'WateringDevice':
         if not self.is_in_db():
             raise ValueError(f"Device {self.id} not in DB, cannot update it")
-        query = Query()
-        DB_TABLE.upsert(self.dict(), query.id == self.id)
+        DB_TABLE.replace_one({"id": self.id}, self.dict())
         return self
 
     def remove_from_db(self) -> 'WateringDevice':
         if not self.is_in_db():
             raise ValueError(f"Device {self.id} not in DB, cannot remove it")
-        query = Query()
-        DB_TABLE.remove(query.id == self.id)
+        DB_TABLE.delete_one({"id": self.id})
         return self
 
     def update(self, update_fields: dict) -> 'WateringDevice':
@@ -98,15 +95,14 @@ class WateringDevice(BaseModel):
 
     @classmethod
     def load_from_db(cls, id: str) -> 'WateringDevice':
-        query = Query()
-        doc = DB_TABLE.get(query.id == id)
+        doc = DB_TABLE.find_one({"id": id})
         if not doc:
             raise ValueError(f"Device {id} not in DB")
         return cls(**doc)
 
     @classmethod
     def list_devices(cls) -> 'List[WateringDevice]':
-        return [cls(**d) for d in DB_TABLE.all()]
+        return [cls(**d) for d in DB_TABLE.find()]
 
     def cleanup_data(self):
         """Remove old data to not have a too heavy database and also be able to plot stuff without
