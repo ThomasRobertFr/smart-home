@@ -273,7 +273,7 @@ if devicechanged then
             elseif(devstatus == 'On') then
                 os.execute("curl -X PUT "..BASE_URL..idx.."/on");
                 if devices_to_reset[idx] then
-                    commandArray[devname] = "Off"
+                    commandArray['UpdateDevice']= idx..'|0|Off'
                 end
             elseif (otherdevices_svalues[devname]) then
                 dim_value = otherdevices_svalues[devname]
