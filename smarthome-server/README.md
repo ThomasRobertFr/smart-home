@@ -483,7 +483,6 @@ end remote
 
 * Add IRRemote specific commands in API and front
 * Home state integration
-* Add auto triggers:
+* Add auto triggers:  
     * light on based on home state + sun elevation
 * Schedule events in calendar
-* In watering, remove / downsample old data point
