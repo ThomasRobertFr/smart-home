@@ -35,13 +35,13 @@ class WateringDevice(BaseModel):
     watering_scheduled: bool = False  # watering based on scheduling
     watering_scheduling_start_bound: int = 0  # bounds in which scheduled watering can occur
     watering_scheduling_end_bound: int = 24 * 60 * 60  # bound in which scheduled watering can occur
-    watering_last: int = 0  # timestamp of last watering
-    watering_humidity_threshold: int = 30  # 30%, water if < threshold
-    watering_humidity_target: int = 60  # 60%, watering stop if > target
-    watering_cycle_nb_max: int = 30  # max 30 cycles of Xs of pumping
+    watering_last: int = int(time.time())  # timestamp of last watering
+    watering_humidity_threshold: int = 70  # 70%, water if < threshold
+    watering_humidity_target: int = 120  # 120%, watering stop if > target
+    watering_cycle_nb_max: int = 1  # max 1 cycles of Xs of pumping
     watering_cycle_duration: int = 5  # 5s
     watering_cycle_sleep: int = 5  # 5s
-    watering_cooldown: int = 60 * 60 * 3  # sleep for 3h after watering
+    watering_cooldown: int = 60 * 60 * 3  # don't water during the 3h after a watering (let water diffuse)
 
     class Config:
         validate_assignment = True
