@@ -60,7 +60,7 @@ for calendar in CALENDARS.values():
     if len(calendar["days"]) < EXPECTED_CALENDAR_LENGHT:
         assert calendar["days"].shape[1] == 3
         calendar["days"] = np.pad(calendar["days"],
-                                [[0, EXPECTED_CALENDAR_LENGHT - calendar["days"].shape[0]], [0, 0]])
+                                [[0, EXPECTED_CALENDAR_LENGHT - calendar["days"].shape[0]], [0, 0]], 'constant')
 
 
 @app.route("/save")
