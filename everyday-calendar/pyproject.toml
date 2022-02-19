@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "everydaycalendar"
+version = "1.0"
+description = "Backend of an LED calendar to log your achievements"
+readme = "README.md"
+authors = ["Thomas Robert <check-my-email-on-website@thomas-robert.fr>"]
+repository = "https://github.com/ThomasRobertFr/smart-home"
+
+[tool.poetry.dependencies]
+python = "^3.7.0"
+
+numpy = "^1.16.0,<1.17"
+adafruit-circuitpython-neopixel = {version = "^6.2.4", markers = "platform_machine == 'armv6l' or platform_machine == 'armv7l'"}
+flask = "^1.1"
+flask_restful = "^0.3.9"
+markupsafe = "2.0.1"  # Fixed version for now because version 2.1.0 is bugged "cannot import name 'soft_unicode' from 'markupsafe'"
+
+[tool.poetry.scripts]
+everyday-calendar = 'everydaycalendar.server:main'
+
+[build-system]
+requires = ["poetry>=1.1.0"]
+build-backend = "poetry.masonry.api"
