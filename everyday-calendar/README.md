@@ -77,6 +77,8 @@ ssh pi@192.168.1.20
 python3.7 -m venv venv
 source venv/bin/activate
 ~/.poetry/bin/poetry install
+pip install adafruit-circuitpython-neopixel # For now it looks like this
+# package is badly installed by poetry
 
 # To run
 everyday-calendar
