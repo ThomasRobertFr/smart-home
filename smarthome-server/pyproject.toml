@@ -11,11 +11,11 @@ python = ">=3.7.0,<4.0"
 
 python-dateutil = ">= 2.0"
 httplib2 = ">= 0.15"
-RPi = {version = ">=0.0.1", markers = "platform_machine == 'armv7l'"}
-rpi_rf = {version = ">=0.9", markers = "platform_machine == 'armv7l'"}
+"RPi.GPIO" = {version = ">=0.7.0", markers = "platform_machine == 'armv6l' or platform_machine == 'armv7l'"}
+rpi_rf = {version = ">=0.9", markers = "platform_machine == 'armv6l' or platform_machine == 'armv7l'"}
 pyyaml = ">= 5.0.0"
 babel = ">= 2.0"
-Adafruit_DHT = {version = ">=1.4", markers = "platform_machine == 'armv7l'"}
+Adafruit_DHT = {version = ">=1.4", markers = "platform_machine == 'armv6l' or platform_machine == 'armv7l'"}
 argparse = ">=1.4.0,<2"
 oauth2client = "^4.1.0"
 google-api-python-client = "^2.7.0"
