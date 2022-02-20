@@ -9,7 +9,7 @@ repository = "https://github.com/ThomasRobertFr/smart-home"
 [tool.poetry.dependencies]
 python = "^3.7.0"
 
-numpy = "^1.16.0,<1.17"
+numpy = "^1.21.0"
 adafruit-circuitpython-neopixel = {version = "^6.2.4", markers = "platform_machine == 'armv6l' or platform_machine == 'armv7l'"}
 flask = "^1.1"
 flask_restful = "^0.3.9"
